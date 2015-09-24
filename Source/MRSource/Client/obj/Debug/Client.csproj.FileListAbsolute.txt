@@ -30,3 +30,6 @@ D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Factory.pdb
 D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Factory.xml
 D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.MRCache.pdb
 D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.MRCache.xml
+D:\BitBucket\DbCreate\Source\MRSource\Client\bin\Debug\Client.exe.config
+D:\BitBucket\DbCreate\Source\MRSource\Client\obj\Debug\Client.exe
+D:\BitBucket\DbCreate\Source\MRSource\Client\obj\Debug\Client.pdb
