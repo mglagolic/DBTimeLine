@@ -69,7 +69,7 @@ namespace Client
                 var key = dlo2.Keys.First<Object>();
                 var dlo22 = dlo2[key];
 
-
+                //3
                 
                 //per.Delete(dlo2, trn);
 
