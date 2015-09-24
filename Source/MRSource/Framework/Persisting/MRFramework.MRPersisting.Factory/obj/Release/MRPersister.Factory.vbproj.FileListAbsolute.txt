@@ -1,0 +1,8 @@
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\obj\Release\MRPersister.Factory.vbproj.GenerateResource.Cache
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\bin\Release\MRPersister.Factory.dll
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\bin\Release\MRPersister.Factory.pdb
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\bin\Release\MRPersister.Factory.xml
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\obj\Release\MRPersister.Factory.Resources.resources
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\obj\Release\MRPersister.Factory.dll
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\obj\Release\MRPersister.Factory.xml
+D:\source_V8.net\MRSource\Model\MRPersister.Factory\obj\Release\MRPersister.Factory.pdb

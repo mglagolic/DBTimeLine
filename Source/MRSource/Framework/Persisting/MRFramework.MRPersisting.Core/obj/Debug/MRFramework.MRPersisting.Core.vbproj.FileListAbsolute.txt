@@ -1,0 +1,12 @@
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.dll
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.pdb
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.xml
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.dll
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.pdb
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.xml
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbprojResolveAssemblyReference.cache
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.Resources.resources
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbproj.GenerateResource.Cache
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.dll
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.xml
+D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.pdb

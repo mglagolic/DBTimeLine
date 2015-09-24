@@ -1,0 +1,32 @@
+C:\Users\Miro\AppData\Local\Temporary Projects\Client\bin\Debug\Client.exe.config
+C:\Users\Miro\AppData\Local\Temporary Projects\Client\bin\Debug\Client.exe
+C:\Users\Miro\AppData\Local\Temporary Projects\Client\bin\Debug\Client.pdb
+C:\Users\Miro\AppData\Local\Temporary Projects\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+C:\Users\Miro\AppData\Local\Temporary Projects\Client\obj\Debug\Client.exe
+C:\Users\Miro\AppData\Local\Temporary Projects\Client\obj\Debug\Client.pdb
+D:\Source\MRSource\Client\bin\Debug\Client.exe.config
+D:\Source\MRSource\Client\obj\Debug\Client.exe
+D:\Source\MRSource\Client\obj\Debug\Client.pdb
+D:\Source\MRSource\Client\obj\Debug\Client.csprojResolveAssemblyReference.cache
+D:\Source\MRSource\Client\obj\Debug\Client.Form1.resources
+D:\Source\MRSource\Client\obj\Debug\Client.csproj.GenerateResource.Cache
+D:\Source\MRSource\Client\bin\Debug\Client.exe
+D:\Source\MRSource\Client\bin\Debug\Client.pdb
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Core.dll
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.dll
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.dll
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Cache.dll
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Factory.dll
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.MRCache.dll
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Core.pdb
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Core.xml
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.pdb
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.xml
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.pdb
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.xml
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Cache.pdb
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Cache.xml
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Factory.pdb
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRPersisting.Factory.xml
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.MRCache.pdb
+D:\Source\MRSource\Client\bin\Debug\MRFramework.MRCore.MRCache.xml

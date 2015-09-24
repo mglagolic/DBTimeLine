@@ -1,0 +1,8 @@
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\bin\Release\MRPersisting.Factory.dll
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\bin\Release\MRPersisting.Factory.pdb
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\bin\Release\MRPersisting.Factory.xml
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\obj\Release\MRPersisting.Factory.Resources.resources
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\obj\Release\MRPersisting.Factory.vbproj.GenerateResource.Cache
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\obj\Release\MRPersisting.Factory.dll
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\obj\Release\MRPersisting.Factory.xml
+D:\source_V8.net\MRSource\Model\MRPersisting.Factory\obj\Release\MRPersisting.Factory.pdb

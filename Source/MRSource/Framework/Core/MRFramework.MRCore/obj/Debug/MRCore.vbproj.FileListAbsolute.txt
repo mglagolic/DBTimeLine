@@ -1,0 +1,8 @@
+D:\source_V8.net\MRSource\Core\MRConfig\bin\Debug\MRCore.dll
+D:\source_V8.net\MRSource\Core\MRConfig\bin\Debug\MRCore.pdb
+D:\source_V8.net\MRSource\Core\MRConfig\bin\Debug\MRCore.xml
+D:\source_V8.net\MRSource\Core\MRConfig\obj\Debug\MRCore.Resources.resources
+D:\source_V8.net\MRSource\Core\MRConfig\obj\Debug\MRCore.vbproj.GenerateResource.Cache
+D:\source_V8.net\MRSource\Core\MRConfig\obj\Debug\MRCore.dll
+D:\source_V8.net\MRSource\Core\MRConfig\obj\Debug\MRCore.xml
+D:\source_V8.net\MRSource\Core\MRConfig\obj\Debug\MRCore.pdb
