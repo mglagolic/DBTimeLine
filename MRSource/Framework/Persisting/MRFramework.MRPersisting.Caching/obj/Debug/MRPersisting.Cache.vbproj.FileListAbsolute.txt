@@ -1,0 +1,12 @@
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\bin\Debug\MRPersisting.Cache.dll
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\bin\Debug\MRPersisting.Cache.pdb
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\bin\Debug\MRPersisting.Cache.xml
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\bin\Debug\MRCache.dll
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\bin\Debug\MRCache.pdb
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\bin\Debug\MRCache.xml
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\obj\Debug\MRPersisting.Cache.vbprojResolveAssemblyReference.cache
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\obj\Debug\MRPersisting.Cache.Resources.resources
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\obj\Debug\MRPersisting.Cache.vbproj.GenerateResource.Cache
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\obj\Debug\MRPersisting.Cache.dll
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\obj\Debug\MRPersisting.Cache.xml
+D:\source_V8.net\MRSource\Persisting\MRPersisting.Cache\obj\Debug\MRPersisting.Cache.pdb
