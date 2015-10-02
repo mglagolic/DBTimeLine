@@ -1,0 +1,3 @@
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Release\MRFramework.MRPersisting.Cache.vbprojResolveAssemblyReference.cache
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Release\MRFramework.MRPersisting.Cache.Resources.resources
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Release\MRFramework.MRPersisting.Cache.vbproj.GenerateResource.Cache

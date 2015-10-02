@@ -14,3 +14,11 @@ D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Rel
 D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.dll
 D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.xml
 D:\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.pdb
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Release\MRFramework.MRPersisting.Factory.dll
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Release\MRFramework.MRPersisting.Factory.pdb
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Release\MRFramework.MRPersisting.Factory.xml
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.Resources.resources
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.vbproj.GenerateResource.Cache
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.dll
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.xml
+D:\BitBucket\DbCreate\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Release\MRFramework.MRPersisting.Factory.pdb
