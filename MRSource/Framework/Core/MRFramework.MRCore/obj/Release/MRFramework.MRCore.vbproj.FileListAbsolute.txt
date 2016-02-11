@@ -30,3 +30,12 @@ D:\BitBucket\DbCreate2\Source\MRSource\Framework\Core\MRFramework.MRCore\obj\Rel
 D:\BitBucket\DbCreate2\Source\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.dll
 D:\BitBucket\DbCreate2\Source\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.xml
 D:\BitBucket\DbCreate2\Source\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\bin\Release\MRFramework.MRCore.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\bin\Release\MRFramework.MRCore.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\bin\Release\MRFramework.MRCore.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.Resources.resources
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.vbproj.GenerateResource.Cache
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Release\MRFramework.MRCore.vbprojResolveAssemblyReference.cache

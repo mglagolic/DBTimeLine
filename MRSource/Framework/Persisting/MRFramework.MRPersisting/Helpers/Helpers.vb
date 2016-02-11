@@ -4,6 +4,7 @@ Imports System.Data.Common
 
 Namespace Helpers
     Public Module Helpers
+
 #Region "Cache"
 
 

@@ -366,13 +366,12 @@ Public MustInherit Class MRPersister
 
 
 #Region "DataWriter"
+
     Public Overridable ReadOnly Property SQLBase As String
         Get
             Return "select * from " & Me.DataBaseTableName
         End Get
     End Property
-
-
 
 
 #Region "Inserting"
@@ -614,6 +613,7 @@ Public MustInherit Class MRPersister
     End Function
 
 #End Region
+
 #Region "Delete"
     Public Function Delete(dlo As IMRDLO, transaction As DbTransaction, Optional lastWins As Boolean = False) As IMRDeleteDLOReturnValue Implements IMRPersister.Delete
         Dim ret As New MRDeleteDLOReturnValue
@@ -635,7 +635,7 @@ Public MustInherit Class MRPersister
                 cmd.CommandText = cvDeleteCommand.DeleteStatement
                 cmd.Transaction = transaction
 
-                Dim cnt As Integer = cmd.ExecuteNonQuery
+                Dim cnt As Integer = cmd.ExecuteNonQuery()
                 If cnt = 0 Then
                     Dim p As DbParameter = Helpers.GetOriginalPkParameter(Me, cmd.Parameters)
                     Dim concurrentDLO As IMRDLO = GetSingleDLO(p.Value, p, cmd)
@@ -656,7 +656,6 @@ Public MustInherit Class MRPersister
         Return ret
     End Function
 #End Region
-
 
     Protected Friend Enum eCommandType
         Insert = 0

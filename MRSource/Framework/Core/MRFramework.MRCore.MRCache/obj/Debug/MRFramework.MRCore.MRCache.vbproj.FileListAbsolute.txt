@@ -34,3 +34,15 @@ D:\Source\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramewo
 D:\Source\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.dll
 D:\Source\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.xml
 D:\Source\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.Resources.resources
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.vbproj.GenerateResource.Cache
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.vbprojResolveAssemblyReference.cache

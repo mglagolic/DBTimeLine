@@ -46,3 +46,15 @@ D:\BitBucket\DbCreate2\Source\MRSource\Framework\Persisting\MRFramework.MRPersis
 D:\BitBucket\DbCreate2\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.dll
 D:\BitBucket\DbCreate2\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.xml
 D:\BitBucket\DbCreate2\Source\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Release\MRFramework.MRPersisting.Cache.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Release\MRFramework.MRPersisting.Cache.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Release\MRFramework.MRPersisting.Cache.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Release\MRFramework.MRCore.MRCache.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Release\MRFramework.MRCore.MRCache.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Release\MRFramework.MRCore.MRCache.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.vbprojResolveAssemblyReference.cache
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.Resources.resources
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.vbproj.GenerateResource.Cache
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Release\MRFramework.MRPersisting.Cache.pdb
