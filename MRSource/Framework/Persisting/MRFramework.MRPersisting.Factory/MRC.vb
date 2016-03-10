@@ -3,6 +3,7 @@
 Public Class MRC
     Private Shared _singleton As MRC = Nothing
     Private Shared syncObject As New Object
+    Private Shared _Factory As DbProviderFactory = Nothing
 
     Public Property ProviderName As String
     Public Property ConnectionString As String
@@ -21,7 +22,6 @@ Public Class MRC
         End SyncLock
     End Function
 
-    Private Shared _Factory As DbProviderFactory = Nothing
     Public Shared Function GetFactory() As DbProviderFactory
         SyncLock syncObject
             If _Factory Is Nothing Then
@@ -31,7 +31,7 @@ Public Class MRC
         End SyncLock
         'Return DbProviderFactories.GetFactory(MRC.GetInstance().ProviderName)
     End Function
-        
+
     Public Shared Function GetConnection() As DbConnection
         Dim cnn As DbConnection = GetFactory.CreateConnection
         cnn.ConnectionString = MRC.GetInstance().ConnectionString
@@ -58,6 +58,7 @@ Public Class MRC
             Return GetParameter(parameterName, dbType, value, cmd)
         End Using
     End Function
+
     Public Shared Function GetParameter(parameterName As String, dbType As System.Data.DbType, value As Object, cmd As DbCommand) As System.Data.Common.DbParameter
         Dim p As DbParameter = Nothing
         Try
@@ -75,10 +76,9 @@ Public Class MRC
         End Try
         Return p
     End Function
+
     Public Shared Function GetCommandBuilder() As DbCommandBuilder
         Return GetFactory.CreateCommandBuilder
     End Function
-
-
 
 End Class

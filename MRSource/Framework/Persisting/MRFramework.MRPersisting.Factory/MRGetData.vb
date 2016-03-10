@@ -43,6 +43,7 @@ Public Module MRGetData
             Return ExecuteAdapter(cnn, sql, da, trn)
         End Using
     End Function
+
     <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")> _
     Public Function ExecuteAdapter(ByVal cnn As DbConnection, ByVal sql As String, Optional ByVal da As DbDataAdapter = Nothing, Optional ByVal trn As DbTransaction = Nothing) As DataSet
         Dim ds As DataSet = Nothing
@@ -70,7 +71,6 @@ Public Module MRGetData
             End If
         End Try
     End Function
-
 
     Public Function ExecuteAdapter(ByVal cmd As DbCommand, Optional ByVal da As DbDataAdapter = Nothing, Optional ByVal trn As DbTransaction = Nothing) As DataSet
         Dim ds As New DataSet
@@ -103,7 +103,6 @@ Public Module MRGetData
         Return ds
     End Function
 
-
     Public Function ExecuteReader(ByVal cmd As DbCommand, Optional ByVal trn As DbTransaction = Nothing) As DbDataReader
         If cmd.Transaction Is Nothing Then
             cmd.Transaction = trn
@@ -117,7 +116,8 @@ Public Module MRGetData
             Return ExecuteAdapterFromReader(cnn, sql, Nothing)
         End Using
     End Function
-    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")> _
+
+    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")>
     Public Function ExecuteAdapterFromReader(ByVal cnn As DbConnection, ByVal sql As String, Optional ByVal trn As DbTransaction = Nothing) As DataTable
         Dim cmd As DbCommand = Nothing
         Dim dtRet As DataTable = Nothing
@@ -133,6 +133,7 @@ Public Module MRGetData
         End Try
         Return dtRet
     End Function
+
     Public Function ExecuteAdapterFromReader(ByVal cmd As DbCommand, Optional ByVal trn As DbTransaction = Nothing) As DataTable
         Using reader As DbDataReader = ExecuteReader(cmd, trn)
             Dim dt As New DataTable
@@ -141,13 +142,14 @@ Public Module MRGetData
         End Using
     End Function
 
-    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")> _
+    <System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")>
     Public Function GetCommandFromSql(sql As String, cnn As DbConnection) As DbCommand
         Dim cmd As DbCommand = MRC.GetCommand(cnn)
         cmd.CommandText = sql
 
         Return cmd
     End Function
+
     Public Function ExecuteScalar(ByVal cmd As DbCommand, Optional ByVal trn As DbTransaction = Nothing) As Object
         Dim ret As Object = Nothing
         Try

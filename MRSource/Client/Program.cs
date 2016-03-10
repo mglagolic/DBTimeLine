@@ -53,7 +53,6 @@ namespace Client
             MRC.GetInstance().ProviderName = Properties.Settings.Default[Properties.Settings.Default.DefaultProvider].ToString();
 
             var per = new myPersister();
-            Object o;
             using (var cnn = MRC.GetConnection())
             {
                 cnn.Open();

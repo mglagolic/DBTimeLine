@@ -7,24 +7,28 @@ MRFramework.MRPersisting
 </assembly>
 <members>
 <member name="M:MRFramework.MRPersisting.MRPersister.InsertBulk(System.Collections.Generic.List{MRFramework.MRPersisting.Core.IMRDLO},System.Data.Common.DbTransaction)">
-	<summary>
-	</summary>
-	<param name="lsDlo"></param>
-	<param name="transaction"></param>
-	<returns></returns>
-	<remarks>Nema vraćanja identity valuesa... Treba doraditi dizajn baze, stagging tables.</remarks>
-</member><member name="P:MRFramework.MRPersisting.My.Resources.Resources.ResourceManager">
-	<summary>
+ <summary>
+ 
+ </summary>
+ <param name="lsDlo"></param>
+ <param name="transaction"></param>
+ <returns></returns>
+ <remarks>Nema vraćanja identity valuesa... Treba doraditi dizajn baze, stagging tables.</remarks>
+</member>
+<member name="T:MRFramework.MRPersisting.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:MRFramework.MRPersisting.My.Resources.Resources.ResourceManager">
+<summary>
   Returns the cached ResourceManager instance used by this class.
 </summary>
-</member><member name="P:MRFramework.MRPersisting.My.Resources.Resources.Culture">
-	<summary>
+</member>
+<member name="P:MRFramework.MRPersisting.My.Resources.Resources.Culture">
+<summary>
   Overrides the current thread's CurrentUICulture property for all
   resource lookups using this strongly typed resource class.
-</summary>
-</member><member name="T:MRFramework.MRPersisting.My.Resources.Resources">
-	<summary>
-  A strongly-typed resource class, for looking up localized strings, etc.
 </summary>
 </member>
 </members>
