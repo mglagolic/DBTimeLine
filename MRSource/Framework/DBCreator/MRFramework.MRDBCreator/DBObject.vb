@@ -21,8 +21,20 @@ Public MustInherit Class DBObject
         Me.Revisions.Add(revision)
         revision.Parent = Me
 
-        GlobalStaticProperties.AllDBSqlRevisions.Add(revision.ConvertToSqlRevision())
+        GlobalStatics.AllDBSqlRevisions.Add(revision.ConvertToSqlRevision())
         Return revision
+    End Function
+
+    Private sbFullName As New System.Text.StringBuilder("")
+
+    Public Function GetFullName() As String Implements IDBObject.GetFullName
+        sbFullName.Clear()
+        Dim p As IDBObject = Me
+        While p IsNot Nothing
+            sbFullName.Insert(0, p.Name & ".")
+            p = p.Parent
+        End While
+        Return sbFullName.ToString().TrimEnd("."c)
     End Function
 
 #End Region

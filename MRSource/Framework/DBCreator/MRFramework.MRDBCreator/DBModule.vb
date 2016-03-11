@@ -1,4 +1,5 @@
-﻿Imports MRFramework.MRPersisting.Factory
+﻿Imports MRFramework.MRDBCreator
+Imports MRFramework.MRPersisting.Factory
 
 Public MustInherit Class DBModule
     Implements IDBModule
@@ -19,55 +20,24 @@ Public MustInherit Class DBModule
 
     MustOverride Sub Create()
 
-    Public Function DBCreate(cnn As Common.DbConnection) As Object Implements IDBModule.DBCreate
-        CreateSystemObjects()
-
-        Create()
+    Public Function CreateRevisions(cnn As Common.DbConnection) As Object Implements IDBModule.CreateRevisions
 
         Return Nothing
     End Function
 
-    Private Sub CreateSystemObjects()
-        CreateRevisionTable()
-    End Sub
+    Public Function LoadRevisions() As Object Implements IDBModule.LoadRevisions
+        Dim ret As Object = Nothing
 
-    Private Sub CreateRevisionTable()
-        Using cnn As IDbConnection = MRC.GetConnection
-            Using cmd As IDbCommand = MRC.GetCommand
-                Try
-                    cmd.CommandText =
-<string>
-IF OBJECT_ID('Common.Revision') IS NULL
-BEGIN
-	CREATE TABLE [Common].[Revision]
-	(
-		[ID] [uniqueidentifier] NOT NULL,
-		[Created] [date] NOT NULL,
-		[Granulation] [int] NOT NULL,
-		[DBObjectFullName] [nvarchar](250) NOT NULL,
-		[DBObjectType] [nvarchar](250) NOT NULL,
-		[DBObjectRevisionType] [nvarchar](250) NOT NULL,
-		CONSTRAINT [PK_Revision] PRIMARY KEY CLUSTERED 
-		(
-			[ID] ASC
-		)
-	)
-END
-</string>.Value
-                    cmd.Connection = cnn
-                    If cnn.State <> ConnectionState.Open Then
-                        cnn.Open()
-                    End If
-                    cmd.ExecuteNonQuery()
-                Catch ex As Exception
-                    If Debugger.IsAttached Then
-                        Debugger.Break()
-                    End If
-                    Throw
-                End Try
-            End Using
-        End Using
-    End Sub
+        Create()
+
+        Return ret
+    End Function
+
+
+
+
+
+
 
     'MustOverride Function CreateInMemoryRevisions() As List(Of DBSqlRevision) Implements IDBModule.CreateInMemoryRevisions
     'MustOverride Function LoadAlreadyExecutedRevisions() As List(Of DBSqlRevision) Implements IDBModule.LoadAlreadyExecutedRevisions

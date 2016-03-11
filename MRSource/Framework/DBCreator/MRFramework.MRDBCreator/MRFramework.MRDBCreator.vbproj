@@ -71,7 +71,7 @@
     <Compile Include="DBSqlRevision.vb" />
     <Compile Include="DBTable.vb" />
     <Compile Include="DBSchema.vb" />
-    <Compile Include="GlobalStaticProperties.vb" />
+    <Compile Include="GlobalStatics.vb" />
     <Compile Include="IDBModule.vb" />
     <Compile Include="IDBObject.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

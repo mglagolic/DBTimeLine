@@ -11,4 +11,5 @@ Public Interface IDBObject
     Property Parent As IDBObject
     Function AddRevision(revision As DBRevision, Optional dbObject As IDBObject = Nothing) As DBRevision
     ReadOnly Property Revisions As List(Of DBRevision)
+    Function GetFullName() As String
 End Interface

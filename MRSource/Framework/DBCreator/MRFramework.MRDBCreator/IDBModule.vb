@@ -2,6 +2,7 @@
 
     ReadOnly Property DBSchemas As List(Of DBSchema)
 
-    Function DBCreate(cnn As Common.DbConnection)
+    Function LoadRevisions()
+    Function CreateRevisions(cnn As Common.DbConnection)
 
 End Interface

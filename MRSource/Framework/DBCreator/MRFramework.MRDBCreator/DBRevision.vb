@@ -1,4 +1,6 @@
-﻿Public Enum eDBRevisionType
+﻿Option Strict On
+
+Public Enum eDBRevisionType
     Create = 0
     Modify = 1
     Delete = 2
@@ -34,27 +36,16 @@ Public Class DBRevision
         MyClass.New(revision.Created, revision.Granulation, revision.DBRevisionType, revision.DBObject)
     End Sub
 
-    Private sbParentFullName As New System.Text.StringBuilder(parentFullName)
-    Private parentFullName As String = ""
-    Private Function GetParentFullName() As String
-        parentFullName = String.Empty
-        Dim p As IDBObject = Parent
-        While p IsNot Nothing
-            sbParentFullName.Insert(0, p.Name & ".")
-            p = p.Parent
-        End While
-        Return sbParentFullName.ToString().TrimEnd("."c)
-    End Function
-
     Public Function ConvertToSqlRevision() As DBSqlRevision
         Dim ret As New DBSqlRevision
 
         With ret
             .Created = Created
-            .DBObjectFullName = GetParentFullName()
-            .DBObjectType = [Enum].GetName(GetType(eDBObjectType), Parent.DBObjectType)
-            .DBRevisionType = [Enum].GetName(GetType(eDBRevisionType), DBRevisionType)
+            .DBObjectFullName = Parent.GetFullName
+            .DBObjectType = Parent.DBObjectType
+            .DBRevisionType = DBRevisionType
             .Granulation = Granulation
+            .Parent = Me
         End With
 
         Return ret
