@@ -68,8 +68,10 @@
     <Compile Include="DBRevision.vb" />
     <Compile Include="DBModule.vb" />
     <Compile Include="DBField.vb" />
+    <Compile Include="DBSqlRevision.vb" />
     <Compile Include="DBTable.vb" />
     <Compile Include="DBSchema.vb" />
+    <Compile Include="GlobalStaticProperties.vb" />
     <Compile Include="IDBModule.vb" />
     <Compile Include="IDBObject.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
@@ -106,6 +108,12 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
+      <Project>{e177c8d6-b8df-4de4-81af-3f2d17e23a05}</Project>
+      <Name>MRFramework.MRPersisting.Factory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

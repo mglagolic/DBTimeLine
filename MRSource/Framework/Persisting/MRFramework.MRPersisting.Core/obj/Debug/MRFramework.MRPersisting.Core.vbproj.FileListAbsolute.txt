@@ -22,3 +22,5 @@ D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Cor
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.dll
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.xml
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.dll.CodeAnalysisLog.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.dll.lastcodeanalysissucceeded

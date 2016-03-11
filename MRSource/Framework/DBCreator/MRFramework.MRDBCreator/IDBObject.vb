@@ -1,4 +1,4 @@
-﻿Public Enum eDBObjectTypes
+﻿Public Enum eDBObjectType
     Schema = 0
     Table = 1
     Field = 2
@@ -7,8 +7,8 @@ End Enum
 
 Public Interface IDBObject
     Property Name As String
-    ReadOnly Property DBObjectType As eDBObjectTypes
+    ReadOnly Property DBObjectType As eDBObjectType
     Property Parent As IDBObject
-    Function AddRevision(revision As DBRevision) As DBRevision
+    Function AddRevision(revision As DBRevision, Optional dbObject As IDBObject = Nothing) As DBRevision
     ReadOnly Property Revisions As List(Of DBRevision)
 End Interface

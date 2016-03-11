@@ -127,6 +127,10 @@
       <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
       <Name>MRFramework.MRDBCreator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Framework\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
+      <Project>{e177c8d6-b8df-4de4-81af-3f2d17e23a05}</Project>
+      <Name>MRFramework.MRPersisting.Factory</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

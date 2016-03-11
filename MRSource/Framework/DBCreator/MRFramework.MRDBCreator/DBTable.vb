@@ -11,9 +11,9 @@
         Me.Name = name
     End Sub
 
-    Public Overrides ReadOnly Property DBObjectType As eDBObjectTypes
+    Public Overrides ReadOnly Property DBObjectType As eDBObjectType
         Get
-            Return eDBObjectTypes.Table
+            Return eDBObjectType.Table
         End Get
     End Property
 

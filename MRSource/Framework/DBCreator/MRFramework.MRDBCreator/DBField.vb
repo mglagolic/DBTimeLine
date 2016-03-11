@@ -1,7 +1,9 @@
 ﻿Public Enum eFieldType
-    guid = 0
-    nvarchar = 1
-    [decimal] = 2
+    Guid = 0
+    Nvarchar = 1
+    [Decimal] = 2
+    Datetime = 3
+    [Integer] = 4
 End Enum
 Public Class DBField
     Inherits DBObject
@@ -27,9 +29,9 @@ Public Class DBField
     Public Property Size As Integer
     Public Property Precision As Integer
 
-    Public Overrides ReadOnly Property DBObjectType As eDBObjectTypes
+    Public Overrides ReadOnly Property DBObjectType As eDBObjectType
         Get
-            Return eDBObjectTypes.Field
+            Return eDBObjectType.Field
         End Get
     End Property
 End Class

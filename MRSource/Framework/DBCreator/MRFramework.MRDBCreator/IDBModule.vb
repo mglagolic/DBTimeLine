@@ -1,7 +1,10 @@
 ﻿Public Interface IDBModule
 
-    ReadOnly Property Schemas As List(Of DBSchema)
-    'Function AddSchema(schema As DBSchema, createRevision As DBRevision) As DBSchema
-    Sub Create()
+    ReadOnly Property DBSchemas As List(Of DBSchema)
+
+    Function DBCreate()
+
+    'Function LoadAlreadyExecutedRevisions() As List(Of DBSqlRevision)
+    'Function GetNewRevisions() As List(Of DBSqlRevision)
 
 End Interface

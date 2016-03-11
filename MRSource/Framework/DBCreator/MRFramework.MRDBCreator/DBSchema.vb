@@ -5,9 +5,9 @@
         Me.Name = name
     End Sub
 
-    Public Overrides ReadOnly Property DBObjectType As eDBObjectTypes
+    Public Overrides ReadOnly Property DBObjectType As eDBObjectType
         Get
-            Return eDBObjectTypes.Schema
+            Return eDBObjectType.Schema
         End Get
     End Property
 

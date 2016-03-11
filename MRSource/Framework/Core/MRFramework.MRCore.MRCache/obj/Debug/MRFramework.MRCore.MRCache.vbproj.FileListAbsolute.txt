@@ -46,3 +46,5 @@ D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Deb
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.xml
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.pdb
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.vbprojResolveAssemblyReference.cache
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.dll.CodeAnalysisLog.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.dll.lastcodeanalysissucceeded

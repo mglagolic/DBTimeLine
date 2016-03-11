@@ -46,3 +46,5 @@ D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Cac
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.dll
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.xml
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.dll.CodeAnalysisLog.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.dll.lastcodeanalysissucceeded

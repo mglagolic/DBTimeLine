@@ -15,12 +15,13 @@ Public MustInherit Class DBObject
         End Get
     End Property
 
-    Public MustOverride ReadOnly Property DBObjectType As eDBObjectTypes Implements IDBObject.DBObjectType
+    Public MustOverride ReadOnly Property DBObjectType As eDBObjectType Implements IDBObject.DBObjectType
 
-    Public Function AddRevision(revision As DBRevision) As DBRevision Implements IDBObject.AddRevision
+    Public Function AddRevision(revision As DBRevision, Optional dbObject As IDBObject = Nothing) As DBRevision Implements IDBObject.AddRevision
         Me.Revisions.Add(revision)
         revision.Parent = Me
 
+        GlobalStaticProperties.AllDBSqlRevisions.Add(revision.ConvertToSqlRevision())
         Return revision
     End Function
 
