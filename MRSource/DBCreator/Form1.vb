@@ -11,15 +11,15 @@ Public Class Form1
 
         Dim modules As New List(Of IDBModule)
 
-        modules.Add(DBCreators.Common.Common.GetInstance())
+        modules.Add(New DBCreators.Common.Common)
 
+        Using cnn As Common.DbConnection = MRFramework.MRPersisting.Factory.MRC.GetConnection()
+            Using trn As Common.DbTransaction = cnn.BeginTransaction
+                For i As Integer = 0 To modules.Count - 1
+                    modules(i).DBCreate(cnn)
+                Next
+            End Using
+        End Using
 
-        ' otvoriti konekciju i transakciju
-
-        'For j As Integer = 0 To 100000
-        For i As Integer = 0 To modules.Count - 1
-                modules(i).DBCreate()
-            Next
-        'Next
     End Sub
 End Class

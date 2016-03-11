@@ -11,7 +11,7 @@ Public MustInherit Class DBModule
     End Property
 
     Protected Function AddSchema(schema As DBSchema, createRevision As DBRevision) As DBSchema
-        Me.DBSchemas.Add(schema)
+        DBSchemas.Add(schema)
         schema.AddRevision(createRevision)
 
         Return schema
@@ -19,12 +19,10 @@ Public MustInherit Class DBModule
 
     MustOverride Sub Create()
 
-    Public Function DBCreate() As Object Implements IDBModule.DBCreate
+    Public Function DBCreate(cnn As Common.DbConnection) As Object Implements IDBModule.DBCreate
         CreateSystemObjects()
 
         Create()
-
-
 
         Return Nothing
     End Function

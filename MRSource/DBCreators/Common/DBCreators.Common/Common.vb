@@ -2,26 +2,6 @@
 Public Class Common
     Inherits DBModule
 
-#Region "Singleton"
-
-    Private Shared _singleton As IDBModule = Nothing
-    Private Shared syncObject As New Object
-
-    Private Sub New()
-        MyBase.New()
-    End Sub
-
-    Public Shared Function GetInstance() As IDBModule
-        SyncLock syncObject
-            If _singleton Is Nothing Then
-                _singleton = New Common
-            End If
-            Return _singleton
-        End SyncLock
-    End Function
-
-#End Region
-
     Public Overrides Sub Create()
 
         Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
