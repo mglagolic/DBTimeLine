@@ -31,3 +31,12 @@ D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Fac
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbprojResolveAssemblyReference.cache
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.dll
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.pdb
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.xml
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.Resources.resources
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbproj.GenerateResource.Cache
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbprojResolveAssemblyReference.cache
