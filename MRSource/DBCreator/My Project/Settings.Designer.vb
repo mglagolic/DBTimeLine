@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("ConnectionStringTest")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("OmegaLocalConnectionString")>  _
         Public ReadOnly Property DefaultConnectionString() As String
             Get
                 Return CType(Me("DefaultConnectionString"),String)
@@ -88,6 +88,18 @@ Namespace My
             Get
                 Return CType(Me("ProviderSqlServer"),String)
             End Get
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=localhost;Initial Catalog=Test;Integrated Security=True")>  _
+        Public Property OmegaLocalConnectionString() As String
+            Get
+                Return CType(Me("OmegaLocalConnectionString"),String)
+            End Get
+            Set
+                Me("OmegaLocalConnectionString") = value
+            End Set
         End Property
     End Class
 End Namespace
