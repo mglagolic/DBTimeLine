@@ -20,35 +20,16 @@ Public Class DBRevision
 
     End Sub
 
-    Public Sub New(created As Date, granulation As Integer, ByVal dBRevisionType As eDBRevisionType, Optional dbObject As IDBObject = Nothing)
+    Public Sub New(created As Date, granulation As Integer, ByVal dBRevisionType As eDBRevisionType)
         MyClass.New()
         Me.DBRevisionType = dBRevisionType
         Me.Created = created
-        Me.DBObject = dbObject
+
         Me.Granulation = granulation
-        If Me.DBObject IsNot Nothing Then
-            Me.DBObject.Parent = Parent
-            Parent = Me.DBObject
-        End If
     End Sub
 
     Public Sub New(revision As DBRevision)
-        MyClass.New(revision.Created, revision.Granulation, revision.DBRevisionType, revision.DBObject)
+        MyClass.New(revision.Created, revision.Granulation, revision.DBRevisionType)
     End Sub
-
-    Public Function ConvertToSqlRevision() As DBSqlRevision
-        Dim ret As New DBSqlRevision
-
-        With ret
-            .Created = Created
-            .DBObjectFullName = Parent.GetFullName
-            .DBObjectType = Parent.DBObjectType
-            .DBRevisionType = DBRevisionType
-            .Granulation = Granulation
-            .Parent = Me
-        End With
-
-        Return ret
-    End Function
 
 End Class

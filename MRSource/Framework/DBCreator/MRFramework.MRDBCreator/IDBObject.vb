@@ -6,10 +6,14 @@
 End Enum
 
 Public Interface IDBObject
+    Inherits IDBChained
+
     Property Name As String
+    ReadOnly Property DBCreator As DBCreator
+    ReadOnly Property SchemaName As String
     ReadOnly Property DBObjectType As eDBObjectType
-    Property Parent As IDBObject
-    Function AddRevision(revision As DBRevision, Optional dbObject As IDBObject = Nothing) As DBRevision
+    Function AddRevision(revision As DBRevision, Optional descriptor As IDBObjectDescriptor = Nothing) As DBRevision
+    Function GetDescriptor() As IDBObjectDescriptor
     ReadOnly Property Revisions As List(Of DBRevision)
     Function GetFullName() As String
 End Interface

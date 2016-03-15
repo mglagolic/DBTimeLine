@@ -1,8 +1,8 @@
 ﻿Public Interface IDBModule
 
-    ReadOnly Property DBSchemas As List(Of DBSchema)
+    ReadOnly Property DBSchemas As Dictionary(Of String, DBSchema)
 
-    Function LoadRevisions()
-    Function CreateRevisions(cnn As Common.DbConnection)
+    Function LoadRevisions() As Object
+    Function CreateRevisions(cnn As Common.DbConnection) As Object
 
 End Interface

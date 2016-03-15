@@ -1,4 +1,17 @@
 ﻿Public Class DBSqlRevision
+
+    Public Sub New(dBRevision As DBRevision)
+        With dBRevision
+            Created = .Created
+            DBObjectFullName = .Parent.GetFullName
+            DBObjectType = .Parent.DBObjectType
+            DBRevisionType = .DBRevisionType
+            Granulation = .Granulation
+
+            Parent = dBRevision
+        End With
+    End Sub
+
     Public Property Created As Date
     Public Property Granulation As Integer
     Public Property DBObjectFullName As String
@@ -18,8 +31,17 @@
     End Property
 
     Public Property Parent As DBRevision
+    Public ReadOnly Property SchemaName As String
+        Get
+            Dim ret As String = ""
+            If Parent.Parent IsNot Nothing Then
+                ret = Parent.Parent.SchemaName
+            End If
+            Return ret
+        End Get
+    End Property
 
-    Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision)
+    Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer
         Dim ret As Integer = 0
 
         If ret = 0 Then

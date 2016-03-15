@@ -1,10 +1,33 @@
-﻿Imports MRFramework.MRPersisting.Factory
+﻿Imports MRFramework.MRDBCreator
+Imports MRFramework.MRPersisting.Factory
 
-Public Module GlobalStatics
+Public Class DBCreator
+    Implements IDBChained
 
-    Public Property AllDBSqlRevisions As New List(Of DBSqlRevision)
+    Public ReadOnly Property DBModules As New List(Of DBModule)
 
-    Public Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
+    Public ReadOnly Property AllDBSqlRevisions As New List(Of DBSqlRevision)
+    Private ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
+
+    Public Property Parent As IDBChained Implements IDBChained.Parent
+
+    Public Function AddModule(dBModule As DBModule) As DBModule
+        DBModules.Add(dBModule)
+        dBModule.Parent = Me
+
+        Return dBModule
+    End Function
+
+    Public Function GetModules() As List(Of DBModule)
+        Dim ret As New List(Of DBModule)
+
+        ret.AddRange(DBModules)
+
+        Return ret
+    End Function
+
+#Region "System objects"
+
 
     Private Sub CreateRevisionTable()
         Using cnn As IDbConnection = MRC.GetConnection
@@ -48,4 +71,7 @@ END
     Public Sub CreateSystemObjects()
         CreateRevisionTable()
     End Sub
-End Module
+
+#End Region
+
+End Class

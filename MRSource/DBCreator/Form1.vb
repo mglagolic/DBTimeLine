@@ -7,25 +7,32 @@ Public Class Form1
         MRC.GetInstance().ConnectionString = My.Settings.Item(My.Settings.DefaultConnectionString)
         MRC.GetInstance().ProviderName = My.Settings.Item(My.Settings.DefaultProvider)
 
-        GlobalStatics.CreateSystemObjects()
+        Dim creator As New MRFramework.MRDBCreator.DBCreator
 
-        Dim modules As New List(Of IDBModule)
 
-        modules.Add(New DBCreators.Common.Common)
+        creator.CreateSystemObjects()
 
-        For i As Integer = 0 To modules.Count - 1
-            modules(i).LoadRevisions()
+
+
+        creator.AddModule(New DBCreators.Common.Common2)
+        creator.AddModule(New DBCreators.Common.Common)
+        creator.AddModule(New DBCreators.Common.DBO)
+
+
+
+        For i As Integer = 0 To creator.DBModules.Count - 1
+            creator.DBModules(i).LoadRevisions()
         Next
 
         ' treba dorada sorta kada postoji vise shema. sloziti ovo. kasnije u tablici dodati index
-        GlobalStatics.AllDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+        creator.AllDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
         Using cnn As Common.DbConnection = MRC.GetConnection()
             cnn.Open()
 
             Using trn As Common.DbTransaction = cnn.BeginTransaction
-                For i As Integer = 0 To modules.Count - 1
-                    modules(i).CreateRevisions(cnn)
+                For i As Integer = 0 To creator.DBModules.Count - 1
+                    creator.DBModules(i).CreateRevisions(cnn)
                 Next
             End Using
         End Using

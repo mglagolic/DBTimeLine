@@ -1,12 +1,10 @@
-﻿Imports MRFramework.MRDBCreator
-
-Public MustInherit Class DBObject
+﻿Public MustInherit Class DBObject
     Implements IDBObject
 
 #Region "IDBObject"
     Public Property Name As String Implements IDBObject.Name
 
-    Public Property Parent As IDBObject Implements IDBObject.Parent
+    Public Property Parent As IDBChained Implements IDBChained.Parent
 
     Private ReadOnly Property _Revisions As New List(Of DBRevision)
     Public ReadOnly Property Revisions As List(Of DBRevision) Implements IDBObject.Revisions
@@ -17,25 +15,75 @@ Public MustInherit Class DBObject
 
     Public MustOverride ReadOnly Property DBObjectType As eDBObjectType Implements IDBObject.DBObjectType
 
-    Public Function AddRevision(revision As DBRevision, Optional dbObject As IDBObject = Nothing) As DBRevision Implements IDBObject.AddRevision
-        Me.Revisions.Add(revision)
+    Public ReadOnly Property Creator As DBCreator Implements IDBObject.DBCreator
+        Get
+            Dim ret As DBCreator = Nothing
+
+            Dim p As IDBChained = Me
+            While p IsNot Nothing
+                If TypeOf p Is DBCreator Then
+                    ret = CType(p, DBCreator)
+                    Exit While
+                Else
+                    p = p.Parent
+                End If
+            End While
+
+            Return ret
+        End Get
+    End Property
+
+    Public ReadOnly Property SchemaName As String Implements IDBObject.SchemaName
+        Get
+            Dim ret As String = String.Empty
+
+            Dim p As IDBChained = Me
+            While p IsNot Nothing
+                If TypeOf p Is DBSchema Then
+                    ret = DirectCast(p, DBSchema).Name
+                    Exit While
+                Else
+                    p = p.Parent
+                End If
+            End While
+
+            Return ret
+        End Get
+    End Property
+
+    Public Function AddRevision(revision As DBRevision, Optional descriptor As IDBObjectDescriptor = Nothing) As DBRevision Implements IDBObject.AddRevision
+        Revisions.Add(revision)
+
         revision.Parent = Me
 
-        GlobalStatics.AllDBSqlRevisions.Add(revision.ConvertToSqlRevision())
+        If descriptor IsNot Nothing Then
+            ApplyDescriptor(descriptor)
+        End If
+
+        Creator.AllDBSqlRevisions.Add(New DBSqlRevision(revision))
+
         Return revision
     End Function
 
-    Private sbFullName As New System.Text.StringBuilder("")
-
+    Private sbFullName As New Text.StringBuilder("")
     Public Function GetFullName() As String Implements IDBObject.GetFullName
         sbFullName.Clear()
+
         Dim p As IDBObject = Me
         While p IsNot Nothing
             sbFullName.Insert(0, p.Name & ".")
-            p = p.Parent
+            If TypeOf p.Parent Is IDBObject Then
+                p = CType(p.Parent, IDBObject)
+            Else
+                p = Nothing
+            End If
         End While
+
         Return sbFullName.ToString().TrimEnd("."c)
     End Function
+
+    MustOverride Sub ApplyDescriptor(descriptor As IDBObjectDescriptor)
+    MustOverride Function GetDescriptor() As IDBObjectDescriptor Implements IDBObject.GetDescriptor
 
 #End Region
 
