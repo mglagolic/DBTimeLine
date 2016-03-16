@@ -5,9 +5,9 @@ Public Class DBO
 
     Public Overrides Sub CreateTimeLine()
 
-        Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
+        Dim rev As New DBRevision(DateSerial(2016, 3, 15), 0, eDBRevisionType.Create)
 
-        With AddSchema("dbo", New DBSchemaDescriptor())
+        With AddSchema("Common", New DBSchemaDescriptor())
 
             With .AddTable("Table1", Nothing,
                            New DBRevision(rev))
@@ -27,48 +27,48 @@ Public Class DBO
 End Class
 
 
-Public Class Common
-    Inherits DBModule
+'Public Class Common
+'    Inherits DBModule
 
-    Public Overrides Sub CreateTimeLine()
+'    Public Overrides Sub CreateTimeLine()
 
-        Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
+'        Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
 
-        With AddSchema("Common", Nothing,
-                          New DBRevision(rev))
+'        With AddSchema("Common", Nothing,
+'                          New DBRevision(rev))
 
-            With .AddTable("Table1", Nothing,
-                           New DBRevision(rev))
+'            With .AddTable("Table1", Nothing,
+'                           New DBRevision(rev))
 
-                With .AddField("ID", New DBFieldDescriptor() With {.FieldType = eFieldType.Guid},
-                          New DBRevision(rev))
+'                With .AddField("ID", New DBFieldDescriptor() With {.FieldType = eFieldType.Guid},
+'                          New DBRevision(rev))
 
-                End With
-            End With
-        End With
+'                End With
+'            End With
+'        End With
 
-    End Sub
+'    End Sub
 
-End Class
+'End Class
 
 
 
-Public Class Common2
-    Inherits DBModule
+'Public Class Common2
+'    Inherits DBModule
 
-    Public Overrides Sub CreateTimeLine()
+'    Public Overrides Sub CreateTimeLine()
 
-        Dim rev As New DBRevision(DateSerial(2016, 3, 13), 0, eDBRevisionType.Create)
+'        Dim rev As New DBRevision(DateSerial(2016, 3, 13), 0, eDBRevisionType.Create)
 
-        With AddSchema("Common", Nothing)
-            With .AddTable("Table1", Nothing)
-                With .AddField("ID", New DBFieldDescriptor())
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 15), 0, eDBRevisionType.Modify),
-                          New DBFieldDescriptor(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 250})
-                End With
-            End With
-        End With
+'        With AddSchema("Common", Nothing)
+'            With .AddTable("Table1", Nothing)
+'                With .AddField("ID", New DBFieldDescriptor())
+'                    .AddRevision(New DBRevision(DateSerial(2016, 3, 15), 0, eDBRevisionType.Modify),
+'                          New DBFieldDescriptor(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 250})
+'                End With
+'            End With
+'        End With
 
-    End Sub
+'    End Sub
 
-End Class
+'End Class

@@ -1,15 +1,30 @@
-﻿Public Class DBSqlRevision
+﻿Imports MRFramework.MRPersisting.Core
+
+Public Class DBSqlRevision
 
     Public Sub New(dBRevision As DBRevision)
         With dBRevision
             Created = .Created
             DBObjectFullName = .Parent.GetFullName
+            DBObjectName = .Parent.Name
             DBObjectType = .Parent.DBObjectType
             DBRevisionType = .DBRevisionType
             Granulation = .Granulation
-
+            If .Parent IsNot Nothing Then
+                SchemaName = .Parent.SchemaName
+            End If
             Parent = dBRevision
         End With
+    End Sub
+    Public Sub New(dlo As IMRDLO)
+        Created = CDate(dlo.ColumnValues("Created"))
+        DBObjectFullName = CStr(dlo.ColumnValues("DBObjectFullName"))
+        DBObjectType = CType([Enum].Parse(GetType(eDBObjectType), CStr(dlo.ColumnValues("DBObjectType"))), eDBObjectType)
+        DBRevisionType = CType([Enum].Parse(GetType(eDBRevisionType), CStr(dlo.ColumnValues("DBRevisionType"))), eDBRevisionType)
+        Granulation = CInt(dlo.ColumnValues("Granulation"))
+        DBObjectName = CStr(dlo.ColumnValues("DBObjectName"))
+        SchemaName = CStr(dlo.ColumnValues("SchemaName"))
+        'TODO - ovdje se parent ne postavlja, treba li ovo?
     End Sub
 
     Public Property Created As Date
@@ -31,15 +46,9 @@
     End Property
 
     Public Property Parent As DBRevision
-    Public ReadOnly Property SchemaName As String
-        Get
-            Dim ret As String = ""
-            If Parent.Parent IsNot Nothing Then
-                ret = Parent.Parent.SchemaName
-            End If
-            Return ret
-        End Get
-    End Property
+    Public Property SchemaName As String
+    Public Property DBObjectName As String
+
 
     Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer
         Dim ret As Integer = 0
@@ -77,5 +86,24 @@
     Public Overrides Function GetHashCode() As Integer
         Return Created.GetHashCode Xor Granulation.GetHashCode Xor DBObjectFullName.GetHashCode Xor DBObjectType.GetHashCode Xor DBRevisionType.GetHashCode
     End Function
+
+#Region "Persister"
+
+    Public Class DBSqlRevisionPersister
+        Inherits MRPersisting.MRPersister
+
+        Public Overrides ReadOnly Property DataBaseTableName As String
+            Get
+                Return "Common.Revision"
+            End Get
+        End Property
+        Public Overrides ReadOnly Property SQL As String
+            Get
+                Return "SELECT ID, Created, Granulation, DBObjectType, DBRevisionType, DBObjectFullName, DBObjectName, SchemaName FROM " & DataBaseTableName
+            End Get
+        End Property
+    End Class
+
+#End Region
 
 End Class

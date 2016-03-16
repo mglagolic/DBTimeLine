@@ -14,8 +14,6 @@ Public Class Form1
 
 
 
-        creator.AddModule(New DBCreators.Common.Common2)
-        creator.AddModule(New DBCreators.Common.Common)
         creator.AddModule(New DBCreators.Common.DBO)
 
 
@@ -31,11 +29,17 @@ Public Class Form1
             cnn.Open()
 
             Using trn As Common.DbTransaction = cnn.BeginTransaction
-                For i As Integer = 0 To creator.DBModules.Count - 1
-                    creator.DBModules(i).CreateRevisions(cnn)
-                Next
+
+                creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
+
+                Dim imaUSourceuNemaUBazi = creator.AllDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions)
+                Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.AllDBSqlRevisions)
+                Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource)
+                Dim t As Object = ""
             End Using
         End Using
+
+
 
     End Sub
 End Class

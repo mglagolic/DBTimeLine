@@ -28,11 +28,6 @@ Public MustInherit Class DBModule
 
     MustOverride Sub CreateTimeLine()
 
-    Public Function CreateRevisions(cnn As Common.DbConnection) As Object Implements IDBModule.CreateRevisions
-
-        Return Nothing
-    End Function
-
     Public Function LoadRevisions() As Object Implements IDBModule.LoadRevisions
         Dim ret As Object = Nothing
 

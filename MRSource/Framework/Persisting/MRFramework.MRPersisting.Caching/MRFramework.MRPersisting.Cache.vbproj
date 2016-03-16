@@ -62,7 +62,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Copy of UpdateCommandCache.vb" />
+    <Compile Include="DeleteCommandCache.vb" />
     <Compile Include="UpdateCommandCache.vb" />
     <Compile Include="InsertCommandCache.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
