@@ -9,20 +9,14 @@ Public Class Form1
 
         Dim creator As New MRFramework.MRDBCreator.DBCreator
 
-
         creator.CreateSystemObjects()
 
-
-
         creator.AddModule(New DBCreators.Common.DBO)
-
-
 
         For i As Integer = 0 To creator.DBModules.Count - 1
             creator.DBModules(i).LoadRevisions()
         Next
 
-        ' treba dorada sorta kada postoji vise shema. sloziti ovo. kasnije u tablici dodati index
         creator.AllDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
         Using cnn As Common.DbConnection = MRC.GetConnection()
@@ -32,14 +26,16 @@ Public Class Form1
 
                 creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
 
-                Dim imaUSourceuNemaUBazi = creator.AllDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions)
-                Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.AllDBSqlRevisions)
-                Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource)
-                Dim t As Object = ""
+                Dim imaUSourceuNemaUBazi = creator.AllDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
+
+                'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.AllDBSqlRevisions)
+                'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource)
+
             End Using
+
         End Using
 
 
-
     End Sub
+
 End Class

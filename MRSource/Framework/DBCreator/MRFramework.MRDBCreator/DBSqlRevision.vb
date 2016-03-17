@@ -30,7 +30,6 @@ Public Class DBSqlRevision
     Public Property Created As Date
     Public Property Granulation As Integer
     Public Property DBObjectFullName As String
-
     Public Property DBObjectType As eDBObjectType
     Public ReadOnly Property DBObjectTypeName As String
         Get
@@ -72,20 +71,29 @@ Public Class DBSqlRevision
         Return ret
     End Function
 
-    Public Overrides Function Equals(obj As Object) As Boolean
-        Dim ret As Boolean = False
+#Region "EqualityComparer"
+    Public Class DBSqlRevisionEqualityComparer
+        Implements IEqualityComparer(Of DBSqlRevision)
 
-        Dim compareResult As Integer = DBSqlRevision.CompareRevisionsForDbCreations(Me, DirectCast(obj, DBSqlRevision))
-        If compareResult = 0 Then
-            ret = True
-        End If
+        Public Shadows Function Equals(x As DBSqlRevision, y As DBSqlRevision) As Boolean Implements IEqualityComparer(Of DBSqlRevision).Equals
+            Dim ret As Boolean = False
 
-        Return ret
-    End Function
+            Dim compareResult As Integer = DBSqlRevision.CompareRevisionsForDbCreations(x, y)
+            If compareResult = 0 Then
+                ret = True
+            End If
 
-    Public Overrides Function GetHashCode() As Integer
-        Return Created.GetHashCode Xor Granulation.GetHashCode Xor DBObjectFullName.GetHashCode Xor DBObjectType.GetHashCode Xor DBRevisionType.GetHashCode
-    End Function
+            Return ret
+        End Function
+
+        Public Shadows Function GetHashCode(obj As DBSqlRevision) As Integer Implements IEqualityComparer(Of DBSqlRevision).GetHashCode
+            With obj
+                Return .Created.GetHashCode Xor .Granulation.GetHashCode Xor .DBObjectFullName.GetHashCode Xor .DBObjectType.GetHashCode Xor .DBRevisionType.GetHashCode
+            End With
+        End Function
+    End Class
+
+#End Region
 
 #Region "Persister"
 
@@ -105,5 +113,6 @@ Public Class DBSqlRevision
     End Class
 
 #End Region
+
 
 End Class

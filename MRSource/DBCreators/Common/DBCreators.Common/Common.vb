@@ -7,7 +7,7 @@ Public Class DBO
 
         Dim rev As New DBRevision(DateSerial(2016, 3, 15), 0, eDBRevisionType.Create)
 
-        With AddSchema("Common", New DBSchemaDescriptor())
+        With AddSchema("dbo", New DBSchemaDescriptor())
 
             With .AddTable("Table1", Nothing,
                            New DBRevision(rev))
@@ -15,7 +15,7 @@ Public Class DBO
                 With .AddField("ID", New DBFieldDescriptor() With {.FieldType = eFieldType.Guid},
                           New DBRevision(rev))
 
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 11), 1, eDBRevisionType.Modify),
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 16), 1, eDBRevisionType.Modify),
                           New DBFieldDescriptor(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
 
                 End With
