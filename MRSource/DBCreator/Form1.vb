@@ -17,7 +17,7 @@ Public Class Form1
             creator.DBModules(i).LoadRevisions()
         Next
 
-        creator.AllDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+        creator.SourceDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
         Using cnn As Common.DbConnection = MRC.GetConnection()
             cnn.Open()
@@ -25,11 +25,13 @@ Public Class Form1
             Using trn As Common.DbTransaction = cnn.BeginTransaction
 
                 creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
+                creator.ExecuteDBSqlRevisions(cnn, trn)
 
-                Dim imaUSourceuNemaUBazi = creator.AllDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
 
-                'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.AllDBSqlRevisions)
-                'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource)
+                Dim imaUSourceuNemaUBazi = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
+
+                'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
+                'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
 
             End Using
 

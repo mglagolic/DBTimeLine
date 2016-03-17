@@ -60,8 +60,6 @@ D:\BitBucket\DbCreate\MRSource\Client\obj\Debug\Client.Form1.resources
 D:\BitBucket\DbCreate\MRSource\Client\obj\Debug\Client.csproj.GenerateResource.Cache
 D:\BitBucket\DbCreate\MRSource\Client\obj\Debug\Client.exe
 D:\BitBucket\DbCreate\MRSource\Client\obj\Debug\Client.pdb
-D:\BitBucket\DbCreate\MRSource\Client\bin\Debug\Client.exe.CodeAnalysisLog.xml
-D:\BitBucket\DbCreate\MRSource\Client\bin\Debug\Client.exe.lastcodeanalysissucceeded
 C:\Miro\Bitbucket\DbCreate\MRSource\Client\bin\Debug\Client.exe.config
 C:\Miro\Bitbucket\DbCreate\MRSource\Client\bin\Debug\Client.exe
 C:\Miro\Bitbucket\DbCreate\MRSource\Client\bin\Debug\Client.pdb

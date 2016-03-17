@@ -1,6 +1,4 @@
-﻿Imports MRFramework.MRDBCreator
-
-Public MustInherit Class DBModule
+﻿Public MustInherit Class DBModule
     Implements IDBModule
     Implements IDBChained
 
@@ -15,7 +13,9 @@ Public MustInherit Class DBModule
 
     Protected Function AddSchema(schemaName As String, descriptor As DBSchemaDescriptor, Optional createRevision As DBRevision = Nothing) As DBSchema
         If Not DBSchemas.ContainsKey(schemaName) Then
-            DBSchemas.Add(schemaName, New DBSchema(schemaName, descriptor) With {.Name = schemaName, .Parent = Me})
+            Dim newSchema As DBSchema = New DBSchema(schemaName, descriptor) With {.Name = schemaName, .Parent = Me}
+            DBSchemas.Add(schemaName, newSchema)
+            DirectCast(Parent, DBCreator).DBSchemas.Add(schemaName, newSchema)
         End If
         Dim schema As DBSchema = DBSchemas(schemaName)
 

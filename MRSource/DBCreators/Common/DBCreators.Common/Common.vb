@@ -9,12 +9,10 @@ Public Class DBO
 
         With AddSchema("dbo", New DBSchemaDescriptor())
 
-            With .AddTable("Table1", Nothing,
+            With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
                            New DBRevision(rev))
 
-                With .AddField("ID", New DBFieldDescriptor() With {.FieldType = eFieldType.Guid},
-                          New DBRevision(rev))
-
+                With .DBFields(.CreatorFieldName)
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 16), 1, eDBRevisionType.Modify),
                           New DBFieldDescriptor(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
 

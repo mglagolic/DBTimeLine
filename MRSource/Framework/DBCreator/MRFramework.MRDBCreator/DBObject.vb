@@ -60,7 +60,7 @@
             ApplyDescriptor(descriptor)
         End If
 
-        Creator.AllDBSqlRevisions.Add(New DBSqlRevision(revision))
+        Creator.SourceDBSqlRevisions.Add(New DBSqlRevision(revision))
 
         Return revision
     End Function
@@ -84,6 +84,7 @@
 
     MustOverride Sub ApplyDescriptor(descriptor As IDBObjectDescriptor)
     MustOverride Function GetDescriptor() As IDBObjectDescriptor Implements IDBObject.GetDescriptor
+    MustOverride Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
 
 #End Region
 

@@ -37,7 +37,9 @@ Public Class DBSchema
 
     Public Function AddTable(tableName As String, descriptor As DBTableDescriptor, Optional createRevision As DBRevision = Nothing) As DBTable
         If Not DBTables.ContainsKey(tableName) Then
-            DBTables.Add(tableName, New DBTable(descriptor) With {.Name = tableName, .Parent = Me})
+            Dim newTable As New DBTable(descriptor) With {.Name = tableName, .Parent = Me}
+            DBTables.Add(tableName, newTable)
+            Creator.DBTables.Add(tableName, newTable)
         End If
         Dim table As DBTable = DBTables(tableName)
 
@@ -56,4 +58,7 @@ Public Class DBSchema
         Return New DBSchemaDescriptor
     End Function
 
+    Public Overrides Function GetSqlCreate() As String
+        Throw New NotImplementedException()
+    End Function
 End Class

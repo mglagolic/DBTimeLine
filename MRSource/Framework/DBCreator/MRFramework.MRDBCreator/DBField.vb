@@ -1,8 +1,12 @@
-﻿Public Interface IDBField
+﻿Imports MRFramework.MRDBCreator
+
+Public Interface IDBField
     Property FieldType As eFieldType
     Property Size As Integer
     Property Precision As Integer
     Property IsIdentity As Boolean
+    Property Nullable As Boolean
+    Property DefaultValue As String
 End Interface
 
 Public Enum eFieldType
@@ -21,6 +25,14 @@ Public Class DBFieldDescriptor
     Public Property Size As Integer = 0 Implements IDBField.Size
     Public Property Precision As Integer = 0 Implements IDBField.Precision
     Public Property IsIdentity As Boolean = False Implements IDBField.IsIdentity
+    Public Property Nullable As Boolean Implements IDBField.Nullable
+    Public Property DefaultValue As String Implements IDBField.DefaultValue
+
+    Public ReadOnly Property FieldTypeName As String
+        Get
+            Return [Enum].GetName(GetType(eFieldType), FieldType)
+        End Get
+    End Property
 
     Public Sub New()
 
@@ -34,6 +46,8 @@ Public Class DBFieldDescriptor
             Size = .Size
             Precision = .Precision
             IsIdentity = .IsIdentity
+            Nullable = .Nullable
+            DefaultValue = .DefaultValue
         End With
     End Sub
 
@@ -47,6 +61,8 @@ Public Class DBField
     Public Property Size As Integer = 0 Implements IDBField.Size
     Public Property Precision As Integer = 0 Implements IDBField.Precision
     Public Property IsIdentity As Boolean = False Implements IDBField.IsIdentity
+    Public Property Nullable As Boolean = True Implements IDBField.Nullable
+    Public Property DefaultValue As String Implements IDBField.DefaultValue
 
     Public Sub New()
 
@@ -64,13 +80,19 @@ Public Class DBField
             Size = .Size
             Precision = .Precision
             IsIdentity = .IsIdentity
+            Nullable = .Nullable
+            DefaultValue = .DefaultValue
         End With
     End Sub
 
     Public Overrides Function GetDescriptor() As IDBObjectDescriptor
-        Dim ret As New DBFieldDescriptor With {.FieldType = FieldType, .Precision = Precision, .Size = Size}
+        Dim ret As New DBFieldDescriptor With {.FieldType = FieldType, .Precision = Precision, .Size = Size, .DefaultValue = DefaultValue, .IsIdentity = IsIdentity, .Nullable = Nullable}
 
         Return ret
+    End Function
+
+    Public Overrides Function GetSqlCreate() As String
+        Throw New NotImplementedException()
     End Function
 
     Public Overrides ReadOnly Property DBObjectType As eDBObjectType
