@@ -13,6 +13,7 @@ Public Class DBO
         End Function
 
         ' TODO - overridati DBField GetDescriptor funkciju ili odustati od customizacije
+        ' TODO - bit ce mozda lakse ako sve classe preselim u posebni assembly i radim iskljucivo interfaceima
 
     End Class
 
