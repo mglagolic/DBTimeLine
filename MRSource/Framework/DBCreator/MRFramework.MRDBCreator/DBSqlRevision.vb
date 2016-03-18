@@ -27,6 +27,21 @@ Public Class DBSqlRevision
         'TODO - ovdje se parent ne postavlja, treba li ovo?
     End Sub
 
+    Public Function GetDlo() As IMRDLO
+        Dim dlo As New MRPersisting.MRDLO
+        With dlo.ColumnValues
+            .Add("Created", Created)
+            .Add("DBObjectFullName", DBObjectFullName)
+            .Add("DBObjectType", DBObjectTypeName)
+            .Add("DBRevisionType", DBRevisionTypeName)
+            .Add("Granulation", Granulation)
+            .Add("DBObjectName", DBObjectName)
+            .Add("SchemaName", SchemaName)
+            .Add("Description", Description)
+        End With
+        Return dlo
+    End Function
+
     Public Property Created As Date
     Public Property Granulation As Integer
     Public Property DBObjectFullName As String
@@ -47,6 +62,7 @@ Public Class DBSqlRevision
     Public Property Parent As DBRevision
     Public Property SchemaName As String
     Public Property DBObjectName As String
+    Public Property Description As String
 
 
     Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer

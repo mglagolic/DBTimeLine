@@ -18,4 +18,6 @@ Public Interface IDBObject
     Function GetFullName() As String
 
     Function GetSqlCreate() As String
+    Function GetSqlModify() As String
+    Function GetSqlDelete() As String
 End Interface

@@ -1,4 +1,6 @@
-﻿Imports MRFramework.MRPersisting.Factory
+﻿Imports System.Text
+Imports MRFramework.MRPersisting.Core
+Imports MRFramework.MRPersisting.Factory
 
 Public Class DBCreator
     Implements IDBChained
@@ -10,7 +12,7 @@ Public Class DBCreator
     Public ReadOnly Property DBSchemas As New Dictionary(Of String, DBSchema)
     Public ReadOnly Property DBTables As New Dictionary(Of String, DBTable)
     Public ReadOnly Property DBFields As New Dictionary(Of String, DBField)
-
+    Public Property RevisionBatchSize As Integer = 2
     Public Property Parent As IDBChained Implements IDBChained.Parent
 
     Public Function AddModule(dBModule As DBModule) As DBModule
@@ -53,13 +55,67 @@ Public Class DBCreator
         End Using
     End Sub
 
-    Public Sub ExecuteDBSqlRevisions(cnn As Common.DbConnection, Optional trn As Common.DbTransaction = Nothing)
-        Dim nonExecutedRevisions = SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
-        For i As Integer = 0 To nonExecutedRevisions.Count - 1
-            Dim rev As DBSqlRevision = nonExecutedRevisions(i)
-            Dim sql As String = rev.Parent.Parent.GetSqlCreate
-        Next
+    Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), cnn As Common.DbConnection, trn As Common.DbTransaction)
+        Using cmd As IDbCommand = MRC.GetCommand(cnn)
+            Try
+                cmd.CommandText = script
+                cmd.Transaction = trn
+                cmd.ExecuteNonQuery()
+                Dim dlos As New List(Of IMRDLO)
+                For Each rev As DBSqlRevision In revisions
+                    Dim dlo As IMRDLO = rev.GetDlo
+                    dlo.ColumnValues.Add("ID", Guid.NewGuid)
+                    dlos.Add(dlo)
+                Next
+                Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
+                    per.InsertBulk(dlos, trn)
+                End Using
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
+        End Using
     End Sub
+
+    Public Function ExecuteDBSqlRevisions(cnn As Common.DbConnection, trn As Common.DbTransaction) As String
+        Dim notExecutedRevisions = SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
+
+        Dim newExecutedRevisions As New List(Of DBSqlRevision)
+        Dim sqlScriptBuilder As New StringBuilder()
+        Dim sqlBatchScriptBuilder As New StringBuilder()
+
+        For i As Integer = 0 To notExecutedRevisions.Count - 1
+            Dim rev As DBSqlRevision = notExecutedRevisions(i)
+            Dim sql As String
+            Select Case rev.DBRevisionType
+                Case eDBRevisionType.Create
+                    sql = rev.Parent.Parent.GetSqlCreate
+                    sqlScriptBuilder.Append(sql)
+                    sqlBatchScriptBuilder.Append(sql)
+                Case eDBRevisionType.Modify
+                    sql = rev.Parent.Parent.GetSqlModify
+                    sqlScriptBuilder.Append(sql)
+                    sqlBatchScriptBuilder.Append(sql)
+                Case eDBRevisionType.Delete
+                    sql = rev.Parent.Parent.GetSqlDelete
+                    sqlScriptBuilder.Append(sql)
+                    sqlBatchScriptBuilder.Append(sql)
+                Case Else
+                    Throw New NotSupportedException("eDBRevisionType")
+            End Select
+            rev.Description = sql
+            newExecutedRevisions.Add(rev)
+            If i = notExecutedRevisions.Count - 1 OrElse (i + 1) Mod RevisionBatchSize = 0 Then
+                ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, cnn, trn)
+                sqlBatchScriptBuilder.Clear()
+                newExecutedRevisions.Clear()
+            End If
+        Next
+
+        Return sqlScriptBuilder.ToString()
+    End Function
 
 #Region "System objects"
 

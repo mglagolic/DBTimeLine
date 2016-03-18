@@ -31,6 +31,30 @@
     End Function
 
 
+    Public Function GetDataType(dbTypeFullName As String) As Type
+        Dim ret As Type
+
+        Select Case dbTypeFullName
+            Case "System.String"
+                ret = GetType(String)
+            Case "System.Decimal"
+                ret = GetType(Decimal)
+            Case "System.Int32"
+                ret = GetType(Integer)
+            Case "System.Int64"
+                ret = GetType(Long)
+            Case "System.DateTime"
+                ret = GetType(DateTime)
+            Case "System.Guid"
+                ret = GetType(Guid)
+
+            Case Else
+                Throw New ArgumentException("TypeConverter: Unsupported dbType.", "databaseType")
+        End Select
+
+        Return ret
+    End Function
+
     Public Function GetPropertyType(dbTypeFullName As String) As Type
         Dim ret As Type
 

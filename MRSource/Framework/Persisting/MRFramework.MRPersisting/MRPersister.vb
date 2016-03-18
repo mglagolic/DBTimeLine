@@ -389,7 +389,7 @@ Public MustInherit Class MRPersister
         If sqlBulkCopier Is Nothing Then
             ' odi na pojedinacni insert
             For Each dlo As MRDLO In lsDlo
-                Me.Insert(dlo, transaction)
+                Insert(dlo, transaction)
             Next
         Else
             Try
@@ -407,7 +407,7 @@ Public MustInherit Class MRPersister
                         For Each dr As DataRow In SchemaTable.Rows
                             'For Each dr As DataRow In schemaTable.Select("IsIdentity = 0")
                             If Not CBool(dr("IsIdentity")) Then
-                                dt.Columns.Add(dr("ColumnName").ToString, typeConverter.GetPropertyType(dr("datatype").ToString))
+                                dt.Columns.Add(dr("ColumnName").ToString, typeConverter.GetDataType(dr("datatype").ToString))
                             End If
                             'If CBool(dr("IsIdentity")) Then
                             '    dt.Columns(dt.Columns.Count - 1).AutoIncrement = True

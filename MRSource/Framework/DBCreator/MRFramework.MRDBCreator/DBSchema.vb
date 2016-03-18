@@ -59,6 +59,21 @@ Public Class DBSchema
     End Function
 
     Public Overrides Function GetSqlCreate() As String
+        Dim ret As String =
+<string>;CREATE SCHEMA <%= Name %>
+</string>.Value
+
+        Return ret
+    End Function
+
+    Public Overrides Function GetSqlModify() As String
         Throw New NotImplementedException()
+    End Function
+
+    Public Overrides Function GetSqlDelete() As String
+        Dim ret As String =
+<string>;DROP SCHEMA <%= Name %></string>.Value
+
+        Return ret
     End Function
 End Class

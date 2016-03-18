@@ -25,14 +25,14 @@ Public Class Form1
             Using trn As Common.DbTransaction = cnn.BeginTransaction
 
                 creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
-                creator.ExecuteDBSqlRevisions(cnn, trn)
+                RichTextBox1.Text = creator.ExecuteDBSqlRevisions(cnn, trn)
 
 
                 Dim imaUSourceuNemaUBazi = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
 
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
-
+                trn.Rollback()
             End Using
 
         End Using

@@ -28,12 +28,6 @@ Public Class DBFieldDescriptor
     Public Property Nullable As Boolean Implements IDBField.Nullable
     Public Property DefaultValue As String Implements IDBField.DefaultValue
 
-    Public ReadOnly Property FieldTypeName As String
-        Get
-            Return [Enum].GetName(GetType(eFieldType), FieldType)
-        End Get
-    End Property
-
     Public Sub New()
 
     End Sub
@@ -50,6 +44,33 @@ Public Class DBFieldDescriptor
             DefaultValue = .DefaultValue
         End With
     End Sub
+
+    Public Function GetFieldTypeSql() As String
+        Dim ret As String = ""
+
+        Select Case FieldType
+            Case eFieldType.Guid
+                ret = "UNIQUEIDENTIFIER"
+            Case eFieldType.Integer
+                ret = "INTEGER"
+            Case eFieldType.Nvarchar
+                ret = "NVARCHAR(" & CStr(IIf(Size = -1, "MAX", Size.ToString)) & ")"
+            Case eFieldType.Datetime
+                ret = "DATETIME"
+            Case eFieldType.Decimal
+                ret = "DECIMAL(" & Size.ToString & ", " & Precision.ToString & ")"
+            Case Else
+                Throw New NotSupportedException("Unsupported eFieldType.")
+        End Select
+
+        If Nullable Then
+            ret &= " NULL"
+        Else
+            ret &= " NOT NULL"
+        End If
+
+        Return ret
+    End Function
 
 End Class
 
@@ -86,13 +107,44 @@ Public Class DBField
     End Sub
 
     Public Overrides Function GetDescriptor() As IDBObjectDescriptor
-        Dim ret As New DBFieldDescriptor With {.FieldType = FieldType, .Precision = Precision, .Size = Size, .DefaultValue = DefaultValue, .IsIdentity = IsIdentity, .Nullable = Nullable}
+        Dim ret As New DBFieldDescriptor With {
+            .FieldType = FieldType,
+            .Precision = Precision,
+            .Size = Size,
+            .DefaultValue = DefaultValue,
+            .IsIdentity = IsIdentity,
+            .Nullable = Nullable
+        }
 
         Return ret
     End Function
 
     Public Overrides Function GetSqlCreate() As String
-        Throw New NotImplementedException()
+        Dim ret As String = ""
+        ret =
+<string>;ALTER TABLE <%= SchemaName %>.<%= DirectCast(Parent, IDBObject).Name %> ADD
+	<%= Name & " " %><%= DirectCast(GetDescriptor(), DBFieldDescriptor).GetFieldTypeSql %>
+</string>.Value
+        Return ret
+    End Function
+
+    Public Overrides Function GetSqlModify() As String
+        Dim ret As String = ""
+        ret =
+<string>;ALTER TABLE <%= SchemaName %>.<%= DirectCast(Parent, IDBObject).Name %> ALTER COLUMN
+	<%= Name & " " %><%= DirectCast(GetDescriptor(), DBFieldDescriptor).GetFieldTypeSql & vbNewLine %></string>.Value
+
+        Return ret
+    End Function
+
+    Public Overrides Function GetSqlDelete() As String
+        Dim ret As String = ""
+        ret =
+<string>;ALTER TABLE <%= SchemaName %>.<%= DirectCast(Parent, IDBObject).Name %> DROP COLUMN
+	<%= Name & " " %>
+</string>.Value
+
+        Return ret
     End Function
 
     Public Overrides ReadOnly Property DBObjectType As eDBObjectType
@@ -100,6 +152,7 @@ Public Class DBField
             Return eDBObjectType.Field
         End Get
     End Property
+
 
 End Class
 
