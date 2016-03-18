@@ -6,6 +6,42 @@ Public Class DBSchemaDescriptor
     Implements IDBObjectDescriptor
     Implements IDBSchema
 
+
+    '    Public Overrides Function GetSqlModify() As String
+    '        Throw New NotImplementedException()
+    '    End Function
+
+    '    Public Overrides Function GetSqlDelete() As String
+    '        Dim ret As String =
+    '<string>;DROP SCHEMA <%= Name %></string>.Value
+
+    '        Return ret
+    '    End Function
+    Public Overridable Function GetSqlCreate(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlCreate
+        Dim ret As String = ""
+        With DirectCast(dBObject, DBSchema)
+            ret = <string>;CREATE SCHEMA <%= .Name %>
+                  </string>.Value
+        End With
+
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlModify(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlModify
+        Throw New NotImplementedException()
+    End Function
+
+    Public Overridable Function GetSqlDelete(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlDelete
+        Dim ret As String = ""
+        With DirectCast(dBObject, DBSchema)
+            ret =
+<string>;DROP SCHEMA <%= .Name %>
+</string>.Value
+
+        End With
+        Return ret
+    End Function
+
 End Class
 
 Public Class DBSchema
@@ -58,22 +94,5 @@ Public Class DBSchema
         Return New DBSchemaDescriptor
     End Function
 
-    Public Overrides Function GetSqlCreate() As String
-        Dim ret As String =
-<string>;CREATE SCHEMA <%= Name %>
-</string>.Value
 
-        Return ret
-    End Function
-
-    Public Overrides Function GetSqlModify() As String
-        Throw New NotImplementedException()
-    End Function
-
-    Public Overrides Function GetSqlDelete() As String
-        Dim ret As String =
-<string>;DROP SCHEMA <%= Name %></string>.Value
-
-        Return ret
-    End Function
 End Class

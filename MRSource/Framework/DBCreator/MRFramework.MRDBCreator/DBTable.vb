@@ -12,6 +12,36 @@ Public Class DBTableDescriptor
 
     Public Property CreatorFieldDescriptor As DBFieldDescriptor Implements IDBTable.CreatorFieldDescriptor
     Public Property CreatorFieldName As String Implements IDBTable.CreatorFieldName
+
+    Public Function GetSqlCreate(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlCreate
+        Dim ret As String = ""
+        With DirectCast(dBObject, DBTable)
+            ret =
+<string>;CREATE TABLE <%= .SchemaName %>.<%= .Name %> 
+(
+    <%= CreatorFieldName & " " %><%= CreatorFieldDescriptor.GetFieldTypeSql %> 
+)
+</string>.Value
+        End With
+
+        Return ret
+    End Function
+
+    Public Function GetSqlDelete(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlDelete
+        Dim ret As String = ""
+        With DirectCast(dBObject, DBTable)
+            ret =
+<string>;DROP TABLE <%= .SchemaName %>.<%= .Name %>
+</string>.Value
+        End With
+
+        Return ret
+    End Function
+
+    Public Function GetSqlModify(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlModify
+        Throw New NotImplementedException()
+    End Function
+
 End Class
 
 Public Class DBTable
@@ -72,26 +102,5 @@ Public Class DBTable
         Return New DBTableDescriptor() With {.CreatorFieldDescriptor = CreatorFieldDescriptor, .CreatorFieldName = CreatorFieldName}
     End Function
 
-    Public Overrides Function GetSqlCreate() As String
-        Dim ret As String =
-<string>;CREATE TABLE <%= SchemaName %>.<%= Name %> 
-(
-    <%= CreatorFieldName & " " %><%= CreatorFieldDescriptor.GetFieldTypeSql %> 
-)
-</string>.Value
 
-        Return ret
-    End Function
-
-    Public Overrides Function GetSqlModify() As String
-        Throw New NotImplementedException()
-    End Function
-
-    Public Overrides Function GetSqlDelete() As String
-        Dim ret As String =
-<string>;DROP TABLE <%= SchemaName %>.<%= Name %>
-</string>.Value
-
-        Return ret
-    End Function
 End Class

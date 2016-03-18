@@ -32,9 +32,14 @@ Public Class DBSqlRevision
         Dim dbObject As DBObject = Nothing
         Select Case DBObjectType
             Case eDBObjectType.Field
-                dbObject = dBCreator.DBFields(DBObjectName)
+                If dBCreator.DBFields.ContainsKey(DBObjectName) Then
+                    dbObject = dBCreator.DBFields(DBObjectName)
+                End If
+
             Case eDBObjectType.Table
-                dbObject = dBCreator.DBTables(DBObjectName)
+                If dBCreator.DBTables.ContainsKey(DBObjectName) Then
+                    dbObject = dBCreator.DBTables(DBObjectName)
+                End If
         End Select
         If dbObject IsNot Nothing Then
             ret = dbObject.FindRevision(Created, Granulation)
@@ -134,7 +139,7 @@ Public Class DBSqlRevision
 
         Public Overrides ReadOnly Property DataBaseTableName As String
             Get
-                Return "Common.Revision"
+                Return "DBCreator.Revision"
             End Get
         End Property
         Public Overrides ReadOnly Property SQL As String

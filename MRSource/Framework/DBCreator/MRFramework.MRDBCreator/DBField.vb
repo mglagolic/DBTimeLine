@@ -19,6 +19,7 @@ End Enum
 
 Public Class DBFieldDescriptor
     Implements IDBObjectDescriptor
+
     Implements IDBField
 
     Public Property FieldType As eFieldType Implements IDBField.FieldType
@@ -72,6 +73,40 @@ Public Class DBFieldDescriptor
         Return ret
     End Function
 
+    Public Overridable Function GetSqlCreate(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlCreate
+        Dim ret As String = ""
+        With DirectCast(dBObject, DBField)
+            ret =
+<string>;ALTER TABLE <%= .SchemaName %>.<%= DirectCast(.Parent, IDBObject).Name %> ADD
+        	<%= .Name & " " %><%= GetFieldTypeSql() %>
+</string>.Value
+        End With
+
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlModify(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlModify
+        Dim ret As String = ""
+        With DirectCast(dBObject, DBField)
+            ret =
+<string>;ALTER TABLE <%= .SchemaName %>.<%= DirectCast(.Parent, IDBObject).Name %> ALTER COLUMN
+        	<%= .Name & " " %><%= GetFieldTypeSql() & vbNewLine %></string>.Value
+        End With
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlDelete(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlDelete
+        Dim ret As String = ""
+        With DirectCast(dBObject, DBField)
+            ret =
+<string>;ALTER TABLE <%= .SchemaName %>.<%= DirectCast(.Parent, IDBObject).Name %> DROP COLUMN
+        	<%= .Name & " " %>
+</string>.Value
+        End With
+        Return ret
+    End Function
+
+
 End Class
 
 Public Class DBField
@@ -115,34 +150,6 @@ Public Class DBField
             .IsIdentity = IsIdentity,
             .Nullable = Nullable
         }
-
-        Return ret
-    End Function
-
-    Public Overrides Function GetSqlCreate() As String
-        Dim ret As String = ""
-        ret =
-<string>;ALTER TABLE <%= SchemaName %>.<%= DirectCast(Parent, IDBObject).Name %> ADD
-	<%= Name & " " %><%= DirectCast(GetDescriptor(), DBFieldDescriptor).GetFieldTypeSql %>
-</string>.Value
-        Return ret
-    End Function
-
-    Public Overrides Function GetSqlModify() As String
-        Dim ret As String = ""
-        ret =
-<string>;ALTER TABLE <%= SchemaName %>.<%= DirectCast(Parent, IDBObject).Name %> ALTER COLUMN
-	<%= Name & " " %><%= DirectCast(GetDescriptor(), DBFieldDescriptor).GetFieldTypeSql & vbNewLine %></string>.Value
-
-        Return ret
-    End Function
-
-    Public Overrides Function GetSqlDelete() As String
-        Dim ret As String = ""
-        ret =
-<string>;ALTER TABLE <%= SchemaName %>.<%= DirectCast(Parent, IDBObject).Name %> DROP COLUMN
-	<%= Name & " " %>
-</string>.Value
 
         Return ret
     End Function

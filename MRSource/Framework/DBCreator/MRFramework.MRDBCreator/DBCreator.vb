@@ -90,15 +90,15 @@ Public Class DBCreator
             Dim sql As String
             Select Case rev.DBRevisionType
                 Case eDBRevisionType.Create
-                    sql = rev.Parent.Parent.GetSqlCreate
+                    sql = rev.Parent.Parent.GetDescriptor.GetSqlCreate(rev.Parent.Parent)
                     sqlScriptBuilder.Append(sql)
                     sqlBatchScriptBuilder.Append(sql)
                 Case eDBRevisionType.Modify
-                    sql = rev.Parent.Parent.GetSqlModify
+                    sql = rev.Parent.Parent.GetDescriptor.GetSqlModify(rev.Parent.Parent)
                     sqlScriptBuilder.Append(sql)
                     sqlBatchScriptBuilder.Append(sql)
                 Case eDBRevisionType.Delete
-                    sql = rev.Parent.Parent.GetSqlDelete
+                    sql = rev.Parent.Parent.GetDescriptor.GetSqlDelete(rev.Parent.Parent)
                     sqlScriptBuilder.Append(sql)
                     sqlBatchScriptBuilder.Append(sql)
                 Case Else
@@ -117,16 +117,16 @@ Public Class DBCreator
     End Function
 
 #Region "System objects"
-
+    'TODO - kreirati shemu DBCreator ako ne postoji i unutra Revision table -- IF NOT EXISTS (SELECT TOP 1 1 FROM sys.schemas WHERE name = 'DBCreator') CREATE SCHEMA DBCreator
     Private Sub CreateRevisionTable()
         Using cnn As IDbConnection = MRC.GetConnection
             Using cmd As IDbCommand = MRC.GetCommand
                 Try
                     cmd.CommandText =
 <string>
-IF OBJECT_ID('Common.Revision') IS NULL
+IF OBJECT_ID('DBCreator.Revision') IS NULL
 BEGIN
-	CREATE TABLE [Common].[Revision]
+	CREATE TABLE [DBCreator].[Revision]
 	(
 		[ID] [uniqueidentifier] NOT NULL PRIMARY KEY NONCLUSTERED,
 		[Created] [date] NOT NULL,
@@ -139,11 +139,11 @@ BEGIN
         [Description] [nvarchar](max) NULL,
 	)
 END
-IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_CommonRevision_Sort' AND object_id = OBJECT_ID('Common.Revision'))
+IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorRevision_Sort' AND object_id = OBJECT_ID('DBCreator.Revision'))
 BEGIN
-	DROP INDEX IX_CommonRevision_Sort ON Common.Revision 
+	DROP INDEX IX_DBCreatorRevision_Sort ON DBCreator.Revision 
 END
-CREATE CLUSTERED INDEX IX_CommonRevision_Sort ON Common.Revision (Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC)
+CREATE CLUSTERED INDEX IX_DBCreatorRevision_Sort ON DBCreator.Revision (Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC)
 
 </string>.Value
                     cmd.Connection = cnn

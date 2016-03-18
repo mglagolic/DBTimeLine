@@ -17,7 +17,4 @@ Public Interface IDBObject
     ReadOnly Property Revisions As List(Of DBRevision)
     Function GetFullName() As String
 
-    Function GetSqlCreate() As String
-    Function GetSqlModify() As String
-    Function GetSqlDelete() As String
 End Interface

@@ -1,7 +1,20 @@
-﻿Imports MRFramework.MRDBCreator
+﻿Imports DBCreators.Common
+Imports MRFramework.MRDBCreator
+
 
 Public Class DBO
     Inherits DBModule
+
+    Public Class myfieldDesc
+        Inherits DBFieldDescriptor
+
+        Public Overrides Function GetSqlCreate(dBObject As IDBObject) As String
+            Return MyBase.GetSqlCreate(dBObject)
+        End Function
+
+        ' TODO - overridati DBField GetDescriptor funkciju ili odustati od customizacije
+
+    End Class
 
     Public Overrides Sub CreateTimeLine()
 
@@ -9,6 +22,8 @@ Public Class DBO
 
         With AddSchema("dbo", New DBSchemaDescriptor())
 
+            'TODO - omoguciti custom descriptore, custom code generatore, code generator factory (ovisno o bazi, verziji baze itd.)
+            'TODO - ovdje exposati samo interface, osim ako nije nuzno (dbCreator mozda ne treba biti interface)
             With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
                            New DBRevision(rev))
 

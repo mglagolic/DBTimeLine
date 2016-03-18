@@ -90,9 +90,10 @@
 
     MustOverride Sub ApplyDescriptor(descriptor As IDBObjectDescriptor)
     MustOverride Function GetDescriptor() As IDBObjectDescriptor Implements IDBObject.GetDescriptor
-    MustOverride Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
-    MustOverride Function GetSqlModify() As String Implements IDBObject.GetSqlModify
-    MustOverride Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
+
+    'MustOverride Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
+    'MustOverride Function GetSqlModify() As String Implements IDBObject.GetSqlModify
+    'MustOverride Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
 
 
 #End Region
