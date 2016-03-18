@@ -14,7 +14,7 @@ Public Class DBO
 
         ' TODO - overridati DBField GetDescriptor funkciju ili odustati od customizacije
         ' TODO - bit ce mozda lakse ako sve classe preselim u posebni assembly i radim iskljucivo interfaceima
-
+        ' TODO - generator koda za vise baza odjednom, nadje identicne stvari, nadje razlicitosti i podijeli to po fajlovima
     End Class
 
     Public Overrides Sub CreateTimeLine()
