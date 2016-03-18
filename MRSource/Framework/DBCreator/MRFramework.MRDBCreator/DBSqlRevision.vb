@@ -16,7 +16,7 @@ Public Class DBSqlRevision
             Parent = dBRevision
         End With
     End Sub
-    Public Sub New(dlo As IMRDLO)
+    Public Sub New(dlo As IMRDLO, dBCreator As DBCreator)
         Created = CDate(dlo.ColumnValues("Created"))
         DBObjectFullName = CStr(dlo.ColumnValues("DBObjectFullName"))
         DBObjectType = CType([Enum].Parse(GetType(eDBObjectType), CStr(dlo.ColumnValues("DBObjectType"))), eDBObjectType)
@@ -24,8 +24,24 @@ Public Class DBSqlRevision
         Granulation = CInt(dlo.ColumnValues("Granulation"))
         DBObjectName = CStr(dlo.ColumnValues("DBObjectName"))
         SchemaName = CStr(dlo.ColumnValues("SchemaName"))
-        'TODO - ovdje se parent ne postavlja, treba li ovo?
+        Parent = FindParent(dBCreator)
     End Sub
+
+    Private Function FindParent(dBCreator As DBCreator) As DBRevision
+        Dim ret As DBRevision = Nothing
+        Dim dbObject As DBObject = Nothing
+        Select Case DBObjectType
+            Case eDBObjectType.Field
+                dbObject = dBCreator.DBFields(DBObjectName)
+            Case eDBObjectType.Table
+                dbObject = dBCreator.DBTables(DBObjectName)
+        End Select
+        If dbObject IsNot Nothing Then
+            ret = dbObject.FindRevision(Created, Granulation)
+        End If
+
+        Return ret
+    End Function
 
     Public Function GetDlo() As IMRDLO
         Dim dlo As New MRPersisting.MRDLO

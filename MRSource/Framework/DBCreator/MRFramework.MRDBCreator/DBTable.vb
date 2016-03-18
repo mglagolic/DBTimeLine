@@ -48,7 +48,7 @@ Public Class DBTable
         If Not DBFields.ContainsKey(fieldName) Then
             Dim newField As New DBField(descriptor) With {.Name = fieldName, .Parent = Me}
             DBFields.Add(fieldName, newField)
-            Creator.DBFields.Add(fieldName, newField)
+            DBCreator.DBFields.Add(fieldName, newField)
         End If
 
         Dim field As DBField = DBFields(fieldName)

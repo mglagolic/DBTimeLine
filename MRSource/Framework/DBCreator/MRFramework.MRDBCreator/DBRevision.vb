@@ -11,15 +11,12 @@ Public Class DBRevision
 
     Public Property DBRevisionType As eDBRevisionType
     Public Property Parent As IDBObject
-
     Public Property Created As Date
     Public Property Granulation As Integer
     Public Property DBObject As IDBObject
-
     Private Sub New()
 
     End Sub
-
     Public Sub New(created As Date, granulation As Integer, ByVal dBRevisionType As eDBRevisionType)
         MyClass.New()
         Me.DBRevisionType = dBRevisionType

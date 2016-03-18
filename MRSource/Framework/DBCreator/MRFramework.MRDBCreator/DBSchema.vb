@@ -39,7 +39,7 @@ Public Class DBSchema
         If Not DBTables.ContainsKey(tableName) Then
             Dim newTable As New DBTable(descriptor) With {.Name = tableName, .Parent = Me}
             DBTables.Add(tableName, newTable)
-            Creator.DBTables.Add(tableName, newTable)
+            DBCreator.DBTables.Add(tableName, newTable)
         End If
         Dim table As DBTable = DBTables(tableName)
 

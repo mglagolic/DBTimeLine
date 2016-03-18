@@ -6,7 +6,6 @@ Public Class DBCreator
     Implements IDBChained
 
     Public ReadOnly Property DBModules As New List(Of DBModule)
-
     Public ReadOnly Property SourceDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property DBSchemas As New Dictionary(Of String, DBSchema)
@@ -35,11 +34,11 @@ Public Class DBCreator
 
         Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn, .PagingEnabled = False}
             With per.OrderItems
-                .Add(New MRCore.MROrderItem("Created", MRCore.Enums.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("Granulation", MRCore.Enums.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("DBObjectType", MRCore.Enums.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("DBRevisionType", MRCore.Enums.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("DBObjectFullName", MRCore.Enums.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("Created", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("Granulation", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("DBObjectType", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("DBRevisionType", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("DBObjectFullName", MRCore.Enums.eOrderDirection.Ascending))
             End With
 
             ' TODO - per.GetData generira bezvezan query, treba smisliti nesto drugo, stignem
@@ -47,9 +46,9 @@ Public Class DBCreator
             ' SELECT Case ID, Created, Granulation, DBObjectType, DBRevisionType, DBObjectFullName, DBObjectName, SchemaName FROM Common.Revision
             ' ORDER BY  Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
 
-            Dim dicExecutedRevisions As Dictionary(Of Object, MRPersisting.Core.IMRDLO) = per.GetData(trn)
-            For Each kv As KeyValuePair(Of Object, MRPersisting.Core.IMRDLO) In dicExecutedRevisions
-                Dim sqlRevision As New DBSqlRevision(kv.Value)
+            Dim dicExecutedRevisions As Dictionary(Of Object, IMRDLO) = per.GetData(trn)
+            For Each kv As KeyValuePair(Of Object, IMRDLO) In dicExecutedRevisions
+                Dim sqlRevision As New DBSqlRevision(kv.Value, Me)
                 ExecutedDBSqlRevisions.Add(sqlRevision)
             Next
         End Using
@@ -129,7 +128,7 @@ IF OBJECT_ID('Common.Revision') IS NULL
 BEGIN
 	CREATE TABLE [Common].[Revision]
 	(
-		[ID] [uniqueidentifier] NOT NULL,
+		[ID] [uniqueidentifier] NOT NULL PRIMARY KEY NONCLUSTERED,
 		[Created] [date] NOT NULL,
 		[Granulation] [int] NOT NULL,
 		[DBObjectFullName] [varchar](250) NOT NULL,
@@ -138,17 +137,13 @@ BEGIN
 		[DBRevisionType] [varchar](50) NOT NULL,
         [SchemaName] [varchar](50),
         [Description] [nvarchar](max) NULL,
-		CONSTRAINT [PK_Revision] PRIMARY KEY CLUSTERED 
-		(
-			[ID] ASC
-		)
 	)
 END
 IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_CommonRevision_Sort' AND object_id = OBJECT_ID('Common.Revision'))
 BEGIN
 	DROP INDEX IX_CommonRevision_Sort ON Common.Revision 
 END
-CREATE INDEX IX_CommonRevision_Sort ON Common.Revision (Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC, ID ASC) include (DBObjectName, schemaname)
+CREATE CLUSTERED INDEX IX_CommonRevision_Sort ON Common.Revision (Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC)
 
 </string>.Value
                     cmd.Connection = cnn

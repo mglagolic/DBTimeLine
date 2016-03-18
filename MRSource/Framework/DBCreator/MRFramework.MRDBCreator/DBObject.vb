@@ -15,7 +15,7 @@
 
     Public MustOverride ReadOnly Property DBObjectType As eDBObjectType Implements IDBObject.DBObjectType
 
-    Public ReadOnly Property Creator As DBCreator Implements IDBObject.DBCreator
+    Public ReadOnly Property DBCreator As DBCreator Implements IDBObject.DBCreator
         Get
             Dim ret As DBCreator = Nothing
 
@@ -60,9 +60,15 @@
             ApplyDescriptor(descriptor)
         End If
 
-        Creator.SourceDBSqlRevisions.Add(New DBSqlRevision(revision))
+        DBCreator.SourceDBSqlRevisions.Add(New DBSqlRevision(revision))
 
         Return revision
+    End Function
+    Public Function FindRevision(created As Date, granulation As Integer) As DBRevision
+        Dim ret As DBRevision = Nothing
+        ret = Revisions.Find(Function(rev) (rev.Created = created AndAlso rev.Granulation = granulation))
+
+        Return ret
     End Function
 
     Private sbFullName As New Text.StringBuilder("")
