@@ -4,35 +4,36 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{823E6196-5212-43F3-9A54-C791A2D667B8}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <StartupObject>DBCreator.My.MyApplication</StartupObject>
-    <RootNamespace>DBCreator</RootNamespace>
-    <AssemblyName>DBCreator</AssemblyName>
+    <ProjectGuid>{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Framework.DBCreator</RootNamespace>
+    <AssemblyName>Framework.DBCreator</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <MyType>Windows</MyType>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>DBCreator.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DocumentationFile>Framework.DBCreator.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>DBCreator.xml</DocumentationFile>
-    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+    <DocumentationFile>Framework.DBCreator.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -41,7 +42,7 @@
     <OptionCompare>Binary</OptionCompare>
   </PropertyGroup>
   <PropertyGroup>
-    <OptionStrict>Off</OptionStrict>
+    <OptionStrict>On</OptionStrict>
   </PropertyGroup>
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
@@ -49,9 +50,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -64,21 +62,28 @@
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
     <Import Include="System.Data" />
-    <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
-    <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Form1.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form1.Designer.vb">
-      <DependentUpon>Form1.vb</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
+    <Compile Include="DBCreator.vb" />
+    <Compile Include="DBSqlRevision.vb" />
+    <Compile Include="Enums\eDBObjectType.vb" />
+    <Compile Include="Enums\eFieldType.vb" />
+    <Compile Include="Enums\eRevisionType.vb" />
+    <Compile Include="IDBSchemaDescriptor.vb" />
+    <Compile Include="IDBTableDescriptor.vb" />
+    <Compile Include="IDBFieldDescriptor.vb" />
+    <Compile Include="IDBObjectDescriptor.vb" />
+    <Compile Include="IDBModule.vb" />
+    <Compile Include="IDBChained.vb" />
+    <Compile Include="IDBObject.vb" />
+    <Compile Include="IDBField.vb" />
+    <Compile Include="IDBRevision.vb" />
+    <Compile Include="IDBTable.vb" />
+    <Compile Include="IDBSchema.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -96,9 +101,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -116,26 +118,26 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBCreators\Common\DBCreators.Common\DBCreators.Common.vbproj">
-      <Project>{acdff559-b744-4236-ac07-8f0a6ca92846}</Project>
-      <Name>DBCreators.Common</Name>
+    <ProjectReference Include="..\..\Core\MRFramework.MRCore\MRFramework.MRCore.vbproj">
+      <Project>{84315872-44b6-4da5-aee6-33a96215294d}</Project>
+      <Name>MRFramework.MRCore</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Framework\DBCreator\Framework.DBCreator.DBObjects\Framework.DBCreator.DBObjects.vbproj">
-      <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
-      <Name>Framework.DBCreator.DBObjects</Name>
+    <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting.Core\MRFramework.MRPersisting.Core.vbproj">
+      <Project>{687aaae9-c8e2-4027-8a74-1411d0c52f7f}</Project>
+      <Name>MRFramework.MRPersisting.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Framework\DBCreator\Framework.DBCreator\Framework.DBCreator.vbproj">
-      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
-      <Name>Framework.DBCreator</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Framework\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
+    <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
       <Project>{e177c8d6-b8df-4de4-81af-3f2d17e23a05}</Project>
       <Name>MRFramework.MRPersisting.Factory</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting\MRFramework.MRPersisting.vbproj">
+      <Project>{be7b128c-d665-4111-9674-0242e17604e7}</Project>
+      <Name>MRFramework.MRPersisting</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

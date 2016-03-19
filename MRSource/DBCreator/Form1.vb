@@ -1,13 +1,15 @@
 ﻿Imports MRFramework.MRPersisting.Factory
-Imports MRFramework.MRDBCreator
+Imports Framework.DBCreator
 
 Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'TODO - omoguciti custom descriptore, custom code generatore, code generator factory (ovisno o bazi, verziji baze itd.)
+        'TODO - kreirati shemu DBCreator ako ne postoji i unutra Revision table -- IF NOT EXISTS (SELECT TOP 1 1 FROM sys.schemas WHERE name = 'DBCreator') CREATE SCHEMA DBCreator
 
         MRC.GetInstance().ConnectionString = My.Settings.Item(My.Settings.DefaultConnectionString)
         MRC.GetInstance().ProviderName = My.Settings.Item(My.Settings.DefaultProvider)
 
-        Dim creator As New MRFramework.MRDBCreator.DBCreator
+        Dim creator As New Framework.DBCreator.DBCreator
 
         creator.CreateSystemObjects()
 

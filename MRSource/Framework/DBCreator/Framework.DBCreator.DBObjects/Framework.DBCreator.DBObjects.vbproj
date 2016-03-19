@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}</ProjectGuid>
+    <ProjectGuid>{986EF2D7-7F89-459F-B9EE-A9077CDCD147}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>MRFramework.MRDBCreator</RootNamespace>
-    <AssemblyName>MRFramework.MRDBCreator</AssemblyName>
+    <RootNamespace>Framework.DBCreator.DBObjects</RootNamespace>
+    <AssemblyName>Framework.DBCreator.DBObjects</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -19,10 +19,8 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>MRFramework.MRDBCreator.xml</DocumentationFile>
-    <NoWarn>
-    </NoWarn>
-    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <DocumentationFile>Framework.DBCreator.DBObjects.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,10 +28,8 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>MRFramework.MRDBCreator.xml</DocumentationFile>
-    <NoWarn>
-    </NoWarn>
-    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+    <DocumentationFile>Framework.DBCreator.DBObjects.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
     <OptionExplicit>On</OptionExplicit>
@@ -42,7 +38,7 @@
     <OptionCompare>Binary</OptionCompare>
   </PropertyGroup>
   <PropertyGroup>
-    <OptionStrict>On</OptionStrict>
+    <OptionStrict>Off</OptionStrict>
   </PropertyGroup>
   <PropertyGroup>
     <OptionInfer>On</OptionInfer>
@@ -68,18 +64,15 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBCreator.vb" />
+    <Compile Include="DBField.vb" />
+    <Compile Include="DBFieldDescriptor.vb" />
+    <Compile Include="DBModule.vb" />
     <Compile Include="DBObject.vb" />
     <Compile Include="DBRevision.vb" />
-    <Compile Include="DBModule.vb" />
-    <Compile Include="DBField.vb" />
-    <Compile Include="DBSqlRevision.vb" />
-    <Compile Include="DBTable.vb" />
     <Compile Include="DBSchema.vb" />
-    <Compile Include="IDBObjectDescriptor.vb" />
-    <Compile Include="IDBModule.vb" />
-    <Compile Include="IDBChained.vb" />
-    <Compile Include="IDBObject.vb" />
+    <Compile Include="DBSchemaDescriptor.vb" />
+    <Compile Include="DBTable.vb" />
+    <Compile Include="DBTableDescriptor.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -116,21 +109,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Core\MRFramework.MRCore\MRFramework.MRCore.vbproj">
-      <Project>{84315872-44b6-4da5-aee6-33a96215294d}</Project>
-      <Name>MRFramework.MRCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting.Core\MRFramework.MRPersisting.Core.vbproj">
-      <Project>{687aaae9-c8e2-4027-8a74-1411d0c52f7f}</Project>
-      <Name>MRFramework.MRPersisting.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
-      <Project>{e177c8d6-b8df-4de4-81af-3f2d17e23a05}</Project>
-      <Name>MRFramework.MRPersisting.Factory</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting\MRFramework.MRPersisting.vbproj">
-      <Project>{be7b128c-d665-4111-9674-0242e17604e7}</Project>
-      <Name>MRFramework.MRPersisting</Name>
+    <ProjectReference Include="..\Framework.DBCreator\Framework.DBCreator.vbproj">
+      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
+      <Name>Framework.DBCreator</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

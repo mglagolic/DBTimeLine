@@ -1,19 +1,15 @@
 ﻿Option Strict On
 
-Public Enum eDBRevisionType
-    Create = 0
-    Modify = 1
-    Delete = 2
-    AlwaysExecute = 3
-End Enum
 
 Public Class DBRevision
+    Implements IDBRevision
 
-    Public Property DBRevisionType As eDBRevisionType
-    Public Property Parent As IDBObject
-    Public Property Created As Date
-    Public Property Granulation As Integer
-    Public Property DBObject As IDBObject
+    Public Property DBRevisionType As eDBRevisionType Implements IDBRevision.DBRevisionType
+    Public Property Parent As IDBObject Implements IDBRevision.Parent
+    Public Property Created As Date Implements IDBRevision.Created
+    Public Property Granulation As Integer Implements IDBRevision.Granulation
+    Public Property DBObject As IDBObject Implements IDBRevision.DBObject
+
     Private Sub New()
 
     End Sub

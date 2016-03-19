@@ -1,8 +1,9 @@
-﻿Imports MRFramework.MRPersisting.Core
+﻿Imports MRFramework
+Imports MRFramework.MRPersisting.Core
 
 Public Class DBSqlRevision
 
-    Public Sub New(dBRevision As DBRevision)
+    Public Sub New(dBRevision As IDBRevision)
         With dBRevision
             Created = .Created
             DBObjectFullName = .Parent.GetFullName
@@ -27,9 +28,9 @@ Public Class DBSqlRevision
         Parent = FindParent(dBCreator)
     End Sub
 
-    Private Function FindParent(dBCreator As DBCreator) As DBRevision
-        Dim ret As DBRevision = Nothing
-        Dim dbObject As DBObject = Nothing
+    Private Function FindParent(dBCreator As DBCreator) As IDBRevision
+        Dim ret As IDBRevision = Nothing
+        Dim dbObject As IDBObject = Nothing
         Select Case DBObjectType
             Case eDBObjectType.Field
                 If dBCreator.DBFields.ContainsKey(DBObjectName) Then
@@ -80,7 +81,7 @@ Public Class DBSqlRevision
         End Get
     End Property
 
-    Public Property Parent As DBRevision
+    Public Property Parent As IDBRevision
     Public Property SchemaName As String
     Public Property DBObjectName As String
     Public Property Description As String

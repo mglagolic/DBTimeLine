@@ -6,8 +6,8 @@
 
     Public Property Parent As IDBChained Implements IDBChained.Parent
 
-    Private ReadOnly Property _Revisions As New List(Of DBRevision)
-    Public ReadOnly Property Revisions As List(Of DBRevision) Implements IDBObject.Revisions
+    Private ReadOnly Property _Revisions As New List(Of IDBRevision)
+    Public ReadOnly Property Revisions As List(Of IDBRevision) Implements IDBObject.Revisions
         Get
             Return _Revisions
         End Get
@@ -51,7 +51,14 @@
         End Get
     End Property
 
-    Public Function AddRevision(revision As DBRevision, Optional descriptor As IDBObjectDescriptor = Nothing) As DBRevision Implements IDBObject.AddRevision
+    Private ReadOnly _DBObjects As New Dictionary(Of String, IDBObject)
+    Public ReadOnly Property DBObjects As Dictionary(Of String, IDBObject) Implements IDBObject.DBObjects
+        Get
+            Return _DBObjects
+        End Get
+    End Property
+
+    Public Function AddRevision(revision As IDBRevision, Optional descriptor As IDBObjectDescriptor = Nothing) As IDBRevision Implements IDBObject.AddRevision
         Revisions.Add(revision)
 
         revision.Parent = Me
@@ -64,7 +71,7 @@
 
         Return revision
     End Function
-    Public Function FindRevision(created As Date, granulation As Integer) As DBRevision
+    Public Function FindRevision(created As Date, granulation As Integer) As IDBRevision Implements IDBObject.FindRevision
         Dim ret As DBRevision = Nothing
         ret = Revisions.Find(Function(rev) (rev.Created = created AndAlso rev.Granulation = granulation))
 
@@ -91,9 +98,9 @@
     MustOverride Sub ApplyDescriptor(descriptor As IDBObjectDescriptor)
     MustOverride Function GetDescriptor() As IDBObjectDescriptor Implements IDBObject.GetDescriptor
 
-    'MustOverride Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
-    'MustOverride Function GetSqlModify() As String Implements IDBObject.GetSqlModify
-    'MustOverride Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
+    MustOverride Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
+    MustOverride Function GetSqlModify() As String Implements IDBObject.GetSqlModify
+    MustOverride Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
 
 
 #End Region

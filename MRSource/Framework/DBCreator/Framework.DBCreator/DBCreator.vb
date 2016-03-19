@@ -1,28 +1,30 @@
 ﻿Imports System.Text
+Imports System.Text.RegularExpressions
+Imports MRFramework
 Imports MRFramework.MRPersisting.Core
 Imports MRFramework.MRPersisting.Factory
 
 Public Class DBCreator
     Implements IDBChained
 
-    Public ReadOnly Property DBModules As New List(Of DBModule)
+    Public ReadOnly Property DBModules As New List(Of IDBModule)
     Public ReadOnly Property SourceDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
-    Public ReadOnly Property DBSchemas As New Dictionary(Of String, DBSchema)
-    Public ReadOnly Property DBTables As New Dictionary(Of String, DBTable)
-    Public ReadOnly Property DBFields As New Dictionary(Of String, DBField)
-    Public Property RevisionBatchSize As Integer = 2
+    Public ReadOnly Property DBSchemas As New Dictionary(Of String, IDBObject)
+    Public ReadOnly Property DBTables As New Dictionary(Of String, IDBObject)
+    Public ReadOnly Property DBFields As New Dictionary(Of String, IDBObject)
+    Public Property RevisionBatchSize As Integer = 10
     Public Property Parent As IDBChained Implements IDBChained.Parent
 
-    Public Function AddModule(dBModule As DBModule) As DBModule
+    Public Function AddModule(dBModule As IDBModule) As IDBModule
         DBModules.Add(dBModule)
         dBModule.Parent = Me
 
         Return dBModule
     End Function
 
-    Public Function GetModules() As List(Of DBModule)
-        Dim ret As New List(Of DBModule)
+    Public Function GetModules() As List(Of IDBModule)
+        Dim ret As New List(Of IDBModule)
 
         ret.AddRange(DBModules)
 
@@ -54,28 +56,40 @@ Public Class DBCreator
         End Using
     End Sub
 
+
+    Private Shared Function SplitSqlStatements(sqlScript As String) As IEnumerable(Of String)
+        ' Split by "GO" statements
+        Dim statements = Regex.Split(sqlScript, "^\s*GO\s* ($ | \-\- .*$)", RegexOptions.Multiline Or RegexOptions.IgnorePatternWhitespace Or RegexOptions.IgnoreCase)
+
+        ' Remove empties, trim, and return
+        Return statements.Where(Function(x) Not String.IsNullOrWhiteSpace(x)).[Select](Function(x) x.Trim(" "c, ControlChars.Cr, ControlChars.Lf))
+    End Function
+
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), cnn As Common.DbConnection, trn As Common.DbTransaction)
-        Using cmd As IDbCommand = MRC.GetCommand(cnn)
-            Try
-                cmd.CommandText = script
-                cmd.Transaction = trn
-                cmd.ExecuteNonQuery()
-                Dim dlos As New List(Of IMRDLO)
-                For Each rev As DBSqlRevision In revisions
-                    Dim dlo As IMRDLO = rev.GetDlo
-                    dlo.ColumnValues.Add("ID", Guid.NewGuid)
-                    dlos.Add(dlo)
-                Next
-                Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
-                    per.InsertBulk(dlos, trn)
-                End Using
-            Catch ex As Exception
-                If Debugger.IsAttached Then
-                    Debugger.Break()
-                End If
-                Throw
-            End Try
-        End Using
+        Dim batches As List(Of String) = SplitSqlStatements(script).ToList
+        For Each batch As String In batches
+            Using cmd As IDbCommand = MRC.GetCommand(cnn)
+                Try
+                    cmd.CommandText = batch
+                    cmd.Transaction = trn
+                    cmd.ExecuteNonQuery()
+                    Dim dlos As New List(Of IMRDLO)
+                    For Each rev As DBSqlRevision In revisions
+                        Dim dlo As IMRDLO = rev.GetDlo
+                        dlo.ColumnValues.Add("ID", Guid.NewGuid)
+                        dlos.Add(dlo)
+                    Next
+                    Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
+                        per.InsertBulk(dlos, trn)
+                    End Using
+                Catch ex As Exception
+                    If Debugger.IsAttached Then
+                        Debugger.Break()
+                    End If
+                    Throw
+                End Try
+            End Using
+        Next
     End Sub
 
     Public Function ExecuteDBSqlRevisions(cnn As Common.DbConnection, trn As Common.DbTransaction) As String
@@ -90,15 +104,15 @@ Public Class DBCreator
             Dim sql As String
             Select Case rev.DBRevisionType
                 Case eDBRevisionType.Create
-                    sql = rev.Parent.Parent.GetDescriptor.GetSqlCreate(rev.Parent.Parent)
+                    sql = rev.Parent.Parent.GetSqlCreate()
                     sqlScriptBuilder.Append(sql)
                     sqlBatchScriptBuilder.Append(sql)
                 Case eDBRevisionType.Modify
-                    sql = rev.Parent.Parent.GetDescriptor.GetSqlModify(rev.Parent.Parent)
+                    sql = rev.Parent.Parent.GetSqlModify()
                     sqlScriptBuilder.Append(sql)
                     sqlBatchScriptBuilder.Append(sql)
                 Case eDBRevisionType.Delete
-                    sql = rev.Parent.Parent.GetDescriptor.GetSqlDelete(rev.Parent.Parent)
+                    sql = rev.Parent.Parent.GetSqlDelete()
                     sqlScriptBuilder.Append(sql)
                     sqlBatchScriptBuilder.Append(sql)
                 Case Else
@@ -117,7 +131,7 @@ Public Class DBCreator
     End Function
 
 #Region "System objects"
-    'TODO - kreirati shemu DBCreator ako ne postoji i unutra Revision table -- IF NOT EXISTS (SELECT TOP 1 1 FROM sys.schemas WHERE name = 'DBCreator') CREATE SCHEMA DBCreator
+
     Private Sub CreateRevisionTable()
         Using cnn As IDbConnection = MRC.GetConnection
             Using cmd As IDbCommand = MRC.GetCommand

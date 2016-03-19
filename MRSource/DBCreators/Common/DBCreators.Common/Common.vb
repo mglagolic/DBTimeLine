@@ -1,34 +1,32 @@
-﻿Imports DBCreators.Common
-Imports MRFramework.MRDBCreator
-
+﻿Imports Framework.DBCreator
+Imports Framework.DBCreator.DBObjects
 
 Public Class DBO
     Inherits DBModule
 
-    Public Class myfieldDesc
-        Inherits DBFieldDescriptor
-
-        Public Overrides Function GetSqlCreate(dBObject As IDBObject) As String
-            Return MyBase.GetSqlCreate(dBObject)
-        End Function
-
-        ' TODO - overridati DBField GetDescriptor funkciju ili odustati od customizacije
-        ' TODO - bit ce mozda lakse ako sve classe preselim u posebni assembly i radim iskljucivo interfaceima
-        ' TODO - generator koda za vise baza odjednom, nadje identicne stvari, nadje razlicitosti i podijeli to po fajlovima
-    End Class
-
     Public Overrides Sub CreateTimeLine()
 
         Dim rev As New DBRevision(DateSerial(2016, 3, 15), 0, eDBRevisionType.Create)
+        With AddSchema("Customization", New DBSchemaDescriptor)
+            .AddRevision(New DBRevision(rev))
+
+            With .AddTable("Test1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New myfieldDesc With {.FieldType = eFieldType.Guid, .NekiNoviKojegNemaUGetDescriptoru = "-- bok 1" & vbNewLine}},
+                    New DBRevision(rev))
+
+                Dim fld As myField = .AddField("Naziv", New myfieldDesc With {.FieldType = eFieldType.Nvarchar, .Size = 50, .NekiNoviKojegNemaUGetDescriptoru = "-- bok kaj ima" & vbNewLine},
+                          New DBRevision(rev))
+                With fld
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 19), 0, eDBRevisionType.Modify),
+                                 New myfieldDesc(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 150})
+                End With
+            End With
+        End With
 
         With AddSchema("dbo", New DBSchemaDescriptor())
-
-            'TODO - omoguciti custom descriptore, custom code generatore, code generator factory (ovisno o bazi, verziji baze itd.)
-            'TODO - ovdje exposati samo interface, osim ako nije nuzno (dbCreator mozda ne treba biti interface)
             With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
                            New DBRevision(rev))
 
-                With .DBFields(.CreatorFieldName)
+                With .DBObjects(.CreatorFieldName)
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 16), 1, eDBRevisionType.Modify),
                           New DBFieldDescriptor(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
 
