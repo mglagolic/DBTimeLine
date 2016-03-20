@@ -37,18 +37,19 @@ SELECT Stupac = 'Ovo je post sql: bok kaj ima'
                           New DBRevision(rev) With {.PostSqlTask = AddressOf postTask}), myField)
                 With fld
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 19), 0, eDBRevisionType.Modify),
-                                 New myfieldDesc(CType(.GetDescriptor(), myfieldDesc)) With {.FieldType = eFieldType.Nvarchar, .Size = 150})
+                                 New myfieldDesc(CType(.Descriptor, myfieldDesc)) With {.FieldType = eFieldType.Nvarchar, .Size = 150})
                 End With
             End With
         End With
 
         With AddSchema("dbo", New DBSchemaDescriptor())
-            With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
+            Dim dt As IDBTable
+            dt = .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
                            New DBRevision(rev))
-
-                With .DBObjects(.CreatorFieldName)
+            With dt
+                With dt.DBObjects(CType(.Descriptor, IDBTableDescriptor).CreatorFieldName)
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 16), 1, eDBRevisionType.Modify),
-                          New DBFieldDescriptor(CType(.GetDescriptor(), DBFieldDescriptor)) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
+                          New DBFieldDescriptor(CType(.Descriptor, DBFieldDescriptor)) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
 
                 End With
                 With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eFieldType.Datetime, .Nullable = True})

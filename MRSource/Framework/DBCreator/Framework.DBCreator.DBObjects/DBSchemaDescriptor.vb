@@ -1,8 +1,8 @@
 ﻿Public Class DBSchemaDescriptor
     Implements IDBSchemaDescriptor
 
-    Public Overridable Function GetDBObjectInstance() As IDBObject Implements IDBObjectDescriptor.GetDBObjectInstance
-        Return New DBSchema(Me)
+    Public Overridable Function GetDBObjectInstance(Optional parent As IDBChained = Nothing) As IDBObject Implements IDBObjectDescriptor.GetDBObjectInstance
+        Return New DBSchema(Me) With {.Parent = parent}
     End Function
 
     '    Public Overridable Function GetSqlCreate(dBObject As IDBObject) As String Implements IDBObjectDescriptor.GetSqlCreate

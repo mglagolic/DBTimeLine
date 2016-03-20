@@ -5,13 +5,9 @@
     Public Property Name As String Implements IDBObject.Name
 
     Public Property Parent As IDBChained Implements IDBChained.Parent
-
-    Private ReadOnly Property _Revisions As New List(Of IDBRevision)
-    Public ReadOnly Property Revisions As List(Of IDBRevision) Implements IDBObject.Revisions
-        Get
-            Return _Revisions
-        End Get
-    End Property
+    Public Property Descriptor As IDBObjectDescriptor Implements IDBObject.Descriptor
+    Public ReadOnly Property DBObjects As New Dictionary(Of String, IDBObject) Implements IDBObject.DBObjects
+    Public ReadOnly Property Revisions As New List(Of IDBRevision) Implements IDBObject.Revisions
 
     Public MustOverride ReadOnly Property DBObjectType As eDBObjectType Implements IDBObject.DBObjectType
 
@@ -51,20 +47,13 @@
         End Get
     End Property
 
-    Private ReadOnly _DBObjects As New Dictionary(Of String, IDBObject)
-    Public ReadOnly Property DBObjects As Dictionary(Of String, IDBObject) Implements IDBObject.DBObjects
-        Get
-            Return _DBObjects
-        End Get
-    End Property
-
     Public Function AddRevision(revision As IDBRevision, Optional descriptor As IDBObjectDescriptor = Nothing) As IDBRevision Implements IDBObject.AddRevision
         Revisions.Add(revision)
 
         revision.Parent = Me
 
         If descriptor IsNot Nothing Then
-            ApplyDescriptor(descriptor)
+            Me.Descriptor = descriptor
         End If
 
         DBCreator.SourceDBSqlRevisions.Add(New DBSqlRevision(revision))
@@ -94,9 +83,6 @@
 
         Return sbFullName.ToString().TrimEnd("."c)
     End Function
-
-    MustOverride Sub ApplyDescriptor(descriptor As IDBObjectDescriptor)
-    MustOverride Function GetDescriptor() As IDBObjectDescriptor Implements IDBObject.GetDescriptor
 
     MustOverride Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
     MustOverride Function GetSqlModify() As String Implements IDBObject.GetSqlModify

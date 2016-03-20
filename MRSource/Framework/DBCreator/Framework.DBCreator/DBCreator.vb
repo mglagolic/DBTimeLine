@@ -12,9 +12,21 @@ Public Class DBCreator
     Public ReadOnly Property DBModules As New List(Of IDBModule)
     Public ReadOnly Property SourceDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
-    Public ReadOnly Property DBSchemas As New Dictionary(Of String, IDBObject)
-    Public ReadOnly Property DBTables As New Dictionary(Of String, IDBObject)
-    Public ReadOnly Property DBFields As New Dictionary(Of String, IDBObject)
+    'Public ReadOnly Property DBSchemas As New Dictionary(Of String, IDBObject)
+
+    Public ReadOnly Property DBTables As Dictionary(Of String, IDBObject)
+        Get
+            ' TODO - procitati sve tableove chiled objekata pocevsi od dbmodule
+            Throw New NotImplementedException
+        End Get
+    End Property
+    Public ReadOnly Property DBFields As Dictionary(Of String, IDBObject)
+        Get
+            ' TODO - procitati sve fieldove chiled objekata pocevsi od dbmodule
+            Throw New NotImplementedException
+        End Get
+    End Property
+
     Public Property RevisionBatchSize As Integer = 10
     Public Property Parent As IDBChained Implements IDBChained.Parent
 

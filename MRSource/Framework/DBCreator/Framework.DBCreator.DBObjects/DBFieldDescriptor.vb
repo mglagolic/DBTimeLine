@@ -10,8 +10,8 @@ Public Class DBFieldDescriptor
     Public Property Nullable As Boolean Implements IDBFieldDescriptor.Nullable
     Public Property DefaultValue As String Implements IDBFieldDescriptor.DefaultValue
 
-    Public Overridable Function GetDBObjectInstance() As IDBObject Implements IDBObjectDescriptor.GetDBObjectInstance
-        Return New DBField(Me)
+    Public Overridable Function GetDBObjectInstance(Optional parent As IDBChained = Nothing) As IDBObject Implements IDBObjectDescriptor.GetDBObjectInstance
+        Return New DBField(Me) With {.Parent = parent}
     End Function
 
     Public Sub New()

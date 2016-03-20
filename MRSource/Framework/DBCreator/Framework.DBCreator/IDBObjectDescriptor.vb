@@ -2,5 +2,5 @@
     'Function GetSqlCreate(dBObject As IDBObject) As String
     'Function GetSqlModify(dBObject As IDBObject) As String
     'Function GetSqlDelete(dBObject As IDBObject) As String
-    Function GetDBObjectInstance() As IDBObject
+    Function GetDBObjectInstance(Optional parent As IDBChained = Nothing) As IDBObject
 End Interface

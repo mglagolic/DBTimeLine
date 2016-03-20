@@ -74,14 +74,11 @@
     <Compile Include="Enums\eDBObjectType.vb" />
     <Compile Include="Enums\eFieldType.vb" />
     <Compile Include="Enums\eRevisionType.vb" />
-    <Compile Include="IDBSchemaDescriptor.vb" />
-    <Compile Include="IDBTableDescriptor.vb" />
-    <Compile Include="IDBFieldDescriptor.vb" />
-    <Compile Include="IDBObjectDescriptor.vb" />
     <Compile Include="IDBModule.vb" />
     <Compile Include="IDBChained.vb" />
     <Compile Include="IDBObject.vb" />
     <Compile Include="IDBField.vb" />
+    <Compile Include="IDBObjectDescriptor.vb" />
     <Compile Include="IDBRevision.vb" />
     <Compile Include="IDBTable.vb" />
     <Compile Include="IDBSchema.vb" />

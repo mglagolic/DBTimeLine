@@ -9,7 +9,7 @@
     Public Sub New(descriptor As DBSchemaDescriptor)
         MyClass.New
 
-        ApplyDescriptor(descriptor)
+        Me.Descriptor = descriptor
     End Sub
 
     Public Overrides ReadOnly Property DBObjectType As eDBObjectType
@@ -18,24 +18,14 @@
         End Get
     End Property
 
-    Public Overrides Sub ApplyDescriptor(descriptor As IDBObjectDescriptor)
-
-    End Sub
-
-    Public Overrides Function GetDescriptor() As IDBObjectDescriptor
-        Return New DBSchemaDescriptor
-    End Function
-
     Public Function AddTable(tableName As String, descriptor As IDBTableDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBTable Implements IDBSchema.AddTable
         If Not DBObjects.ContainsKey(tableName) Then
-            Dim newDBObject As IDBObject = descriptor.GetDBObjectInstance
+            Dim newDBObject As IDBObject = descriptor.GetDBObjectInstance(Me)
             With newDBObject
                 .Name = tableName
-                .Parent = Me
             End With
             ' TODO - dodati fullobject name u idbobject tako da dic ne bi pucao ako postoje npr dvije scheme s istom tablicom
             DBObjects.Add(tableName, newDBObject)
-            DBCreator.DBTables.Add(tableName, newDBObject)
         End If
         Dim table As DBTable = DBObjects(tableName)
 

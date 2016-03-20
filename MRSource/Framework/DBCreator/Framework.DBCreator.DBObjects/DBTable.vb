@@ -1,6 +1,5 @@
 ﻿Public Class DBTable
     Inherits DBObject
-    Implements IDBTableCommon
     Implements IDBTable
 
     Public Sub New()
@@ -10,7 +9,16 @@
     Public Sub New(descriptor As IDBTableDescriptor)
         MyClass.New
 
-        ApplyDescriptor(descriptor)
+        Me.Descriptor = descriptor
+        If Not String.IsNullOrWhiteSpace(descriptor.CreatorFieldName) AndAlso descriptor.CreatorFieldDescriptor IsNot Nothing Then
+            'AddField(descriptor.CreatorFieldName, descriptor.CreatorFieldDescriptor)
+            Dim fld As IDBObject = descriptor.CreatorFieldDescriptor.GetDBObjectInstance(Me)
+            With fld
+                .Name = descriptor.CreatorFieldName
+            End With
+
+            DBObjects.Add(descriptor.CreatorFieldName, fld)
+        End If
     End Sub
 
     Public Overrides ReadOnly Property DBObjectType As eDBObjectType
@@ -19,19 +27,14 @@
         End Get
     End Property
 
-    Public Property CreatorFieldDescriptor As IDBFieldDescriptor Implements IDBTableCommon.CreatorFieldDescriptor
-    Public Property CreatorFieldName As String Implements IDBTableCommon.CreatorFieldName
-
     Public Function AddField(fieldName As String, descriptor As IDBFieldDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddField
         If Not DBObjects.ContainsKey(fieldName) Then
-            Dim newDBObject As IDBObject = descriptor.GetDBObjectInstance
+            Dim newDBObject As IDBObject = descriptor.GetDBObjectInstance(Me)
             With newDBObject
                 .Name = fieldName
-                .Parent = Me
             End With
 
             DBObjects.Add(fieldName, newDBObject)
-            DBCreator.DBFields.Add(fieldName, newDBObject)
         End If
 
         Dim field As DBField = DBObjects(fieldName)
@@ -43,36 +46,17 @@
         Return field
     End Function
 
-    Public Overrides Sub ApplyDescriptor(descriptor As IDBObjectDescriptor)
-        With DirectCast(descriptor, DBTableDescriptor)
-            CreatorFieldDescriptor = .CreatorFieldDescriptor
-            CreatorFieldName = .CreatorFieldName
-
-            Dim fld As IDBObject = CreatorFieldDescriptor.GetDBObjectInstance
-            With fld
-                .Parent = Me
-                .Name = CreatorFieldName
-            End With
-
-            DBObjects.Add(CreatorFieldName, fld)
-        End With
-    End Sub
-
-    Public Overrides Function GetDescriptor() As IDBObjectDescriptor
-        Return New DBTableDescriptor() With {.CreatorFieldDescriptor = CreatorFieldDescriptor, .CreatorFieldName = CreatorFieldName}
-    End Function
-
     Public Overrides Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
         Dim ret As String = ""
-
-        ret =
+        With CType(Descriptor, IDBTableDescriptor)
+            ret =
 <string>
 CREATE TABLE <%= SchemaName %>.<%= Name %> 
 (
-    <%= CreatorFieldName & " " %><%= CreatorFieldDescriptor.GetFieldTypeSql %>
+    <%= .CreatorFieldName & " " %><%= .CreatorFieldDescriptor.GetFieldTypeSql %>
 )
 </string>.Value
-
+        End With
 
         Return ret
     End Function
