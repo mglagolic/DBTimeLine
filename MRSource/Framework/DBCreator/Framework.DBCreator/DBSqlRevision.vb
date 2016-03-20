@@ -2,6 +2,26 @@
 Imports MRFramework.MRPersisting.Core
 
 Public Class DBSqlRevision
+    Public Property Created As Date
+    Public Property Granulation As Integer
+    Public Property DBObjectFullName As String
+    Public Property DBObjectType As eDBObjectType
+    Public ReadOnly Property DBObjectTypeName As String
+        Get
+            Return [Enum].GetName(GetType(eDBObjectType), DBObjectType)
+        End Get
+    End Property
+    Public Property DBRevisionType As eDBRevisionType
+    Public ReadOnly Property DBRevisionTypeName As String
+        Get
+            Return [Enum].GetName(GetType(eDBRevisionType), DBRevisionType)
+        End Get
+    End Property
+    Public Property Parent As IDBRevision
+    Public Property SchemaName As String
+    Public Property DBObjectName As String
+    Public Property Sql As String
+    Public Property Description As String
 
     Public Sub New(dBRevision As IDBRevision)
         With dBRevision
@@ -14,6 +34,8 @@ Public Class DBSqlRevision
             If .Parent IsNot Nothing Then
                 SchemaName = .Parent.SchemaName
             End If
+            Sql = .GetSql
+            Description = Sql
             Parent = dBRevision
         End With
     End Sub
@@ -64,27 +86,6 @@ Public Class DBSqlRevision
         Return dlo
     End Function
 
-    Public Property Created As Date
-    Public Property Granulation As Integer
-    Public Property DBObjectFullName As String
-    Public Property DBObjectType As eDBObjectType
-    Public ReadOnly Property DBObjectTypeName As String
-        Get
-            Return [Enum].GetName(GetType(eDBObjectType), DBObjectType)
-        End Get
-    End Property
-
-    Public Property DBRevisionType As eDBRevisionType
-    Public ReadOnly Property DBRevisionTypeName As String
-        Get
-            Return [Enum].GetName(GetType(eDBRevisionType), DBRevisionType)
-        End Get
-    End Property
-
-    Public Property Parent As IDBRevision
-    Public Property SchemaName As String
-    Public Property DBObjectName As String
-    Public Property Description As String
 
 
     Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer

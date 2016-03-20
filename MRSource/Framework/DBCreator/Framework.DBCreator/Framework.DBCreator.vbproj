@@ -69,6 +69,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DBCreator.vb" />
+    <Compile Include="DBModulePersister.vb" />
     <Compile Include="DBSqlRevision.vb" />
     <Compile Include="Enums\eDBObjectType.vb" />
     <Compile Include="Enums\eFieldType.vb" />

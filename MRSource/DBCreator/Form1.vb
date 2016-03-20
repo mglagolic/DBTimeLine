@@ -4,7 +4,6 @@ Imports Framework.DBCreator
 Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'TODO - omoguciti custom descriptore, custom code generatore, code generator factory (ovisno o bazi, verziji baze itd.)
-        'TODO - kreirati shemu DBCreator ako ne postoji i unutra Revision table -- IF NOT EXISTS (SELECT TOP 1 1 FROM sys.schemas WHERE name = 'DBCreator') CREATE SCHEMA DBCreator
 
         MRC.GetInstance().ConnectionString = My.Settings.Item(My.Settings.DefaultConnectionString)
         MRC.GetInstance().ProviderName = My.Settings.Item(My.Settings.DefaultProvider)
@@ -13,10 +12,17 @@ Public Class Form1
 
         creator.CreateSystemObjects()
 
+        ' TODO  - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
+        '       - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
+
         creator.AddModule(New DBCreators.Common.DBO)
+        creator.AddModule(New DBCreators.Common.CorePlace)
+        creator.LoadModuleKeysFromDB()
 
         For i As Integer = 0 To creator.DBModules.Count - 1
-            creator.DBModules(i).LoadRevisions()
+            If creator.ActiveModuleKeys.Contains(creator.DBModules(i).ModuleKey) Then
+                creator.DBModules(i).LoadRevisions()
+            End If
         Next
 
         creator.SourceDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)

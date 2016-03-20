@@ -1,4 +1,5 @@
-﻿Imports System.Text
+﻿Imports System.Data.Common
+Imports System.Text
 Imports System.Text.RegularExpressions
 Imports MRFramework
 Imports MRFramework.MRPersisting.Core
@@ -7,6 +8,7 @@ Imports MRFramework.MRPersisting.Factory
 Public Class DBCreator
     Implements IDBChained
 
+    Public Property ActiveModuleKeys As New List(Of String)
     Public ReadOnly Property DBModules As New List(Of IDBModule)
     Public ReadOnly Property SourceDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
@@ -23,10 +25,31 @@ Public Class DBCreator
         Return dBModule
     End Function
 
-    Public Function GetModules() As List(Of IDBModule)
+    Public Function LoadModuleKeysFromDB() As List(Of IDBModule)
         Dim ret As New List(Of IDBModule)
 
-        ret.AddRange(DBModules)
+        Using cnn As DbConnection = MRC.GetConnection
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
+
+                Using per As New DBModulePersister
+                    per.Where = "Active = 1"
+                    per.CNN = cnn
+                    Dim res As Dictionary(Of Object, IMRDLO) = per.GetData()
+                    For Each key As Object In res.Keys
+                        ActiveModuleKeys.Add(CStr(key))
+                    Next
+                End Using
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
+
+        End Using
 
         Return ret
     End Function
@@ -101,24 +124,10 @@ Public Class DBCreator
 
         For i As Integer = 0 To notExecutedRevisions.Count - 1
             Dim rev As DBSqlRevision = notExecutedRevisions(i)
-            Dim sql As String
-            Select Case rev.DBRevisionType
-                Case eDBRevisionType.Create
-                    sql = rev.Parent.Parent.GetSqlCreate()
-                    sqlScriptBuilder.Append(sql)
-                    sqlBatchScriptBuilder.Append(sql)
-                Case eDBRevisionType.Modify
-                    sql = rev.Parent.Parent.GetSqlModify()
-                    sqlScriptBuilder.Append(sql)
-                    sqlBatchScriptBuilder.Append(sql)
-                Case eDBRevisionType.Delete
-                    sql = rev.Parent.Parent.GetSqlDelete()
-                    sqlScriptBuilder.Append(sql)
-                    sqlBatchScriptBuilder.Append(sql)
-                Case Else
-                    Throw New NotSupportedException("eDBRevisionType")
-            End Select
-            rev.Description = sql
+            Dim sql As String = rev.Sql
+            sqlScriptBuilder.Append(sql)
+            sqlBatchScriptBuilder.Append(sql)
+
             newExecutedRevisions.Add(rev)
             If i = notExecutedRevisions.Count - 1 OrElse (i + 1) Mod RevisionBatchSize = 0 Then
                 ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, cnn, trn)
@@ -134,10 +143,14 @@ Public Class DBCreator
 
     Private Sub CreateRevisionTable()
         Using cnn As IDbConnection = MRC.GetConnection
-            Using cmd As IDbCommand = MRC.GetCommand
+            Using cmd As IDbCommand = MRC.GetCommand()
                 Try
-                    cmd.CommandText =
-<string>
+                    cmd.Connection = cnn
+                    If cnn.State <> ConnectionState.Open Then
+                        cnn.Open()
+                    End If
+
+                    cmd.CommandText = "
 IF OBJECT_ID('DBCreator.Revision') IS NULL
 BEGIN
 	CREATE TABLE [DBCreator].[Revision]
@@ -158,13 +171,65 @@ BEGIN
 	DROP INDEX IX_DBCreatorRevision_Sort ON DBCreator.Revision 
 END
 CREATE CLUSTERED INDEX IX_DBCreatorRevision_Sort ON DBCreator.Revision (Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC)
+"
+                    cmd.ExecuteNonQuery()
 
-</string>.Value
+                Catch ex As Exception
+                    If Debugger.IsAttached Then
+                        Debugger.Break()
+                    End If
+                    Throw
+                End Try
+            End Using
+        End Using
+    End Sub
+
+    Private Sub CreateSchema()
+        Using cnn As IDbConnection = MRC.GetConnection
+            Using cmd As IDbCommand = MRC.GetCommand()
+                Try
                     cmd.Connection = cnn
                     If cnn.State <> ConnectionState.Open Then
                         cnn.Open()
                     End If
 
+                    cmd.CommandText = "SELECT TOP 1 1 FROM sys.schemas WHERE name = 'DBCreator'"
+                    If cmd.ExecuteScalar() Is Nothing Then
+                        cmd.CommandText = "CREATE SCHEMA DBCreator"
+                        cmd.ExecuteNonQuery()
+                    End If
+                Catch ex As Exception
+                    If Debugger.IsAttached Then
+                        Debugger.Break()
+                    End If
+                    Throw
+                End Try
+            End Using
+        End Using
+    End Sub
+
+    Private Sub CreateModuleTable()
+        Using cnn As IDbConnection = MRC.GetConnection
+            Using cmd As IDbCommand = MRC.GetCommand()
+                Try
+                    cmd.Connection = cnn
+                    If cnn.State <> ConnectionState.Open Then
+                        cnn.Open()
+                    End If
+
+                    cmd.CommandText = "
+IF OBJECT_ID('DBCreator.Module') IS NULL
+BEGIN
+	CREATE  TABLE [DBCreator].[Module]
+	(
+        [ModuleKey] [varchar](50) NOT NULL PRIMARY KEY,
+        [Name] [nvarchar](50) NOT NULL,
+        [Created] [datetime] NOT NULL,
+        [Active] bit NOT NULL,
+        [Description] [nvarchar](MAX) NULL
+	)
+END
+"
                     cmd.ExecuteNonQuery()
                 Catch ex As Exception
                     If Debugger.IsAttached Then
@@ -177,7 +242,9 @@ CREATE CLUSTERED INDEX IX_DBCreatorRevision_Sort ON DBCreator.Revision (Created 
     End Sub
 
     Public Sub CreateSystemObjects()
+        CreateSchema()
         CreateRevisionTable()
+        CreateModuleTable()
     End Sub
 
 #End Region

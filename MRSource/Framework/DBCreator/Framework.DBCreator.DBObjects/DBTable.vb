@@ -3,7 +3,6 @@
     Implements IDBTableCommon
     Implements IDBTable
 
-
     Public Sub New()
 
     End Sub

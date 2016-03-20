@@ -1,23 +1,43 @@
-﻿Imports Framework.DBCreator
+﻿Option Strict On
+
+Imports Framework.DBCreator
 Imports Framework.DBCreator.DBObjects
 
 Public Class DBO
     Inherits DBModule
 
+    Public Overrides ReadOnly Property ModuleKey As String
+        Get
+            Return "dbo"
+        End Get
+    End Property
+
+    Private Function preTask(sender As IDBRevision) As String
+        Return ""
+    End Function
+
+    Private Function postTask(sender As IDBRevision) As String
+        Dim sql As String = "
+GO 
+SELECT Stupac = 'Ovo je post sql: bok kaj ima'
+"
+
+        Return sql
+    End Function
     Public Overrides Sub CreateTimeLine()
 
         Dim rev As New DBRevision(DateSerial(2016, 3, 15), 0, eDBRevisionType.Create)
         With AddSchema("Customization", New DBSchemaDescriptor)
-            .AddRevision(New DBRevision(rev))
+            .AddRevision(New DBRevision(rev) With {.PreSqlTask = AddressOf preTask})
 
             With .AddTable("Test1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New myfieldDesc With {.FieldType = eFieldType.Guid, .NekiNoviKojegNemaUGetDescriptoru = "-- bok 1" & vbNewLine}},
                     New DBRevision(rev))
 
-                Dim fld As myField = .AddField("Naziv", New myfieldDesc With {.FieldType = eFieldType.Nvarchar, .Size = 50, .NekiNoviKojegNemaUGetDescriptoru = "-- bok kaj ima" & vbNewLine},
-                          New DBRevision(rev))
+                Dim fld As myField = CType(.AddField("Naziv", New myfieldDesc With {.FieldType = eFieldType.Nvarchar, .Size = 50, .NekiNoviKojegNemaUGetDescriptoru = "-- bok kaj ima" & vbNewLine},
+                          New DBRevision(rev) With {.PostSqlTask = AddressOf postTask}), myField)
                 With fld
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 19), 0, eDBRevisionType.Modify),
-                                 New myfieldDesc(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 150})
+                                 New myfieldDesc(CType(.GetDescriptor(), myfieldDesc)) With {.FieldType = eFieldType.Nvarchar, .Size = 150})
                 End With
             End With
         End With
@@ -28,7 +48,7 @@ Public Class DBO
 
                 With .DBObjects(.CreatorFieldName)
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 16), 1, eDBRevisionType.Modify),
-                          New DBFieldDescriptor(.GetDescriptor()) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
+                          New DBFieldDescriptor(CType(.GetDescriptor(), DBFieldDescriptor)) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
 
                 End With
                 With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eFieldType.Datetime, .Nullable = True})
@@ -42,29 +62,30 @@ Public Class DBO
 End Class
 
 
-'Public Class Common
-'    Inherits DBModule
+Public Class CorePlace
+    Inherits DBModule
 
-'    Public Overrides Sub CreateTimeLine()
+    Public Overrides ReadOnly Property ModuleKey As String
+        Get
+            Return "CorePlace"
+        End Get
+    End Property
 
-'        Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
+    Public Overrides Sub CreateTimeLine()
 
-'        With AddSchema("Common", Nothing,
-'                          New DBRevision(rev))
+        Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
 
-'            With .AddTable("Table1", Nothing,
-'                           New DBRevision(rev))
+        With AddSchema("Place", New DBSchemaDescriptor(), New DBRevision(rev))
+            With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
+                           New DBRevision(rev))
 
-'                With .AddField("ID", New DBFieldDescriptor() With {.FieldType = eFieldType.Guid},
-'                          New DBRevision(rev))
+                .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eFieldType.Datetime, .Nullable = True}, New DBRevision(DateSerial(2016, 3, 18), 0, eDBRevisionType.Create))
+            End With
+        End With
 
-'                End With
-'            End With
-'        End With
+    End Sub
 
-'    End Sub
-
-'End Class
+End Class
 
 
 

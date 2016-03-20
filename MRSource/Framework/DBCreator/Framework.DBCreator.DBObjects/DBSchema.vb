@@ -33,7 +33,7 @@
                 .Name = tableName
                 .Parent = Me
             End With
-
+            ' TODO - dodati fullobject name u idbobject tako da dic ne bi pucao ako postoje npr dvije scheme s istom tablicom
             DBObjects.Add(tableName, newDBObject)
             DBCreator.DBTables.Add(tableName, newDBObject)
         End If

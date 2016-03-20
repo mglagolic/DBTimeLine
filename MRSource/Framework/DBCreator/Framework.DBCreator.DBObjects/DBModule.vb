@@ -1,4 +1,6 @@
-﻿Public MustInherit Class DBModule
+﻿Imports Framework.DBCreator
+
+Public MustInherit Class DBModule
     Implements IDBModule
 
     Private ReadOnly Property _DBSchemas As New Dictionary(Of String, IDBSchema)
@@ -9,6 +11,8 @@
     End Property
 
     Public Property Parent As IDBChained Implements IDBModule.Parent
+    Public MustOverride ReadOnly Property ModuleKey As String Implements IDBModule.ModuleKey
+
 
     Protected Function AddSchema(schemaName As String, descriptor As IDBSchemaDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBSchema Implements IDBModule.AddSchema
         If Not DBSchemas.ContainsKey(schemaName) Then
