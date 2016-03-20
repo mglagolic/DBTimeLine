@@ -4,36 +4,43 @@ Imports MRFramework.MRPersisting.Core
 Public Class DBSqlRevision
     Public Property Created As Date
     Public Property Granulation As Integer
-    Public Property DBObjectFullName As String
-    Public Property DBObjectType As eDBObjectType
-    Public ReadOnly Property DBObjectTypeName As String
+    Public Property ObjectFullName As String
+    Public Property ObjectType As eDBObjectType
+    Public ReadOnly Property ObjectTypeName As String
         Get
-            Return [Enum].GetName(GetType(eDBObjectType), DBObjectType)
+            Return [Enum].GetName(GetType(eDBObjectType), ObjectType)
         End Get
     End Property
-    Public Property DBRevisionType As eDBRevisionType
-    Public ReadOnly Property DBRevisionTypeName As String
+    Public Property RevisionType As eDBRevisionType
+    Public ReadOnly Property RevisionTypeName As String
         Get
-            Return [Enum].GetName(GetType(eDBRevisionType), DBRevisionType)
+            Return [Enum].GetName(GetType(eDBRevisionType), RevisionType)
         End Get
     End Property
     Public Property Parent As IDBRevision
+
+    Public Property ModuleKey As String
     Public Property SchemaName As String
-    Public Property DBObjectName As String
+    Public Property TableName As String
+    Public Property ObjectName As String
+
     Public Property Sql As String
     Public Property Description As String
 
     Public Sub New(dBRevision As IDBRevision)
         With dBRevision
             Created = .Created
-            DBObjectFullName = .Parent.GetFullName
-            DBObjectName = .Parent.Name
-            DBObjectType = .Parent.DBObjectType
-            DBRevisionType = .DBRevisionType
             Granulation = .Granulation
-            If .Parent IsNot Nothing Then
-                SchemaName = .Parent.SchemaName
-            End If
+
+            ObjectType = .Parent.ObjectType
+            RevisionType = .DBRevisionType
+
+            ModuleKey = .Parent.ModuleKey
+            SchemaName = .Parent.SchemaName
+            TableName = .Parent.TableName
+            ObjectName = .Parent.Name
+
+            ObjectFullName = .Parent.GetFullName
             Sql = .GetSql
             Description = Sql
             Parent = dBRevision
@@ -41,27 +48,34 @@ Public Class DBSqlRevision
     End Sub
     Public Sub New(dlo As IMRDLO, dBCreator As DBCreator)
         Created = CDate(dlo.ColumnValues("Created"))
-        DBObjectFullName = CStr(dlo.ColumnValues("DBObjectFullName"))
-        DBObjectType = CType([Enum].Parse(GetType(eDBObjectType), CStr(dlo.ColumnValues("DBObjectType"))), eDBObjectType)
-        DBRevisionType = CType([Enum].Parse(GetType(eDBRevisionType), CStr(dlo.ColumnValues("DBRevisionType"))), eDBRevisionType)
         Granulation = CInt(dlo.ColumnValues("Granulation"))
-        DBObjectName = CStr(dlo.ColumnValues("DBObjectName"))
+
+        ObjectType = CType([Enum].Parse(GetType(eDBObjectType), CStr(dlo.ColumnValues("ObjectType"))), eDBObjectType)
+        RevisionType = CType([Enum].Parse(GetType(eDBRevisionType), CStr(dlo.ColumnValues("RevisionType"))), eDBRevisionType)
+
+        ModuleKey = CStr(dlo.ColumnValues("ModuleKey"))
         SchemaName = CStr(dlo.ColumnValues("SchemaName"))
+        TableName = CStr(dlo.ColumnValues("SchemaName"))
+        ObjectName = CStr(dlo.ColumnValues("ObjectName"))
+
+        ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
+
         Parent = FindParent(dBCreator)
     End Sub
 
+    'TODO - ovo popraviti
     Private Function FindParent(dBCreator As DBCreator) As IDBRevision
         Dim ret As IDBRevision = Nothing
         Dim dbObject As IDBObject = Nothing
-        Select Case DBObjectType
+        Select Case ObjectType
             Case eDBObjectType.Field
-                If dBCreator.DBFields.ContainsKey(DBObjectName) Then
-                    dbObject = dBCreator.DBFields(DBObjectName)
+                If dBCreator.DBFields.ContainsKey(ObjectName) Then
+                    dbObject = dBCreator.DBFields(ObjectName)
                 End If
 
             Case eDBObjectType.Table
-                If dBCreator.DBTables.ContainsKey(DBObjectName) Then
-                    dbObject = dBCreator.DBTables(DBObjectName)
+                If dBCreator.DBTables.ContainsKey(ObjectName) Then
+                    dbObject = dBCreator.DBTables(ObjectName)
                 End If
         End Select
         If dbObject IsNot Nothing Then
@@ -75,13 +89,19 @@ Public Class DBSqlRevision
         Dim dlo As New MRPersisting.MRDLO
         With dlo.ColumnValues
             .Add("Created", Created)
-            .Add("DBObjectFullName", DBObjectFullName)
-            .Add("DBObjectType", DBObjectTypeName)
-            .Add("DBRevisionType", DBRevisionTypeName)
             .Add("Granulation", Granulation)
-            .Add("DBObjectName", DBObjectName)
+
+            .Add("ObjectType", ObjectTypeName)
+            .Add("RevisionType", RevisionTypeName)
+
+            .Add("ModuleKey", ModuleKey)
             .Add("SchemaName", SchemaName)
+            .Add("TableName", TableName)
+            .Add("ObjectName", ObjectName)
+
+            .Add("ObjectFullName", ObjectFullName)
             .Add("Description", Description)
+
         End With
         Return dlo
     End Function
@@ -98,13 +118,22 @@ Public Class DBSqlRevision
             ret = rev1.Granulation.CompareTo(rev2.Granulation)
         End If
         If ret = 0 Then
-            ret = rev1.DBObjectType.CompareTo(rev2.DBObjectType)
+            ret = rev1.ObjectType.CompareTo(rev2.ObjectType)
         End If
         If ret = 0 Then
-            ret = rev1.DBRevisionType.CompareTo(rev2.DBRevisionType)
+            ret = rev1.RevisionType.CompareTo(rev2.RevisionType)
         End If
         If ret = 0 Then
-            ret = rev1.DBObjectFullName.CompareTo(rev2.DBObjectFullName)
+            ret = rev1.ModuleKey.CompareTo(rev2.ModuleKey)
+        End If
+        If ret = 0 Then
+            ret = rev1.SchemaName.CompareTo(rev2.SchemaName)
+        End If
+        If ret = 0 Then
+            ret = rev1.TableName.CompareTo(rev2.TableName)
+        End If
+        If ret = 0 Then
+            ret = rev1.ObjectName.CompareTo(rev2.ObjectName)
         End If
 
         Return ret
@@ -127,7 +156,15 @@ Public Class DBSqlRevision
 
         Public Shadows Function GetHashCode(obj As DBSqlRevision) As Integer Implements IEqualityComparer(Of DBSqlRevision).GetHashCode
             With obj
-                Return .Created.GetHashCode Xor .Granulation.GetHashCode Xor .DBObjectFullName.GetHashCode Xor .DBObjectType.GetHashCode Xor .DBRevisionType.GetHashCode
+                Return _
+                    .Created.GetHashCode Xor
+                    .Granulation.GetHashCode Xor
+                    .ObjectType.GetHashCode Xor
+                    .RevisionType.GetHashCode Xor
+                    .ModuleKey.GetHashCode Xor
+                    .SchemaName.GetHashCode Xor
+                    .TableName.GetHashCode Xor
+                    .ObjectName.GetHashCode
             End With
         End Function
     End Class
@@ -146,7 +183,7 @@ Public Class DBSqlRevision
         End Property
         Public Overrides ReadOnly Property SQL As String
             Get
-                Return "SELECT ID, Created, Granulation, DBObjectType, DBRevisionType, DBObjectFullName, DBObjectName, SchemaName FROM " & DataBaseTableName
+                Return "SELECT ID, Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, TableName, ObjectName, ObjectFullName FROM " & DataBaseTableName
             End Get
         End Property
     End Class

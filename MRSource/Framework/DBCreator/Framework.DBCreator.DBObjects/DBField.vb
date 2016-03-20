@@ -12,7 +12,7 @@
         Me.Descriptor = descriptor
     End Sub
 
-    Public Overrides ReadOnly Property DBObjectType As eDBObjectType
+    Public Overrides ReadOnly Property ObjectType As eDBObjectType
         Get
             Return eDBObjectType.Field
         End Get

@@ -73,9 +73,12 @@ Public Class DBCreator
             With per.OrderItems
                 .Add(New MRCore.MROrderItem("Created", MRCore.Enums.eOrderDirection.Ascending))
                 .Add(New MRCore.MROrderItem("Granulation", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("DBObjectType", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("DBRevisionType", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("DBObjectFullName", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("ObjectType", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("RevisionType", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("ModuleKey", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("SchemaName", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("TableName", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("ObjectName", MRCore.Enums.eOrderDirection.Ascending))
             End With
 
             ' TODO - per.GetData generira bezvezan query, treba smisliti nesto drugo, stignem
@@ -170,19 +173,22 @@ BEGIN
 		[ID] [uniqueidentifier] NOT NULL PRIMARY KEY NONCLUSTERED,
 		[Created] [date] NOT NULL,
 		[Granulation] [int] NOT NULL,
-		[DBObjectFullName] [varchar](250) NOT NULL,
-        [DBObjectName] [varchar](50) NOT NULL,
-		[DBObjectType] [varchar](50) NOT NULL,
-		[DBRevisionType] [varchar](50) NOT NULL,
+        [ObjectType] [varchar](50) NOT NULL,        
+        [RevisionType] [varchar](50) NOT NULL,
+        [ModuleKey] [varchar](50),
         [SchemaName] [varchar](50),
-        [Description] [nvarchar](max) NULL,
+        [TableName] [varchar](100),
+        [ObjectName] [varchar](100) NOT NULL,
+		
+        [ObjectFullName] [varchar](100) NOT NULL,
+        [Description] [nvarchar](MAX) NULL
 	)
 END
-IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorRevision_Sort' AND object_id = OBJECT_ID('DBCreator.Revision'))
+IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorRevision_Clustered' AND object_id = OBJECT_ID('DBCreator.Revision'))
 BEGIN
-	DROP INDEX IX_DBCreatorRevision_Sort ON DBCreator.Revision 
+	DROP INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision 
 END
-CREATE CLUSTERED INDEX IX_DBCreatorRevision_Sort ON DBCreator.Revision (Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC)
+CREATE CLUSTERED INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision (Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, TableName, ObjectName)
 "
                     cmd.ExecuteNonQuery()
 

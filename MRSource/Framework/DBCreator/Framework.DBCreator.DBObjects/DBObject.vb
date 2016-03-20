@@ -9,7 +9,7 @@
     Public ReadOnly Property DBObjects As New Dictionary(Of String, IDBObject) Implements IDBObject.DBObjects
     Public ReadOnly Property Revisions As New List(Of IDBRevision) Implements IDBObject.Revisions
 
-    Public MustOverride ReadOnly Property DBObjectType As eDBObjectType Implements IDBObject.DBObjectType
+    Public MustOverride ReadOnly Property ObjectType As eDBObjectType Implements IDBObject.ObjectType
 
     Public ReadOnly Property DBCreator As DBCreator Implements IDBObject.DBCreator
         Get
@@ -19,24 +19,6 @@
             While p IsNot Nothing
                 If TypeOf p Is DBCreator Then
                     ret = CType(p, DBCreator)
-                    Exit While
-                Else
-                    p = p.Parent
-                End If
-            End While
-
-            Return ret
-        End Get
-    End Property
-
-    Public ReadOnly Property SchemaName As String Implements IDBObject.SchemaName
-        Get
-            Dim ret As String = String.Empty
-
-            Dim p As IDBChained = Me
-            While p IsNot Nothing
-                If TypeOf p Is DBSchema Then
-                    ret = DirectCast(p, DBSchema).Name
                     Exit While
                 Else
                     p = p.Parent
@@ -67,9 +49,9 @@
         Return ret
     End Function
 
-    Private sbFullName As New Text.StringBuilder("")
+
     Public Function GetFullName() As String Implements IDBObject.GetFullName
-        sbFullName.Clear()
+        Dim sbFullName As New Text.StringBuilder
 
         Dim p As IDBObject = Me
         While p IsNot Nothing
@@ -88,6 +70,59 @@
     MustOverride Function GetSqlModify() As String Implements IDBObject.GetSqlModify
     MustOverride Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
 
+    ReadOnly Property ModuleKey() As String Implements IDBObject.ModuleKey
+        Get
+            Dim ret As String = ""
+
+            Dim p As IDBChained = Me
+            While p IsNot Nothing
+                If TypeOf p Is IDBModule Then
+                    ret = CType(p, IDBModule).ModuleKey
+                    Exit While
+                Else
+                    p = p.Parent
+                End If
+            End While
+
+            Return ret
+        End Get
+    End Property
+
+    Public ReadOnly Property SchemaName As String Implements IDBObject.SchemaName
+        Get
+            Dim ret As String = String.Empty
+
+            Dim p As IDBChained = Me
+            While p IsNot Nothing
+                If TypeOf p Is DBSchema Then
+                    ret = DirectCast(p, DBSchema).Name
+                    Exit While
+                Else
+                    p = p.Parent
+                End If
+            End While
+
+            Return ret
+        End Get
+    End Property
+
+    ReadOnly Property TableName() As String Implements IDBObject.TableName
+        Get
+            Dim ret As String = ""
+
+            Dim p As IDBChained = Me
+            While p IsNot Nothing
+                If TypeOf p Is IDBTable Then
+                    ret = CType(p, IDBTable).Name
+                    Exit While
+                Else
+                    p = p.Parent
+                End If
+            End While
+
+            Return ret
+        End Get
+    End Property
 
 #End Region
 

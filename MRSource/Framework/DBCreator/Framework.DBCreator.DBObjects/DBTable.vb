@@ -11,17 +11,11 @@
 
         Me.Descriptor = descriptor
         If Not String.IsNullOrWhiteSpace(descriptor.CreatorFieldName) AndAlso descriptor.CreatorFieldDescriptor IsNot Nothing Then
-            'AddField(descriptor.CreatorFieldName, descriptor.CreatorFieldDescriptor)
-            Dim fld As IDBObject = descriptor.CreatorFieldDescriptor.GetDBObjectInstance(Me)
-            With fld
-                .Name = descriptor.CreatorFieldName
-            End With
-
-            DBObjects.Add(descriptor.CreatorFieldName, fld)
+            AddField(descriptor.CreatorFieldName, descriptor.CreatorFieldDescriptor)
         End If
     End Sub
 
-    Public Overrides ReadOnly Property DBObjectType As eDBObjectType
+    Public Overrides ReadOnly Property ObjectType As eDBObjectType
         Get
             Return eDBObjectType.Table
         End Get
