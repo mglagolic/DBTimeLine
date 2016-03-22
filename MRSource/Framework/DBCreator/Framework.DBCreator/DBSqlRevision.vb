@@ -21,7 +21,7 @@ Public Class DBSqlRevision
 
     Public Property ModuleKey As String
     Public Property SchemaName As String
-    Public Property TableName As String
+    Public Property SchemaObjectName As String
     Public Property ObjectName As String
 
     Public Property Sql As String
@@ -37,7 +37,7 @@ Public Class DBSqlRevision
 
             ModuleKey = .Parent.ModuleKey
             SchemaName = .Parent.SchemaName
-            TableName = .Parent.TableName
+            SchemaObjectName = .Parent.SchemaObjectName
             ObjectName = .Parent.Name
 
             ObjectFullName = .Parent.GetFullName
@@ -55,7 +55,7 @@ Public Class DBSqlRevision
 
         ModuleKey = CStr(dlo.ColumnValues("ModuleKey"))
         SchemaName = CStr(dlo.ColumnValues("SchemaName"))
-        TableName = CStr(dlo.ColumnValues("SchemaName"))
+        SchemaObjectName = CStr(dlo.ColumnValues("SchemaObjectName"))
         ObjectName = CStr(dlo.ColumnValues("ObjectName"))
 
         ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
@@ -96,7 +96,7 @@ Public Class DBSqlRevision
 
             .Add("ModuleKey", ModuleKey)
             .Add("SchemaName", SchemaName)
-            .Add("TableName", TableName)
+            .Add("SchemaObjectName", SchemaObjectName)
             .Add("ObjectName", ObjectName)
 
             .Add("ObjectFullName", ObjectFullName)
@@ -130,7 +130,7 @@ Public Class DBSqlRevision
             ret = rev1.SchemaName.CompareTo(rev2.SchemaName)
         End If
         If ret = 0 Then
-            ret = rev1.TableName.CompareTo(rev2.TableName)
+            ret = rev1.SchemaObjectName.CompareTo(rev2.SchemaObjectName)
         End If
         If ret = 0 Then
             ret = rev1.ObjectName.CompareTo(rev2.ObjectName)
@@ -163,7 +163,7 @@ Public Class DBSqlRevision
                     .RevisionType.GetHashCode Xor
                     .ModuleKey.GetHashCode Xor
                     .SchemaName.GetHashCode Xor
-                    .TableName.GetHashCode Xor
+                    .SchemaObjectName.GetHashCode Xor
                     .ObjectName.GetHashCode
             End With
         End Function
@@ -183,7 +183,7 @@ Public Class DBSqlRevision
         End Property
         Public Overrides ReadOnly Property SQL As String
             Get
-                Return "SELECT ID, Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, TableName, ObjectName, ObjectFullName FROM " & DataBaseTableName
+                Return "SELECT ID, Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName, ObjectFullName FROM " & DataBaseTableName
             End Get
         End Property
     End Class

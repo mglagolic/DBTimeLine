@@ -42,8 +42,9 @@
 
         Return revision
     End Function
+
     Public Function FindRevision(created As Date, granulation As Integer) As IDBRevision Implements IDBObject.FindRevision
-        Dim ret As DBRevision = Nothing
+        Dim ret As IDBRevision = Nothing
         ret = Revisions.Find(Function(rev) (rev.Created = created AndAlso rev.Granulation = granulation))
 
         Return ret
@@ -94,8 +95,8 @@
 
             Dim p As IDBChained = Me
             While p IsNot Nothing
-                If TypeOf p Is DBSchema Then
-                    ret = DirectCast(p, DBSchema).Name
+                If TypeOf p Is IDBSchema Then
+                    ret = DirectCast(p, IDBSchema).Name
                     Exit While
                 Else
                     p = p.Parent
@@ -106,7 +107,7 @@
         End Get
     End Property
 
-    ReadOnly Property TableName() As String Implements IDBObject.TableName
+    ReadOnly Property SchemaObjectName() As String Implements IDBObject.SchemaObjectName
         Get
             Dim ret As String = ""
 

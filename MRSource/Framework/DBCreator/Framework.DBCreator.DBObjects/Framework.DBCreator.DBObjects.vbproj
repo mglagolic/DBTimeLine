@@ -71,8 +71,12 @@
     <Compile Include="DBRevision.vb" />
     <Compile Include="DBSchema.vb" />
     <Compile Include="DBSchemaDescriptor.vb" />
+    <Compile Include="DBSqlGeneratorFactory\DBSqlGenerator.vb" />
+    <Compile Include="DBSqlGeneratorFactory\DBSqlGeneratorFactory.vb" />
+    <Compile Include="DBSqlGeneratorFactory\DBSqlGeneratorSqlServer.vb" />
     <Compile Include="DBTable.vb" />
     <Compile Include="DBTableDescriptor.vb" />
+    <Compile Include="Helpers.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

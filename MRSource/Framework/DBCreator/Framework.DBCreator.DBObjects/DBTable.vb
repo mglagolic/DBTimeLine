@@ -22,22 +22,7 @@
     End Property
 
     Public Function AddField(fieldName As String, descriptor As IDBFieldDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddField
-        If Not DBObjects.ContainsKey(fieldName) Then
-            Dim newDBObject As IDBObject = descriptor.GetDBObjectInstance(Me)
-            With newDBObject
-                .Name = fieldName
-            End With
-
-            DBObjects.Add(fieldName, newDBObject)
-        End If
-
-        Dim field As DBField = DBObjects(fieldName)
-
-        If createRevision IsNot Nothing Then
-            field.AddRevision(createRevision)
-        End If
-
-        Return field
+        Return Helpers.AddDBObjectToParent(Me, fieldName, descriptor, createRevision)
     End Function
 
     Public Overrides Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate

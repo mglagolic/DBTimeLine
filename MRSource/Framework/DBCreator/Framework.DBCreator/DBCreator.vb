@@ -8,11 +8,11 @@ Imports MRFramework.MRPersisting.Factory
 Public Class DBCreator
     Implements IDBChained
 
+    Public Property DBSqlGenerator As IDBSqlGenerator
     Public Property ActiveModuleKeys As New List(Of String)
     Public ReadOnly Property DBModules As New List(Of IDBModule)
     Public ReadOnly Property SourceDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
-    'Public ReadOnly Property DBSchemas As New Dictionary(Of String, IDBObject)
 
     Public ReadOnly Property DBTables As Dictionary(Of String, IDBObject)
         Get
@@ -77,7 +77,7 @@ Public Class DBCreator
                 .Add(New MRCore.MROrderItem("RevisionType", MRCore.Enums.eOrderDirection.Ascending))
                 .Add(New MRCore.MROrderItem("ModuleKey", MRCore.Enums.eOrderDirection.Ascending))
                 .Add(New MRCore.MROrderItem("SchemaName", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("TableName", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("SchemaObjectName", MRCore.Enums.eOrderDirection.Ascending))
                 .Add(New MRCore.MROrderItem("ObjectName", MRCore.Enums.eOrderDirection.Ascending))
             End With
 
@@ -177,18 +177,18 @@ BEGIN
         [RevisionType] [varchar](50) NOT NULL,
         [ModuleKey] [varchar](50),
         [SchemaName] [varchar](50),
-        [TableName] [varchar](100),
-        [ObjectName] [varchar](100) NOT NULL,
+        [SchemaObjectName] [varchar](150),
+        [ObjectName] [varchar](150) NOT NULL,
 		
         [ObjectFullName] [varchar](100) NOT NULL,
         [Description] [nvarchar](MAX) NULL
 	)
+	IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorRevision_Clustered' AND object_id = OBJECT_ID('DBCreator.Revision'))
+	BEGIN
+		DROP INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision 
+	END
+	CREATE CLUSTERED INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision (Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName)
 END
-IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorRevision_Clustered' AND object_id = OBJECT_ID('DBCreator.Revision'))
-BEGIN
-	DROP INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision 
-END
-CREATE CLUSTERED INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision (Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, TableName, ObjectName)
 "
                     cmd.ExecuteNonQuery()
 
