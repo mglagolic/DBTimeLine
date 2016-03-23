@@ -16,11 +16,4 @@
         Return Helpers.AddDBObjectToParent(Me, tableName, descriptor, createRevision)
     End Function
 
-    Public Overrides Function GetSqlModify() As String Implements IDBObject.GetSqlModify
-        Throw New NotImplementedException()
-    End Function
-
-    Public Overrides Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
-        Return DBCreator.DBSqlGenerator.GetSqlCreateSchema(Name)
-    End Function
 End Class

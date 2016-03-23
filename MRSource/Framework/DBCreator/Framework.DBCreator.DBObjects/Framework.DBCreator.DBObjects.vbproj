@@ -64,7 +64,9 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBConstraint.vb" />
     <Compile Include="DBField.vb" />
+    <Compile Include="DBConstraintDescriptor.vb" />
     <Compile Include="DBFieldDescriptor.vb" />
     <Compile Include="DBModule.vb" />
     <Compile Include="DBObject.vb" />

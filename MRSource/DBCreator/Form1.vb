@@ -16,8 +16,8 @@ Public Class Form1
         ' TODO  - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
         '       - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
 
-        creator.AddModule(New DBCreators.Common.DBO)
-        'creator.AddModule(New DBCreators.Common.CorePlace)
+        'creator.AddModule(New DBCreators.Common.DBO)
+        creator.AddModule(New DBCreators.Common.CorePlace)
 
         'creator.LoadModuleKeysFromDB()
 

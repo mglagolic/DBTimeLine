@@ -60,27 +60,39 @@ Public Class DBSqlRevision
 
         ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
 
-        'TODO - ovo ukljuciti
-        'Parent = FindParent(dBCreator)
+        Parent = FindParent(dBCreator)
     End Sub
 
-    'TODO - ovo popraviti
+    Public Function GetDBObjectKey() As String
+        Dim ret As String = String.Empty
+
+        Dim sbFullName As New Text.StringBuilder
+        sbFullName.Append(ModuleKey)
+        sbFullName.Append(".")
+        sbFullName.Append(SchemaName)
+
+        Select Case ObjectType
+            Case eDBObjectType.Table, eDBObjectType.View
+                sbFullName.Append(".")
+                sbFullName.Append(SchemaObjectName)
+            Case eDBObjectType.Field
+                sbFullName.Append(".")
+                sbFullName.Append(SchemaObjectName)
+                sbFullName.Append(".")
+                sbFullName.Append(ObjectName)
+        End Select
+
+        ret = sbFullName.ToString
+
+        Return ret
+    End Function
+
     Private Function FindParent(dBCreator As DBCreator) As IDBRevision
         Dim ret As IDBRevision = Nothing
-        Dim dbObject As IDBObject = Nothing
-        Select Case ObjectType
-            Case eDBObjectType.Field
-                If dBCreator.DBFields.ContainsKey(ObjectName) Then
-                    dbObject = dBCreator.DBFields(ObjectName)
-                End If
 
-            Case eDBObjectType.Table
-                If dBCreator.DBTables.ContainsKey(ObjectName) Then
-                    dbObject = dBCreator.DBTables(ObjectName)
-                End If
-        End Select
-        If dbObject IsNot Nothing Then
-            ret = dbObject.FindRevision(Created, Granulation)
+        Dim key As String = GetDBObjectKey()
+        If dBCreator.DBObjects.ContainsKey(key) Then
+            ret = dBCreator.DBObjects(key).FindRevision(Created, Granulation)
         End If
 
         Return ret
@@ -106,8 +118,6 @@ Public Class DBSqlRevision
         End With
         Return dlo
     End Function
-
-
 
     Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer
         Dim ret As Integer = 0

@@ -73,31 +73,26 @@ Public Class CorePlace
 
     Public Overrides Sub CreateTimeLine()
 
-        'Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
+        Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
 
-        'With AddSchema("Place", New DBSchemaDescriptor(), New DBRevision(rev))
-        '    With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
-        '                   New DBRevision(rev))
+        With AddSchema("Place", New DBSchemaDescriptor(), New DBRevision(rev))
+            With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
+                           New DBRevision(rev))
 
-        '        With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eDBFieldType.Nvarchar, .Size = -1, .Nullable = True},
-        '                         New DBRevision(DateSerial(2016, 3, 18), 0, eDBRevisionType.Create))
+                With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eDBFieldType.Nvarchar, .Size = -1, .Nullable = True},
+                                 New DBRevision(DateSerial(2016, 3, 18), 0, eDBRevisionType.Create))
 
-        '            .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Modify),
-        '                         New DBFieldDescriptor(.Descriptor) With {.FieldType = eDBFieldType.Guid})
-        '        End With
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Modify),
+                                 New DBFieldDescriptor(.Descriptor) With {.FieldType = eDBFieldType.Guid})
+                End With
 
-        '        With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eDBFieldType.Datetime, .Nullable = True})
-        '            .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
-        '        End With
+                With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eDBFieldType.Datetime, .Nullable = True})
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
+                End With
 
-        '        '.AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
-        '    End With
-        'End With
-
-        'With AddSchema("Custom", New MyDBSchemaDescriptor(), New DBRevision(rev))
-        '    .AddTable("CustomT1", New MyDBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
-        '              New DBRevision(rev))
-        'End With
+                '.AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
+            End With
+        End With
 
     End Sub
 

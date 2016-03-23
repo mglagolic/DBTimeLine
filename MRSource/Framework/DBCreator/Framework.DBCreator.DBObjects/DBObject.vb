@@ -1,4 +1,6 @@
-﻿Public MustInherit Class DBObject
+﻿Option Strict On
+
+Public MustInherit Class DBObject
     Implements IDBObject
 
 #Region "IDBObject"
@@ -38,7 +40,14 @@
             Me.Descriptor = descriptor
         End If
 
-        DBCreator.SourceDBSqlRevisions.Add(New DBSqlRevision(revision))
+        Dim sqlRevision As New DBSqlRevision(revision)
+        DBCreator.SourceDBSqlRevisions.Add(sqlRevision)
+
+        'TODO - razmisliti - mozda u dbcreatoru umjesto dbObjects dodati property dbRevisions isto kao sorted dictionary
+        Dim key As String = sqlRevision.GetDBObjectKey
+        If Not DBCreator.DBObjects.ContainsKey(key) Then
+            DBCreator.DBObjects.Add(key, Me)
+        End If
 
         Return revision
     End Function
@@ -67,14 +76,14 @@
         Return sbFullName.ToString().TrimEnd("."c)
     End Function
 
-    Public Overridable Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
+    Public Overridable Function GetSqlCreate(sqlGenerator As IDBSqlGenerator) As String Implements IDBObject.GetSqlCreate
         Dim ret As String = ""
         If TypeOf Me Is IDBSchema Then
-            ret = DBCreator.DBSqlGenerator.GetSqlCreateSchema(Name)
+            ret = sqlGenerator.GetSqlCreateSchema(DirectCast(Me, IDBSchema))
         ElseIf TypeOf Me Is IDBTable Then
-            ret = DBCreator.DBSqlGenerator.GetSqlCreateTable(DirectCast(Me, IDBTable))
+            ret = sqlGenerator.GetSqlCreateTable(DirectCast(Me, IDBTable))
         ElseIf TypeOf Me Is IDBField Then
-            ret = DBCreator.DBSqlGenerator.GetSqlCreateField(DirectCast(Me, IDBField))
+            ret = sqlGenerator.GetSqlCreateField(DirectCast(Me, IDBField))
         Else
             Throw New NotSupportedException
         End If
@@ -82,7 +91,7 @@
         Return ret
     End Function
 
-    Public Overridable Function GetSqlModify() As String Implements IDBObject.GetSqlModify
+    Public Overridable Function GetSqlModify(sqlGenerator As IDBSqlGenerator) As String Implements IDBObject.GetSqlModify
         Dim ret As String = ""
 
         If TypeOf Me Is IDBSchema Then
@@ -90,7 +99,7 @@
         ElseIf TypeOf Me Is IDBTable Then
             Throw New NotImplementedException()
         ElseIf TypeOf Me Is IDBField Then
-            ret = DBCreator.DBSqlGenerator.GetSqlModifyField(DirectCast(Me, IDBField))
+            ret = sqlGenerator.GetSqlModifyField(DirectCast(Me, IDBField))
         Else
             Throw New NotSupportedException
         End If
@@ -98,15 +107,15 @@
         Return ret
     End Function
 
-    Public Overridable Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
+    Public Overridable Function GetSqlDelete(sqlGenerator As IDBSqlGenerator) As String Implements IDBObject.GetSqlDelete
         Dim ret As String = ""
 
         If TypeOf Me Is IDBSchema Then
-            ret = DBCreator.DBSqlGenerator.GetSqlDeleteSchema(Name)
+            ret = sqlGenerator.GetSqlDeleteSchema(DirectCast(Me, IDBSchema))
         ElseIf TypeOf Me Is IDBTable Then
-            ret = DBCreator.DBSqlGenerator.GetSqlDeleteTable(SchemaName, Name)
+            ret = sqlGenerator.GetSqlDeleteTable(DirectCast(Me, IDBTable))
         ElseIf TypeOf Me Is IDBField Then
-            ret = DBCreator.DBSqlGenerator.GetSqlDeleteField(DirectCast(Me, IDBField))
+            ret = sqlGenerator.GetSqlDeleteField(DirectCast(Me, IDBField))
         Else
             Throw New NotSupportedException
         End If

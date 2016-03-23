@@ -5,23 +5,23 @@ Public Class DBSqlGenerator
 
     'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
     'TODO - sve sql get funkcije promijeniti tako da im argument bude samo idbobject
-    Public Overridable Function GetSqlCreateSchema(name As String) As String Implements IDBSqlGenerator.GetSqlCreateSchema
+    Public Overridable Function GetSqlCreateSchema(schema As IDBSchema) As String Implements IDBSqlGenerator.GetSqlCreateSchema
         Dim ret As String = ""
 
         ret = String.Format("GO
 CREATE SCHEMA {0}
 GO
-", name)
+", schema.Name)
         Return ret
     End Function
 
-    Public Overridable Function GetSqlDeleteSchema(name As String) As String Implements IDBSqlGenerator.GetSqlDeleteSchema
+    Public Overridable Function GetSqlDeleteSchema(schema As IDBSchema) As String Implements IDBSqlGenerator.GetSqlDeleteSchema
         Dim ret As String = ""
 
         ret = String.Format("GO
 DROP SCHEMA {0}
 GO
-", name)
+", schema.Name)
         Return ret
     End Function
 
@@ -68,11 +68,11 @@ GO
         Return ret
     End Function
 
-    Public Overridable Function GetSqlDeleteTable(schemaName As String, name As String) As String Implements IDBSqlGenerator.GetSqlDeleteTable
+    Public Overridable Function GetSqlDeleteTable(table As IDBTable) As String Implements IDBSqlGenerator.GetSqlDeleteTable
         Dim ret As String = ""
 
         ret = String.Format("DROP TABLE {0}.{1}
-", schemaName, name)
+", table.SchemaName, table.Name)
 
         Return ret
     End Function
@@ -103,6 +103,27 @@ GO
                 ret &= " NOT NULL"
             End If
         End With
+        Return ret
+    End Function
+
+    Public Function GetSqlCreateConstraint(constraint As IDBConstraint) As String Implements IDBSqlGenerator.GetSqlCreateConstraint
+        Dim ret As String = ""
+        ' TODO - implementirati PK i FK constraints za sada. Dodati constraint type enum
+        With CType(constraint.Descriptor, IDBConstraintDescriptor)
+            Select Case .ConstraintType
+                Case eDBConstraintType.PrimaryKey
+                    Throw New NotImplementedException
+                Case eDBConstraintType.ForeignKey
+                    Throw New NotImplementedException
+            End Select
+        End With
+
+        'ALTER TABLE Place.Table1 ADD CONSTRAINT
+        '	PK_Table1 PRIMARY KEY CLUSTERED 
+        '	(
+        '	ID
+        '	)
+
         Return ret
     End Function
 End Class

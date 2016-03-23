@@ -39,11 +39,11 @@ Public Class DBRevision
         If Parent IsNot Nothing Then
             Select Case DBRevisionType
                 Case eDBRevisionType.Create
-                    sbSql.Append(Parent.GetSqlCreate())
+                    sbSql.Append(Parent.GetSqlCreate(Parent.DBCreator.DBSqlGenerator))
                 Case eDBRevisionType.Modify
-                    sbSql.Append(Parent.GetSqlModify())
+                    sbSql.Append(Parent.GetSqlModify(Parent.DBCreator.DBSqlGenerator))
                 Case eDBRevisionType.Delete
-                    sbSql.Append(Parent.GetSqlDelete())
+                    sbSql.Append(Parent.GetSqlDelete(Parent.DBCreator.DBSqlGenerator))
                 Case Else
                     Throw New NotSupportedException("eDBRevisionType")
             End Select

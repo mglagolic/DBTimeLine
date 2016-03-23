@@ -25,8 +25,9 @@ End Class
 Public Class myField
     Inherits DBField
 
-    Public Overrides Function GetSqlCreate() As String
-        Dim sql As String = MyBase.GetSqlCreate()
+    Public Overrides Function GetSqlCreate(sqlGenerator As IDBSqlGenerator) As String
+        Dim sql As String = MyBase.GetSqlCreate(sqlGenerator)
+
         sql &= NekiNoviKojegNemaUGetDescriptoru
 
         Return sql

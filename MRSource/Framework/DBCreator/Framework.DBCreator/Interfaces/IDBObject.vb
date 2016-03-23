@@ -18,7 +18,7 @@
 
     Function FindRevision(created As Date, granulation As Integer) As IDBRevision
 
-    Function GetSqlCreate() As String
-    Function GetSqlModify() As String
-    Function GetSqlDelete() As String
+    Function GetSqlCreate(sqlGenerator As IDBSqlGenerator) As String
+    Function GetSqlModify(sqlGenerator As IDBSqlGenerator) As String
+    Function GetSqlDelete(sqlGenerator As IDBSqlGenerator) As String
 End Interface

@@ -13,6 +13,7 @@ Public Class DBCreator
     Public ReadOnly Property DBModules As New List(Of IDBModule)
     Public ReadOnly Property SourceDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
+    Public ReadOnly Property DBObjects As New SortedDictionary(Of String, IDBObject)
 
     Public ReadOnly Property DBTables As Dictionary(Of String, IDBObject)
         Get
@@ -135,7 +136,8 @@ Public Class DBCreator
         Next
     End Sub
 
-    Public Function ExecuteDBSqlRevisions(cnn As Common.DbConnection, trn As Common.DbTransaction) As String
+    Public Function ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction) As String
+        ' TODO - razmisliti o uvodjenju hashseta ili sorted seta ili sorted dictionarya, provjeriti performanse except metode
         Dim notExecutedRevisions = SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
 
         Dim newExecutedRevisions As New List(Of DBSqlRevision)

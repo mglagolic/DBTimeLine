@@ -1,6 +1,6 @@
-﻿Public Class DBField
+﻿Public Class DBConstraint
     Inherits DBObject
-    Implements IDBField
+    Implements IDBConstraint
 
     Public Sub New()
 
@@ -8,14 +8,9 @@
 
     Public Overrides ReadOnly Property ObjectType As eDBObjectType
         Get
-            Return eDBObjectType.Field
+            Return eDBObjectType.Constraint
         End Get
     End Property
 
 End Class
 
-'ALTER TABLE Place.Table1 ADD CONSTRAINT
-'	PK_Table1 PRIMARY KEY CLUSTERED 
-'	(
-'	ID
-'	)
