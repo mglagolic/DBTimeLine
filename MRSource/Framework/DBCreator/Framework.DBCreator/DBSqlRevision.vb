@@ -60,7 +60,8 @@ Public Class DBSqlRevision
 
         ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
 
-        Parent = FindParent(dBCreator)
+        'TODO - ovo ukljuciti
+        'Parent = FindParent(dBCreator)
     End Sub
 
     'TODO - ovo popraviti

@@ -6,12 +6,6 @@
 
     End Sub
 
-    Public Sub New(descriptor As DBSchemaDescriptor)
-        MyClass.New
-
-        Me.Descriptor = descriptor
-    End Sub
-
     Public Overrides ReadOnly Property ObjectType As eDBObjectType
         Get
             Return eDBObjectType.Schema
@@ -22,30 +16,11 @@
         Return Helpers.AddDBObjectToParent(Me, tableName, descriptor, createRevision)
     End Function
 
-    Public Overrides Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
-        Dim ret As String = ""
-
-        ret = <string>GO
-CREATE SCHEMA <%= Name %>
-GO
-</string>.Value
-
-        Return ret
-    End Function
-
     Public Overrides Function GetSqlModify() As String Implements IDBObject.GetSqlModify
         Throw New NotImplementedException()
     End Function
 
     Public Overrides Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
-        Dim ret As String = ""
-
-        ret =
-<string>GO
-DROP SCHEMA <%= Name & vbNewLine %>
-GO
-</string>.Value
-
-        Return ret
+        Return DBCreator.DBSqlGenerator.GetSqlCreateSchema(Name)
     End Function
 End Class

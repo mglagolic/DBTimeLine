@@ -25,35 +25,4 @@
         Return Helpers.AddDBObjectToParent(Me, fieldName, descriptor, createRevision)
     End Function
 
-    Public Overrides Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
-        Dim ret As String = ""
-        With CType(Descriptor, IDBTableDescriptor)
-            ret =
-<string>
-CREATE TABLE <%= SchemaName %>.<%= Name %> 
-(
-    <%= .CreatorFieldName & " " %><%= .CreatorFieldDescriptor.GetFieldTypeSql %>
-)
-</string>.Value
-        End With
-
-        Return ret
-    End Function
-
-    Public Overrides Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
-        Dim ret As String = ""
-
-        ret =
-<string>
-DROP TABLE <%= SchemaName %>.<%= Name %>
-</string>.Value
-
-
-        Return ret
-    End Function
-
-    Public Overrides Function GetSqlModify() As String Implements IDBObject.GetSqlModify
-        Throw New NotImplementedException()
-    End Function
-
 End Class

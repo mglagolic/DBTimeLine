@@ -1,14 +1,15 @@
 ﻿Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBCreator
+Imports Framework.DBCreator.DBObjects
 
 Public Class Form1
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'TODO - omoguciti custom descriptore, custom code generatore, code generator factory (ovisno o bazi, verziji baze itd.)
-
         MRC.GetInstance().ConnectionString = My.Settings.Item(My.Settings.DefaultConnectionString)
         MRC.GetInstance().ProviderName = My.Settings.Item(My.Settings.DefaultProvider)
 
-        Dim creator As New Framework.DBCreator.DBCreator
+        Dim dbSqlFactory As New DBSqlGeneratorFactory
+
+        Dim creator As New Framework.DBCreator.DBCreator With {.DBSqlGenerator = dbSqlFactory.GetDBSqlGenerator(eDBType.TransactSQL)}
 
         creator.CreateSystemObjects()
 

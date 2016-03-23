@@ -67,9 +67,52 @@
         Return sbFullName.ToString().TrimEnd("."c)
     End Function
 
-    MustOverride Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
-    MustOverride Function GetSqlModify() As String Implements IDBObject.GetSqlModify
-    MustOverride Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
+    Public Overridable Function GetSqlCreate() As String Implements IDBObject.GetSqlCreate
+        Dim ret As String = ""
+        If TypeOf Me Is IDBSchema Then
+            ret = DBCreator.DBSqlGenerator.GetSqlCreateSchema(Name)
+        ElseIf TypeOf Me Is IDBTable Then
+            ret = DBCreator.DBSqlGenerator.GetSqlCreateTable(SchemaName, Name, Descriptor)
+        ElseIf TypeOf Me Is IDBField Then
+            ret = DBCreator.DBSqlGenerator.GetSqlCreateField(SchemaName, DirectCast(Parent, IDBObject).Name, Name, Descriptor)
+        Else
+            Throw New NotSupportedException
+        End If
+
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlModify() As String Implements IDBObject.GetSqlModify
+        Dim ret As String = ""
+
+        If TypeOf Me Is IDBSchema Then
+            Throw New NotImplementedException()
+        ElseIf TypeOf Me Is IDBTable Then
+            Throw New NotImplementedException()
+        ElseIf TypeOf Me Is IDBField Then
+            ret = DBCreator.DBSqlGenerator.GetSqlModifyField(SchemaName, DirectCast(Parent, IDBObject).Name, Name, Descriptor)
+        Else
+            Throw New NotSupportedException
+        End If
+
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlDelete() As String Implements IDBObject.GetSqlDelete
+        Dim ret As String = ""
+
+        If TypeOf Me Is IDBSchema Then
+            ret = DBCreator.DBSqlGenerator.GetSqlDeleteSchema(Name)
+        ElseIf TypeOf Me Is IDBTable Then
+            ret = DBCreator.DBSqlGenerator.GetSqlDeleteTable(SchemaName, Name)
+        ElseIf TypeOf Me Is IDBField Then
+            ret = DBCreator.DBSqlGenerator.GetSqlDeleteField(SchemaName, DirectCast(Parent, IDBObject).Name, Name)
+        Else
+            Throw New NotSupportedException
+        End If
+
+        Return ret
+    End Function
 
     ReadOnly Property ModuleKey() As String Implements IDBObject.ModuleKey
         Get

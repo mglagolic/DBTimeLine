@@ -1,4 +1,4 @@
-﻿Public Enum eFieldType
+﻿Public Enum eDBFieldType
     Guid = 0
     Nvarchar = 1
     [Decimal] = 2

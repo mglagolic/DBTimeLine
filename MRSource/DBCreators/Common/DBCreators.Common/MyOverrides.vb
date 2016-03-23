@@ -18,7 +18,7 @@ Public Class myfieldDesc
     End Sub
 
     Public Overrides Function GetDBObjectInstance(Optional parent As IDBChained = Nothing) As IDBObject
-        Return New myField(Me) With {.Parent = parent}
+        Return New myField() With {.Parent = parent, .Descriptor = Me}
     End Function
 End Class
 
@@ -31,10 +31,6 @@ Public Class myField
 
         Return sql
     End Function
-
-    Public Sub New(descriptor As myfieldDesc)
-        MyBase.New(descriptor)
-    End Sub
 
     Public Property NekiNoviKojegNemaUGetDescriptoru As String
 

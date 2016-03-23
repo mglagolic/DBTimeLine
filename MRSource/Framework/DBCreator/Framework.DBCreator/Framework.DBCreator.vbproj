@@ -75,8 +75,8 @@
     <Compile Include="Interfaces\IDBSqlGenerator.vb" />
     <Compile Include="DBSqlRevision.vb" />
     <Compile Include="Enums\eDBObjectType.vb" />
-    <Compile Include="Enums\eFieldType.vb" />
-    <Compile Include="Enums\eRevisionType.vb" />
+    <Compile Include="Enums\eDBFieldType.vb" />
+    <Compile Include="Enums\eDBRevisionType.vb" />
     <Compile Include="Interfaces\IDBModule.vb" />
     <Compile Include="Interfaces\IDBChained.vb" />
     <Compile Include="Interfaces\IDBObject.vb" />
