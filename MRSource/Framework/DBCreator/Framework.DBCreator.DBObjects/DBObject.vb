@@ -72,9 +72,9 @@
         If TypeOf Me Is IDBSchema Then
             ret = DBCreator.DBSqlGenerator.GetSqlCreateSchema(Name)
         ElseIf TypeOf Me Is IDBTable Then
-            ret = DBCreator.DBSqlGenerator.GetSqlCreateTable(SchemaName, Name, Descriptor)
+            ret = DBCreator.DBSqlGenerator.GetSqlCreateTable(DirectCast(Me, IDBTable))
         ElseIf TypeOf Me Is IDBField Then
-            ret = DBCreator.DBSqlGenerator.GetSqlCreateField(SchemaName, DirectCast(Parent, IDBObject).Name, Name, Descriptor)
+            ret = DBCreator.DBSqlGenerator.GetSqlCreateField(DirectCast(Me, IDBField))
         Else
             Throw New NotSupportedException
         End If
@@ -90,7 +90,7 @@
         ElseIf TypeOf Me Is IDBTable Then
             Throw New NotImplementedException()
         ElseIf TypeOf Me Is IDBField Then
-            ret = DBCreator.DBSqlGenerator.GetSqlModifyField(SchemaName, DirectCast(Parent, IDBObject).Name, Name, Descriptor)
+            ret = DBCreator.DBSqlGenerator.GetSqlModifyField(DirectCast(Me, IDBField))
         Else
             Throw New NotSupportedException
         End If
@@ -106,7 +106,7 @@
         ElseIf TypeOf Me Is IDBTable Then
             ret = DBCreator.DBSqlGenerator.GetSqlDeleteTable(SchemaName, Name)
         ElseIf TypeOf Me Is IDBField Then
-            ret = DBCreator.DBSqlGenerator.GetSqlDeleteField(SchemaName, DirectCast(Parent, IDBObject).Name, Name)
+            ret = DBCreator.DBSqlGenerator.GetSqlDeleteField(DirectCast(Me, IDBField))
         Else
             Throw New NotSupportedException
         End If

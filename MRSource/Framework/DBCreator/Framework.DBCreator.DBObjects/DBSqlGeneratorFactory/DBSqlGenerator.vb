@@ -4,7 +4,7 @@ Public Class DBSqlGenerator
     Implements IDBSqlGenerator
 
     'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
-
+    'TODO - sve sql get funkcije promijeniti tako da im argument bude samo idbobject
     Public Overridable Function GetSqlCreateSchema(name As String) As String Implements IDBSqlGenerator.GetSqlCreateSchema
         Dim ret As String = ""
 
@@ -25,38 +25,44 @@ GO
         Return ret
     End Function
 
-    Public Overridable Function GetSqlCreateField(schemaName As String, tableName As String, name As String, descriptor As IDBFieldDescriptor) As String Implements IDBSqlGenerator.GetSqlCreateField
-        Dim ret As String = String.Format("ALTER TABLE {0}.{1} ADD
+    Public Overridable Function GetSqlCreateField(field As IDBField) As String Implements IDBSqlGenerator.GetSqlCreateField
+        With field
+            Dim ret As String = String.Format("ALTER TABLE {0}.{1} ADD
 {2} {3}
-", schemaName, tableName, name, GetFieldTypeSql(descriptor))
+", .SchemaName, DirectCast(.Parent, IDBObject).Name, .Name, GetFieldTypeSql(.Descriptor))
 
-        Return ret
+            Return ret
+        End With
     End Function
 
-    Public Overridable Function GetSqlModifyField(schemaName As String, tableName As String, name As String, descriptor As IDBFieldDescriptor) As String Implements IDBSqlGenerator.GetSqlModifyField
-        Dim ret As String = String.Format("ALTER TABLE {0}.{1} ALTER COLUMN
+    Public Overridable Function GetSqlModifyField(field As IDBField) As String Implements IDBSqlGenerator.GetSqlModifyField
+        With field
+            Dim ret As String = String.Format("ALTER TABLE {0}.{1} ALTER COLUMN
 {2} {3}
-", schemaName, tableName, name, GetFieldTypeSql(descriptor))
+", .SchemaName, DirectCast(.Parent, IDBObject).Name, .Name, GetFieldTypeSql(.Descriptor))
 
-        Return ret
+            Return ret
+        End With
     End Function
 
-    Public Overridable Function GetSqlDeleteField(schemaName As String, tableName As String, name As String) As String Implements IDBSqlGenerator.GetSqlDeleteField
-        Dim ret As String = String.Format("ALTER TABLE {0}.{1} DROP COLUMN
+    Public Overridable Function GetSqlDeleteField(field As IDBField) As String Implements IDBSqlGenerator.GetSqlDeleteField
+        With field
+            Dim ret As String = String.Format("ALTER TABLE {0}.{1} DROP COLUMN
 {2}
-", schemaName, tableName, name)
+", .SchemaName, DirectCast(.Parent, IDBObject).Name, .Name)
 
-        Return ret
+            Return ret
+        End With
     End Function
 
-    Public Overridable Function GetSqlCreateTable(schemaName As String, name As String, descriptor As IDBTableDescriptor) As String Implements IDBSqlGenerator.GetSqlCreateTable
+    Public Overridable Function GetSqlCreateTable(table As IDBTable) As String Implements IDBSqlGenerator.GetSqlCreateTable
         Dim ret As String = ""
-        With descriptor
+        With table
             ret = String.Format("CREATE TABLE {0}.{1}
 (
     {2} {3}
 )
-", schemaName, name, .CreatorFieldName, GetFieldTypeSql(.CreatorFieldDescriptor))
+", .SchemaName, .Name, CType(.Descriptor, IDBTableDescriptor).CreatorFieldName, GetFieldTypeSql(CType(.Descriptor, IDBTableDescriptor).CreatorFieldDescriptor))
         End With
 
         Return ret
