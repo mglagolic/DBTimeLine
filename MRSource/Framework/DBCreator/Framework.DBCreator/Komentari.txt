@@ -1,0 +1,22 @@
+﻿DBCreator only deploys revisions which are not already deployed. 
+- If these new revisions change database objects which are different in production than in source, then those database objects will be overwriten, and only those. 
+- The rest of manual changes to production database are irrelevant to DBCreator and will not be overwriten.
+- This feature allows DBCreator to continue existing database version control without the need of scripting current database structure.
+- With DBCreator, all you need is start using it.
+
+CreateTimeLine
+- database structure and data are both part of DBCreator revision timeline
+
+Capture current database structure
+- querying ddl views DBCreator generates its own modules on bases of captured database structure
+- these captures can be saved directly in the database or in standalone .cs, .sql files
+- this allows legacy issues to be completely removed
+- it is also possible to deploy these captures to new databases which makes setting up production environment for new clients painless
+
+- code generation possible on multiple databases simultaneously, DBCreator automaticaly finds identical dbObject and puts differences in separate files
+
+Plugins
+- DBCreator uses plugins for custom changes in a way that each database knows what it needs installed
+- no need for external config files or something similar
+
+
