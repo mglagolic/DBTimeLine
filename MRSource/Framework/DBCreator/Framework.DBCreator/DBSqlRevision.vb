@@ -29,6 +29,10 @@ Public Class DBSqlRevision
 
     Public Property Key As String
 
+    Private Sub New()
+
+    End Sub
+
     Public Sub New(dBRevision As IDBRevision)
         With dBRevision
             Created = .Created
