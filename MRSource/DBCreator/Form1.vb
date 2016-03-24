@@ -30,9 +30,6 @@ Public Class Form1
             creator.DBModules(i).LoadRevisions()
         Next
 
-
-        creator.SourceDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
-
         Using cnn As Common.DbConnection = MRC.GetConnection()
             cnn.Open()
 
@@ -42,7 +39,9 @@ Public Class Form1
 
                 RichTextBox1.Text = creator.ExecuteDBSqlRevisions(cnn, trn)
 
-                Dim imaUSourceuNemaUBazi = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
+                Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+                newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+
 
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()

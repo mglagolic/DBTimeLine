@@ -22,11 +22,11 @@
     End Property
 
     Public Function AddConstraint(constraintName As String, descriptor As IDBObjectDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddConstraint
-        Return Helpers.AddDBObjectToParent(Me, constraintName, descriptor, createRevision)
+        Return MyBase.AddDBObject(constraintName, descriptor, createRevision)
     End Function
 
     Public Function AddField(fieldName As String, descriptor As IDBFieldDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddField
-        Return Helpers.AddDBObjectToParent(Me, fieldName, descriptor, createRevision)
+        Return MyBase.AddDBObject(fieldName, descriptor, createRevision)
     End Function
 
 End Class

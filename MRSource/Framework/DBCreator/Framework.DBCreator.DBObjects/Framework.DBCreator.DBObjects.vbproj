@@ -70,6 +70,7 @@
     <Compile Include="DBFieldDescriptor.vb" />
     <Compile Include="DBModule.vb" />
     <Compile Include="DBObject.vb" />
+    <Compile Include="DBParent.vb" />
     <Compile Include="DBRevision.vb" />
     <Compile Include="DBSchema.vb" />
     <Compile Include="DBSchemaDescriptor.vb" />
@@ -78,7 +79,6 @@
     <Compile Include="DBSqlGeneratorFactory\DBSqlGeneratorSqlServer.vb" />
     <Compile Include="DBTable.vb" />
     <Compile Include="DBTableDescriptor.vb" />
-    <Compile Include="Helpers.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

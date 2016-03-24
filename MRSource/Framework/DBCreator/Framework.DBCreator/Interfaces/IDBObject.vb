@@ -16,7 +16,7 @@
     ReadOnly Property Revisions As List(Of IDBRevision)
     Function GetFullName() As String
 
-    Function FindRevision(created As Date, granulation As Integer) As IDBRevision
+    'Function FindRevision(created As Date, granulation As Integer) As IDBRevision
 
     Function GetSqlCreate(sqlGenerator As IDBSqlGenerator) As String
     Function GetSqlModify(sqlGenerator As IDBSqlGenerator) As String

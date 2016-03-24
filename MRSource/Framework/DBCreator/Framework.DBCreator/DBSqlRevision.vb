@@ -27,6 +27,8 @@ Public Class DBSqlRevision
     Public Property Sql As String
     Public Property Description As String
 
+    Public Property Key As String
+
     Public Sub New(dBRevision As IDBRevision)
         With dBRevision
             Created = .Created
@@ -43,9 +45,13 @@ Public Class DBSqlRevision
             ObjectFullName = .Parent.GetFullName
             Sql = .GetSql
             Description = Sql
+
             Parent = dBRevision
+
+            Key = GetDBSqlRevisionKey()
         End With
     End Sub
+
     Public Sub New(dlo As IMRDLO, dBCreator As DBCreator)
         Created = CDate(dlo.ColumnValues("Created"))
         Granulation = CInt(dlo.ColumnValues("Granulation"))
@@ -60,13 +66,23 @@ Public Class DBSqlRevision
 
         ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
 
+        Key = GetDBSqlRevisionKey()
+
         Parent = FindParent(dBCreator)
     End Sub
 
-    Public Function GetDBObjectKey() As String
+    Public Function GetDBSqlRevisionKey() As String
         Dim ret As String = String.Empty
 
         Dim sbFullName As New Text.StringBuilder
+        sbFullName.Append(Created.ToString("yyyy-MM-dd"))
+        sbFullName.Append(".")
+        sbFullName.Append(Granulation.ToString)
+        sbFullName.Append(".")
+        sbFullName.Append(ObjectType.ToString)
+        sbFullName.Append(".")
+        sbFullName.Append(RevisionType.ToString)
+        sbFullName.Append(".")
         sbFullName.Append(ModuleKey)
         sbFullName.Append(".")
         sbFullName.Append(SchemaName)
@@ -90,9 +106,8 @@ Public Class DBSqlRevision
     Private Function FindParent(dBCreator As DBCreator) As IDBRevision
         Dim ret As IDBRevision = Nothing
 
-        Dim key As String = GetDBObjectKey()
-        If dBCreator.DBObjects.ContainsKey(key) Then
-            ret = dBCreator.DBObjects(key).FindRevision(Created, Granulation)
+        If dBCreator.SourceDBRevisions.ContainsKey(Key) Then
+            ret = dBCreator.SourceDBRevisions(Key)
         End If
 
         Return ret
@@ -122,30 +137,7 @@ Public Class DBSqlRevision
     Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer
         Dim ret As Integer = 0
 
-        If ret = 0 Then
-            ret = rev1.Created.CompareTo(rev2.Created)
-        End If
-        If ret = 0 Then
-            ret = rev1.Granulation.CompareTo(rev2.Granulation)
-        End If
-        If ret = 0 Then
-            ret = rev1.ObjectType.CompareTo(rev2.ObjectType)
-        End If
-        If ret = 0 Then
-            ret = rev1.RevisionType.CompareTo(rev2.RevisionType)
-        End If
-        If ret = 0 Then
-            ret = rev1.ModuleKey.CompareTo(rev2.ModuleKey)
-        End If
-        If ret = 0 Then
-            ret = rev1.SchemaName.CompareTo(rev2.SchemaName)
-        End If
-        If ret = 0 Then
-            ret = rev1.SchemaObjectName.CompareTo(rev2.SchemaObjectName)
-        End If
-        If ret = 0 Then
-            ret = rev1.ObjectName.CompareTo(rev2.ObjectName)
-        End If
+        ret = rev1.Key.CompareTo(rev2.Key)
 
         Return ret
     End Function
@@ -157,8 +149,7 @@ Public Class DBSqlRevision
         Public Shadows Function Equals(x As DBSqlRevision, y As DBSqlRevision) As Boolean Implements IEqualityComparer(Of DBSqlRevision).Equals
             Dim ret As Boolean = False
 
-            Dim compareResult As Integer = DBSqlRevision.CompareRevisionsForDbCreations(x, y)
-            If compareResult = 0 Then
+            If CompareRevisionsForDbCreations(x, y) = 0 Then
                 ret = True
             End If
 
@@ -166,17 +157,7 @@ Public Class DBSqlRevision
         End Function
 
         Public Shadows Function GetHashCode(obj As DBSqlRevision) As Integer Implements IEqualityComparer(Of DBSqlRevision).GetHashCode
-            With obj
-                Return _
-                    .Created.GetHashCode Xor
-                    .Granulation.GetHashCode Xor
-                    .ObjectType.GetHashCode Xor
-                    .RevisionType.GetHashCode Xor
-                    .ModuleKey.GetHashCode Xor
-                    .SchemaName.GetHashCode Xor
-                    .SchemaObjectName.GetHashCode Xor
-                    .ObjectName.GetHashCode
-            End With
+            Return obj.Key.GetHashCode
         End Function
     End Class
 

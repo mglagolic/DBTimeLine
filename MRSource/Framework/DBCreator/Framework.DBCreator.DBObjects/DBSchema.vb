@@ -13,7 +13,7 @@
     End Property
 
     Public Function AddTable(tableName As String, descriptor As IDBTableDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBTable Implements IDBSchema.AddTable
-        Return Helpers.AddDBObjectToParent(Me, tableName, descriptor, createRevision)
+        Return MyBase.AddDBObject(tableName, descriptor, createRevision)
     End Function
 
 End Class

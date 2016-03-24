@@ -88,6 +88,8 @@ Public Class CorePlace
 
                 With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eDBFieldType.Datetime, .Nullable = True})
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
+
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 24), 0, eDBRevisionType.Create))
                 End With
 
                 '.AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))

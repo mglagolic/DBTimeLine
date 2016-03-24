@@ -11,9 +11,11 @@ Public Class DBCreator
     Public Property DBSqlGenerator As IDBSqlGenerator
     Public Property ActiveModuleKeys As New List(Of String)
     Public ReadOnly Property DBModules As New List(Of IDBModule)
-    Public ReadOnly Property SourceDBSqlRevisions As New List(Of DBSqlRevision)
-    Public ReadOnly Property ExecutedDBSqlRevisions As New List(Of DBSqlRevision)
-    Public ReadOnly Property DBObjects As New SortedDictionary(Of String, IDBObject)
+    Public ReadOnly Property SourceDBRevisions As New Dictionary(Of String, IDBRevision)
+
+    Public ReadOnly Property SourceDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
+    Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
+
 
     Public ReadOnly Property DBTables As Dictionary(Of String, IDBObject)
         Get
@@ -137,8 +139,8 @@ Public Class DBCreator
     End Sub
 
     Public Function ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction) As String
-        ' TODO - razmisliti o uvodjenju hashseta ili sorted seta ili sorted dictionarya, provjeriti performanse except metode
-        Dim notExecutedRevisions = SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList()
+        Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+        notExecutedRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
         Dim newExecutedRevisions As New List(Of DBSqlRevision)
         Dim sqlScriptBuilder As New StringBuilder()
