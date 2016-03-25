@@ -101,6 +101,7 @@ Public Class CorePlace
 
                 .AddConstraint(New DBPrimaryKeyConstraintDescriptor("ID"),
                                New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
+
             End With
 
             With .AddTable("Table2", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},

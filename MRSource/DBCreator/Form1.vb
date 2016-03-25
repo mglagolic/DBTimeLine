@@ -39,6 +39,7 @@ Public Class Form1
 
                 RichTextBox1.Text = creator.ExecuteDBSqlRevisions(cnn, trn)
 
+
                 Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
                 newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 

@@ -15,21 +15,6 @@ Public Class DBCreator
 
     Public ReadOnly Property SourceDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
-
-
-    Public ReadOnly Property DBTables As Dictionary(Of String, IDBObject)
-        Get
-            ' TODO - procitati sve tableove chiled objekata pocevsi od dbmodule
-            Throw New NotImplementedException
-        End Get
-    End Property
-    Public ReadOnly Property DBFields As Dictionary(Of String, IDBObject)
-        Get
-            ' TODO - procitati sve fieldove chiled objekata pocevsi od dbmodule
-            Throw New NotImplementedException
-        End Get
-    End Property
-
     Public Property RevisionBatchSize As Integer = 10
     Public Property Parent As IDBChained Implements IDBChained.Parent
 

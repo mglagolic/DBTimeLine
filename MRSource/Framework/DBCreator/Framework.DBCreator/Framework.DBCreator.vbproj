@@ -71,6 +71,7 @@
     <Compile Include="DBCreator.vb" />
     <Compile Include="DBModulePersister.vb" />
     <Compile Include="Enums\eDBType.vb" />
+    <Compile Include="Interfaces\IDBConstraintDescriptor.vb" />
     <Compile Include="Interfaces\IDBPrimaryKeyConstraint.vb" />
     <Compile Include="Interfaces\IDBSqlGeneratorFactory.vb" />
     <Compile Include="Interfaces\IDBSqlGenerator.vb" />
