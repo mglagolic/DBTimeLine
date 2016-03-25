@@ -76,6 +76,7 @@ Public Class CorePlace
         Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
 
         With AddSchema("Place", New DBSchemaDescriptor(), New DBRevision(rev))
+
             With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
                            New DBRevision(rev))
 
@@ -98,15 +99,14 @@ Public Class CorePlace
                 .AddField("DatumDo", New DBFieldDescriptor With {.FieldType = eDBFieldType.Nvarchar, .Size = -1, .Nullable = False},
                                  New DBRevision(DateSerial(2016, 3, 18), 0, eDBRevisionType.Create))
 
-                .AddConstraint("PK", New DBPrimaryKeyConstraintDescriptor("ID"),
+                .AddConstraint(New DBPrimaryKeyConstraintDescriptor("ID"),
                                New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
-
             End With
 
             With .AddTable("Table2", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
                         New DBRevision(rev))
 
-                With .AddConstraint("PK", New DBPrimaryKeyConstraintDescriptor("ID"),
+                With .AddConstraint(New DBPrimaryKeyConstraintDescriptor("ID") With {.ConstraintName = "peroConstraint"},
                                New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
 
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Delete))

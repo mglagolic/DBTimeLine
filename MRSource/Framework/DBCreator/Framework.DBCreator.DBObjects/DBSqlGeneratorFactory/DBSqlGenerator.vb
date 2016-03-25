@@ -60,19 +60,20 @@ GO
         ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
             With DirectCast(dbObject, IDBPrimaryKeyConstraint)
                 Dim descriptor As IDBPrimaryKeyConstraintDescriptor = DirectCast(.Descriptor, IDBPrimaryKeyConstraintDescriptor)
+
+                Dim constraintName As String = descriptor.ConstraintName
                 Dim columns As String = ""
                 For Each col As String In descriptor.Columns
                     columns &= col & ","
                 Next
                 columns = columns.TrimEnd(","c)
 
-                Dim constraintName As String = descriptor.ConstraintName
                 If String.IsNullOrWhiteSpace(constraintName) Then
                     constraintName = "PK_" & .SchemaName & "_" & DirectCast(.Parent, IDBObject).Name & "_" & columns.Replace(","c, "_")
                 End If
 
                 ret = String.Format("ALTER TABLE {0}.{1}
-ADD Constraint {2} PRIMARY KEY ({3})
+ADD CONSTRAINT {2} PRIMARY KEY ({3})
 ", .SchemaName, DirectCast(.Parent, IDBObject).Name, constraintName, columns)
 
             End With

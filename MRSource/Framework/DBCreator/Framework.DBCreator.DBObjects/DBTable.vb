@@ -21,8 +21,21 @@
         End Get
     End Property
 
-    Public Function AddConstraint(constraintName As String, descriptor As IDBObjectDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddConstraint
-        'TODO - ovdje promijeniti signature, staviti constraintName da je opcionalan, ovdje ga kalkulirati ako je prazan i pozvati adddbobject
+    Public Function AddConstraint(descriptor As IDBObjectDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddConstraint
+        Dim constraintName As String = ""
+        With DirectCast(descriptor, IDBPrimaryKeyConstraintDescriptor)
+            constraintName = .ConstraintName
+            If String.IsNullOrWhiteSpace(constraintName) Then
+                Dim columns As String = ""
+                For Each col As String In .Columns
+                    columns &= col & ","
+                Next
+                columns = columns.TrimEnd(","c)
+
+                constraintName = "PK_" & SchemaName & "_" & Name & "_" & columns.Replace(","c, "_")
+            End If
+        End With
+
         Return MyBase.AddDBObject(constraintName, descriptor, createRevision)
     End Function
 
