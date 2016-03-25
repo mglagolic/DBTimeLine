@@ -15,7 +15,7 @@ Public Class DBCreator
 
     Public ReadOnly Property SourceDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
-    Public Property RevisionBatchSize As Integer = 10
+    Public Property RevisionBatchSize As Integer = 3
     Public Property Parent As IDBChained Implements IDBChained.Parent
 
     Public Function AddModule(dBModule As IDBModule) As IDBModule
@@ -91,6 +91,10 @@ Public Class DBCreator
         Return statements.Where(Function(x) Not String.IsNullOrWhiteSpace(x)).[Select](Function(x) x.Trim(" "c, ControlChars.Cr, ControlChars.Lf))
     End Function
 
+    Public Event BatchExecuted(sender As Object, e As BatchExecutedEventArgs)
+    Public Sub OnBatchExecuted(sender As Object, e As BatchExecutedEventArgs)
+        RaiseEvent BatchExecuted(sender, e)
+    End Sub
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), cnn As Common.DbConnection, trn As Common.DbTransaction)
         Dim batches As List(Of String) = SplitSqlStatements(script).ToList
         For Each batch As String In batches
@@ -98,7 +102,11 @@ Public Class DBCreator
                 Try
                     cmd.CommandText = batch
                     cmd.Transaction = trn
+
+                    Dim ts1 As New TimeSpan(Now.Ticks)
+
                     cmd.ExecuteNonQuery()
+
                     Dim dlos As New List(Of IMRDLO)
                     For Each rev As DBSqlRevision In revisions
                         Dim dlo As IMRDLO = rev.GetDlo
@@ -108,6 +116,9 @@ Public Class DBCreator
                     Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
                         per.InsertBulk(dlos, trn)
                     End Using
+
+                    Dim ts2 As New TimeSpan(Now.Ticks)
+                    OnBatchExecuted(Me, New BatchExecutedEventArgs With {.Sql = batch, .Duration = ts2 - ts1})
                 Catch ex As SqlClient.SqlException
                     If Debugger.IsAttached Then
                         Debugger.Break()

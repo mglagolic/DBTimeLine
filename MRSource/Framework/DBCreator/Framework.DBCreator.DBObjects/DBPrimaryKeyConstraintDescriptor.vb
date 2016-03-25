@@ -35,4 +35,17 @@
         End With
     End Sub
 
+    Public Function GetConstraintName(schemaName As String, tableName As String) As String Implements IDBConstraintDescriptor.GetConstraintName
+        Dim ret As String = ConstraintName
+        If String.IsNullOrWhiteSpace(ret) Then
+            Dim cols As String = ""
+            For Each col As String In Columns
+                cols &= col & ","
+            Next
+            cols = cols.TrimEnd(","c)
+
+            ret = "PK_" & schemaName & "_" & tableName & "_" & cols.Replace(","c, "_")
+        End If
+        Return ret
+    End Function
 End Class
