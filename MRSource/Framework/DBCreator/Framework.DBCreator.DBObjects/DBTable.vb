@@ -22,6 +22,7 @@
     End Property
 
     Public Function AddConstraint(constraintName As String, descriptor As IDBObjectDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddConstraint
+        'TODO - ovdje promijeniti signature, staviti constraintName da je opcionalan, ovdje ga kalkulirati ako je prazan i pozvati adddbobject
         Return MyBase.AddDBObject(constraintName, descriptor, createRevision)
     End Function
 

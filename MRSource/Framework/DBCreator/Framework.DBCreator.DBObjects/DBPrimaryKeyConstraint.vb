@@ -1,6 +1,6 @@
-﻿Public Class DBConstraint
+﻿Public Class DBPrimaryKeyConstraint
     Inherits DBObject
-    Implements IDBConstraint
+    Implements IDBPrimaryKeyConstraint
 
     Public Sub New()
 

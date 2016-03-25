@@ -3,7 +3,19 @@ Imports MRFramework.MRPersisting.Core
 
 Public Class DBSqlRevision
     Public Property Created As Date
+    Private Const MaxGranulationPower As Integer = 3
+    Private _Granulation As Integer = 0
     Public Property Granulation As Integer
+        Get
+            Return _Granulation
+        End Get
+        Set(value As Integer)
+            If value < 0 OrElse value > Math.Pow(10, MaxGranulationPower) - 1 Then
+                Throw New ArgumentOutOfRangeException("Granulation must be between 0 and 999.")
+            End If
+            _Granulation = value
+        End Set
+    End Property
     Public Property ObjectFullName As String
     Public Property ObjectType As eDBObjectType
     Public ReadOnly Property ObjectTypeName As String
@@ -47,7 +59,7 @@ Public Class DBSqlRevision
             ObjectName = .Parent.Name
 
             ObjectFullName = .Parent.GetFullName
-            Sql = .GetSql
+            Sql = .GetSql 'TODO - razmisliti jel treba ovo odradjivati samo za nove revizije
             Description = Sql
 
             Parent = dBRevision
@@ -81,11 +93,11 @@ Public Class DBSqlRevision
         Dim sbFullName As New Text.StringBuilder
         sbFullName.Append(Created.ToString("yyyy-MM-dd"))
         sbFullName.Append(".")
-        sbFullName.Append(Granulation.ToString)
+        sbFullName.Append(Granulation.ToString.PadLeft(MaxGranulationPower, "0"c))
         sbFullName.Append(".")
-        sbFullName.Append(ObjectType.ToString)
+        sbFullName.Append(CType(ObjectType, Integer).ToString("d3"))
         sbFullName.Append(".")
-        sbFullName.Append(RevisionType.ToString)
+        sbFullName.Append(CType(RevisionType, Integer).ToString("d3"))
         sbFullName.Append(".")
         sbFullName.Append(ModuleKey)
         sbFullName.Append(".")
@@ -95,7 +107,7 @@ Public Class DBSqlRevision
             Case eDBObjectType.Table, eDBObjectType.View
                 sbFullName.Append(".")
                 sbFullName.Append(SchemaObjectName)
-            Case eDBObjectType.Field
+            Case eDBObjectType.Field, eDBObjectType.Constraint
                 sbFullName.Append(".")
                 sbFullName.Append(SchemaObjectName)
                 sbFullName.Append(".")

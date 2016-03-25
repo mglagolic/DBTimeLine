@@ -1,6 +1,4 @@
-﻿
-
-Public Interface IDBFieldDescriptor
+﻿Public Interface IDBFieldDescriptor
     Inherits IDBObjectDescriptor
 
     Property FieldType As eDBFieldType
@@ -10,9 +8,7 @@ Public Interface IDBFieldDescriptor
     Property Nullable As Boolean
     Property DefaultValue As String
 
-
 End Interface
-
 
 Public Interface IDBField
     Inherits IDBObject

@@ -123,7 +123,7 @@ Public Class DBCreator
                     Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
                         per.InsertBulk(dlos, trn)
                     End Using
-                Catch ex As Data.SqlClient.SqlException
+                Catch ex As SqlClient.SqlException
                     If Debugger.IsAttached Then
                         Debugger.Break()
                     End If

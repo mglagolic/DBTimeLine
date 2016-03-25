@@ -5,27 +5,6 @@ Public Class DBSqlGenerator
 
     'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
 
-    '    Public Function GetSqlCreateConstraint(constraint As IDBConstraint) As String Implements IDBSqlGenerator.GetSqlCreateConstraint
-    '        Dim ret As String = ""
-    '        ' TODO - implementirati PK i FK constraints za sada. Dodati constraint type enum
-    '        With CType(constraint.Descriptor, IDBConstraintDescriptor)
-    '            Select Case .ConstraintType
-    '                Case eDBConstraintType.PrimaryKey
-    '                    Throw New NotImplementedException
-    '                Case eDBConstraintType.ForeignKey
-    '                    Throw New NotImplementedException
-    '            End Select
-    '        End With
-
-    '        'ALTER TABLE Place.Table1 ADD CONSTRAINT
-    '        '	PK_Table1 PRIMARY KEY CLUSTERED 
-    '        '	(
-    '        '	ID
-    '        '	)
-
-    '        Return ret
-    '    End Function
-
     Public Overridable Function GetFieldTypeSql(descriptor As IDBFieldDescriptor) As String Implements IDBSqlGenerator.GetFieldTypeSql
         Dim ret As String = ""
 
@@ -78,6 +57,25 @@ GO
 ", .SchemaName, DirectCast(.Parent, IDBObject).Name, .Name, GetFieldTypeSql(.Descriptor))
             End With
 
+        ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
+            With DirectCast(dbObject, IDBPrimaryKeyConstraint)
+                Dim descriptor As IDBPrimaryKeyConstraintDescriptor = DirectCast(.Descriptor, IDBPrimaryKeyConstraintDescriptor)
+                Dim columns As String = ""
+                For Each col As String In descriptor.Columns
+                    columns &= col & ","
+                Next
+                columns = columns.TrimEnd(","c)
+
+                Dim constraintName As String = descriptor.ConstraintName
+                If String.IsNullOrWhiteSpace(constraintName) Then
+                    constraintName = "PK_" & .SchemaName & "_" & DirectCast(.Parent, IDBObject).Name & "_" & columns.Replace(","c, "_")
+                End If
+
+                ret = String.Format("ALTER TABLE {0}.{1}
+ADD Constraint {2} PRIMARY KEY ({3})
+", .SchemaName, DirectCast(.Parent, IDBObject).Name, constraintName, columns)
+
+            End With
         End If
 
         Return ret
@@ -116,6 +114,26 @@ GO
                 ret = String.Format("ALTER TABLE {0}.{1} DROP COLUMN
     {2}
 ", .SchemaName, DirectCast(.Parent, IDBObject).Name, .Name)
+            End With
+
+        ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
+            With DirectCast(dbObject, IDBPrimaryKeyConstraint)
+                Dim descriptor As IDBPrimaryKeyConstraintDescriptor = DirectCast(.Descriptor, IDBPrimaryKeyConstraintDescriptor)
+                Dim columns As String = ""
+                For Each col As String In descriptor.Columns
+                    columns &= col & ","
+                Next
+                columns = columns.TrimEnd(","c)
+
+                Dim constraintName As String = descriptor.ConstraintName
+                If String.IsNullOrWhiteSpace(constraintName) Then
+                    constraintName = "PK_" & .SchemaName & "_" & DirectCast(.Parent, IDBObject).Name & "_" & columns.Replace(","c, "_")
+                End If
+
+                ret = String.Format("ALTER TABLE {0}.{1}
+DROP Constraint {2}
+", .SchemaName, DirectCast(.Parent, IDBObject).Name, constraintName)
+
             End With
         End If
 

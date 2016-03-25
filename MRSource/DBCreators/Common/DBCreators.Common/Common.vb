@@ -84,15 +84,33 @@ Public Class CorePlace
 
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Modify),
                                  New DBFieldDescriptor(.Descriptor) With {.FieldType = eDBFieldType.Guid})
+
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 24), 2, eDBRevisionType.Modify),
+                                 New DBFieldDescriptor(.Descriptor) With {.Nullable = False})
                 End With
 
                 With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eDBFieldType.Datetime, .Nullable = True})
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
 
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 24), 0, eDBRevisionType.Create))
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 24), 1, eDBRevisionType.Create))
                 End With
 
-                '.AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
+                .AddField("DatumDo", New DBFieldDescriptor With {.FieldType = eDBFieldType.Nvarchar, .Size = -1, .Nullable = False},
+                                 New DBRevision(DateSerial(2016, 3, 18), 0, eDBRevisionType.Create))
+
+                .AddConstraint("PK", New DBPrimaryKeyConstraintDescriptor("ID"),
+                               New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
+
+            End With
+
+            With .AddTable("Table2", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
+                        New DBRevision(rev))
+
+                With .AddConstraint("PK", New DBPrimaryKeyConstraintDescriptor("ID"),
+                               New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
+
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Delete))
+                End With
             End With
         End With
 
