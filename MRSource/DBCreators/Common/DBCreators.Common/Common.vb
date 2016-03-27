@@ -19,6 +19,16 @@ Public Class DBO
         Dim sql As String = "
 GO 
 SELECT Stupac = 'Ovo je post sql: bok kaj ima'
+
+declare @i int
+set @i = 0
+
+while @i < 1000000
+begin
+print 'bok'
+set @i = @i + 1
+end
+
 "
 
         Return sql

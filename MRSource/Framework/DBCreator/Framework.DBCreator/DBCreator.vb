@@ -15,7 +15,7 @@ Public Class DBCreator
 
     Public ReadOnly Property SourceDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
-    Public Property RevisionBatchSize As Integer = 3
+    Public Property RevisionBatchSize As Integer = 1
     Public Property Parent As IDBChained Implements IDBChained.Parent
 
     Public Function AddModule(dBModule As IDBModule) As IDBModule
@@ -91,6 +91,11 @@ Public Class DBCreator
         Return statements.Where(Function(x) Not String.IsNullOrWhiteSpace(x)).[Select](Function(x) x.Trim(" "c, ControlChars.Cr, ControlChars.Lf))
     End Function
 
+    Public Event BatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
+    Public Sub OnBatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
+        RaiseEvent BatchExecuting(sender, ce)
+    End Sub
+
     Public Event BatchExecuted(sender As Object, e As BatchExecutedEventArgs)
     Public Sub OnBatchExecuted(sender As Object, e As BatchExecutedEventArgs)
         RaiseEvent BatchExecuted(sender, e)
@@ -98,13 +103,17 @@ Public Class DBCreator
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), cnn As Common.DbConnection, trn As Common.DbTransaction)
         Dim batches As List(Of String) = SplitSqlStatements(script).ToList
         For Each batch As String In batches
+            Dim ts1 As TimeSpan
+            Dim ts2 As TimeSpan
             Using cmd As IDbCommand = MRC.GetCommand(cnn)
+                Dim errorMessage As String = ""
                 Try
                     cmd.CommandText = batch
                     cmd.Transaction = trn
 
-                    Dim ts1 As New TimeSpan(Now.Ticks)
+                    OnBatchExecuting(Me, New BatchExecutingEventArgs With {.Cancel = False, .Sql = batch})
 
+                    ts1 = New TimeSpan(Now.Ticks)
                     cmd.ExecuteNonQuery()
 
                     Dim dlos As New List(Of IMRDLO)
@@ -117,18 +126,21 @@ Public Class DBCreator
                         per.InsertBulk(dlos, trn)
                     End Using
 
-                    Dim ts2 As New TimeSpan(Now.Ticks)
-                    OnBatchExecuted(Me, New BatchExecutedEventArgs With {.Sql = batch, .Duration = ts2 - ts1})
+                    ts2 = New TimeSpan(Now.Ticks)
                 Catch ex As SqlClient.SqlException
                     If Debugger.IsAttached Then
                         Debugger.Break()
                     End If
+                    errorMessage = ex.Message
                     Throw
                 Catch ex As Exception
                     If Debugger.IsAttached Then
                         Debugger.Break()
                     End If
+                    errorMessage = ex.Message
                     Throw
+                Finally
+                    OnBatchExecuted(Me, New BatchExecutedEventArgs With {.Sql = batch, .Duration = ts2 - ts1, .ResultType = CType(IIf(errorMessage = "", eBatchExecutionResultType.Success, eBatchExecutionResultType.Failed), eBatchExecutionResultType), .ErrorMessage = errorMessage})
                 End Try
             End Using
         Next
