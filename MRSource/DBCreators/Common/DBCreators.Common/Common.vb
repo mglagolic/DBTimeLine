@@ -51,6 +51,7 @@ end
             End With
         End With
 
+
         'With AddSchema("dbo", New DBSchemaDescriptor())
         '    Dim dt As IDBTable
         '    dt = .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
@@ -84,9 +85,10 @@ Public Class CorePlace
     Public Overrides Sub CreateTimeLine()
 
         Dim rev As New DBRevision(DateSerial(2016, 3, 10), 0, eDBRevisionType.Create)
+        Dim schemaCommon As IDBSchema
+        schemaCommon = AddSchema("Place", New DBSchemaDescriptor(), New DBRevision(rev))
 
-        With AddSchema("Place", New DBSchemaDescriptor(), New DBRevision(rev))
-
+        With schemaCommon
             With .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
                            New DBRevision(rev))
 
@@ -112,6 +114,11 @@ Public Class CorePlace
                 .AddConstraint(New DBPrimaryKeyConstraintDescriptor("ID"),
                                New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
 
+                With .AddField("Name", New DBFieldDescriptor With {.FieldType = eDBFieldType.Nvarchar, .Size = -1, .Nullable = True},
+                                 New DBRevision(DateSerial(2016, 3, 26), 0, eDBRevisionType.Create))
+
+                End With
+
             End With
 
             With .AddTable("Table2", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
@@ -123,10 +130,40 @@ Public Class CorePlace
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Delete))
                 End With
             End With
+
+        End With
+
+        AddViews(schemaCommon)
+    End Sub
+
+    Private Sub AddViews(schema As IDBSchema)
+        With schema
+            With .AddView("Test1Browse", New DBViewDescriptor With {.WithSchemaBinding = True,
+                              .Body =
+    "
+SELECT 
+	ID
+FROM 
+	Place.Table1
+"
+    },
+                              New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
+
+                .AddRevision(New DBRevision(DateSerial(2016, 3, 27), 0, eDBRevisionType.Modify),
+                             New DBViewDescriptor(.Descriptor) With {
+                            .Body =
+    "
+SELECT 
+    ID,	
+    Name
+FROM 
+	Place.Table1"
+    })
+                .AddRevision(New DBRevision(DateSerial(2016, 3, 27), 1, eDBRevisionType.Delete))
+            End With
         End With
 
     End Sub
-
 End Class
 
 

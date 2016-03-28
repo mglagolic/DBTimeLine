@@ -74,6 +74,8 @@
     <Compile Include="Enums\eDBType.vb" />
     <Compile Include="EventArgs\BatchExecutingEventArgs.vb" />
     <Compile Include="EventArgs\BatchExecutedEventArgs.vb" />
+    <Compile Include="Interfaces\IDBView.vb" />
+    <Compile Include="Interfaces\IDBViewDescriptor.vb" />
     <Compile Include="Interfaces\IDBConstraintDescriptor.vb" />
     <Compile Include="Interfaces\IDBPrimaryKeyConstraint.vb" />
     <Compile Include="Interfaces\IDBSqlGeneratorFactory.vb" />

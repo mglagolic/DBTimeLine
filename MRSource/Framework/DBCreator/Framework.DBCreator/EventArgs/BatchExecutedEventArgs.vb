@@ -5,5 +5,6 @@
     Public Property Sql As String
     Public Property Duration As TimeSpan
     Public Property ErrorMessage As String
-
+    Public Property ExecutedRevisionsCount As Integer
+    Public Property TotalRevisionsCount As Integer
 End Class

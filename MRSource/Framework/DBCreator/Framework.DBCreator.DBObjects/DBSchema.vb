@@ -16,4 +16,7 @@
         Return MyBase.AddDBObject(tableName, descriptor, createRevision)
     End Function
 
+    Public Function AddView(viewName As String, descriptor As IDBViewDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBView Implements IDBSchema.AddView
+        Return MyBase.AddDBObject(viewName, descriptor, createRevision)
+    End Function
 End Class

@@ -1,4 +1,6 @@
-﻿Imports MRFramework.MRPersisting.Factory
+﻿Option Strict On
+
+Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBCreator
 Imports Framework.DBCreator.DBObjects
 Imports System.ComponentModel
@@ -8,7 +10,16 @@ Public Class Form1
 
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Button1.PerformClick()
+    End Sub
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        rtb1.Text = ""
+        If backWorker.IsBusy Then
+            backWorker.CancelAsync()
+        Else
+            backWorker.RunWorkerAsync(Nothing)
+        End If
     End Sub
 
     Delegate Sub BatchExecutingCallback(sender As Object, e As BatchExecutingEventArgs)
@@ -33,33 +44,24 @@ Public Class Form1
             Exit Sub
         End If
 
-        Dim color As Color = Color.LawnGreen
+        If e.TotalRevisionsCount <> 0 Then
+            backWorker.ReportProgress(CInt(e.ExecutedRevisionsCount / e.TotalRevisionsCount * 100))
+        End If
+
         If e.ResultType = eBatchExecutionResultType.Failed Then
-            color = Color.Red
-            rtb1.SelectionColor = color
-            rtb1.AppendText(e.Sql & vbNewLine)
+            rtb1.SelectionColor = Color.Red
+            rtb1.AppendText(e.ErrorMessage & vbNewLine)
         End If
         rtb1.SelectionColor = Color.Yellow
         rtb1.AppendText("Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine)
         rtb1.ScrollToCaret()
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        rtb1.Text = ""
-        If backWorker.IsBusy Then
-            backWorker.CancelAsync()
-        Else
-
-            backWorker.RunWorkerAsync(Nothing)
-        End If
-
-    End Sub
-
     Private Sub DbCreate()
         ' TODO - ovo sve u progressbar i thread
 
-        MRC.GetInstance().ConnectionString = My.Settings.Item(My.Settings.DefaultConnectionString)
-        MRC.GetInstance().ProviderName = My.Settings.Item(My.Settings.DefaultProvider)
+        MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
+        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
 
         Dim dbSqlFactory As New DBSqlGeneratorFactory
 
@@ -95,7 +97,6 @@ Public Class Form1
 
                 creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
 
-                'rtb1.Text = 
                 creator.ExecuteDBSqlRevisions(cnn, trn)
 
                 Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList

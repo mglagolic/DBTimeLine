@@ -132,8 +132,8 @@ Public MustInherit Class DBObject
 
             Dim p As IDBChained = Me
             While p IsNot Nothing
-                If TypeOf p Is IDBTable Then
-                    ret = CType(p, IDBTable).Name
+                If p.Parent IsNot Nothing AndAlso TypeOf p.Parent Is IDBSchema Then
+                    ret = CType(p, IDBObject).Name
                     Exit While
                 Else
                     p = p.Parent

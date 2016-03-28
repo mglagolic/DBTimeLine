@@ -76,8 +76,11 @@
     <Compile Include="DBSchemaDescriptor.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSqlGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSqlGeneratorFactory.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBSqlGeneratorSqlServer.vb" />
+    <Compile Include="DBSqlGeneratorFactory\DBViewGenerator.vb" />
+    <Compile Include="DBSqlGeneratorFactory\SqlServer\DBSqlGeneratorSqlServer.vb" />
+    <Compile Include="DBView.vb" />
     <Compile Include="DBTable.vb" />
+    <Compile Include="DBViewDescriptor.vb" />
     <Compile Include="DBTableDescriptor.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

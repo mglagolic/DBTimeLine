@@ -1,19 +1,16 @@
-﻿Public Interface IDBSqlGenerator
-    'Function GetSqlCreateSchema(schema As IDBSchema) As String
-    'Function GetSqlDeleteSchema(schema As IDBSchema) As String
+﻿Public Interface IDBObjectGenerator
+    Function GetSqlCreate(dbObject As IDBObject) As String
+    Function GetSqlModify(dbObject As IDBObject) As String
+    Function GetSqlDelete(dbObject As IDBObject) As String
 
-    'Function GetSqlCreateTable(table As IDBTable) As String
-    'Function GetSqlDeleteTable(table As IDBTable) As String
+End Interface
 
-    'Function GetSqlCreateField(field As IDBField) As String
-    'Function GetSqlModifyField(field As IDBField) As String
-    'Function GetSqlDeleteField(field As IDBField) As String
+Public Interface IDBSqlGenerator
     Function GetSqlCreate(dbObject As IDBObject) As String
     Function GetSqlModify(dbObject As IDBObject) As String
     Function GetSqlDelete(dbObject As IDBObject) As String
 
     Function GetFieldTypeSql(descriptor As IDBFieldDescriptor) As String
 
-    'Function GetSqlCreateConstraint(constraint As IDBConstraint) As String
-
+    Property DBViewGenerator As IDBObjectGenerator
 End Interface

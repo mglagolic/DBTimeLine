@@ -9,6 +9,7 @@ Public Class DBSqlGeneratorFactory
         Select Case dbType
             Case eDBType.TransactSQL
                 ret = New DBSqlGenerator
+                ret.DBViewGenerator = New DBViewGenerator
             Case eDBType.SqlServer
                 ret = New DBSqlGeneratorSqlServer
             Case eDBType.MySql

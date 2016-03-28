@@ -1,7 +1,7 @@
-﻿Imports Framework.DBCreator
-
-Public Class DBSqlGenerator
+﻿Public Class DBSqlGenerator
     Implements IDBSqlGenerator
+
+    Public Property DBViewGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBViewGenerator
 
     'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
 
@@ -50,6 +50,7 @@ GO
 )
 ", .SchemaName, .Name, CType(.Descriptor, IDBTableDescriptor).CreatorFieldName, GetFieldTypeSql(CType(.Descriptor, IDBTableDescriptor).CreatorFieldDescriptor))
             End With
+
         ElseIf TypeOf dbObject Is IDBField Then
             With DirectCast(dbObject, IDBField)
                 ret = String.Format("ALTER TABLE {0}.{1} ADD
@@ -77,6 +78,8 @@ ADD CONSTRAINT {2} PRIMARY KEY ({3})
 ", .SchemaName, DirectCast(.Parent, IDBObject).Name, constraintName, columns)
 
             End With
+        ElseIf TypeOf dbObject Is IDBView Then
+            ret = DBViewGenerator.GetSqlCreate(CType(dbObject, IDBView))
         End If
 
         Return ret
@@ -90,7 +93,11 @@ ADD CONSTRAINT {2} PRIMARY KEY ({3})
     {2} {3}
 ", .SchemaName, DirectCast(.Parent, IDBObject).Name, .Name, GetFieldTypeSql(.Descriptor))
             End With
+
+        ElseIf TypeOf dbObject Is IDBView Then
+            ret = DBViewGenerator.GetSqlModify(CType(dbObject, IDBView))
         End If
+
 
         Return ret
     End Function
@@ -136,6 +143,9 @@ DROP Constraint {2}
 ", .SchemaName, DirectCast(.Parent, IDBObject).Name, constraintName)
 
             End With
+
+        ElseIf TypeOf dbObject Is IDBView Then
+            ret = DBViewGenerator.GetSqlDelete(CType(dbObject, IDBView))
         End If
 
         Return ret

@@ -39,11 +39,11 @@ Partial Class Form1
         Me.rtb1.Location = New System.Drawing.Point(0, 0)
         Me.rtb1.Name = "rtb1"
         Me.rtb1.ReadOnly = True
+        Me.rtb1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
         Me.rtb1.ShowSelectionMargin = True
         Me.rtb1.Size = New System.Drawing.Size(886, 175)
         Me.rtb1.TabIndex = 0
-        Me.rtb1.Text = "GO" & Global.Microsoft.VisualBasic.ChrW(10) & "CREATE SCHEMA BokKajIma" & Global.Microsoft.VisualBasic.ChrW(10) & "GO" & Global.Microsoft.VisualBasic.ChrW(10) & "CREATE TABLE Table1" & Global.Microsoft.VisualBasic.ChrW(10) & "(" & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(9) & "ID UNIQUEIDENTIFIER" & Global.Microsoft.VisualBasic.ChrW(10) & ")" & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(10) & "GO" & Global.Microsoft.VisualBasic.ChrW(10) & "CR" &
-    "EATE SCHEMA BokKajIma" & Global.Microsoft.VisualBasic.ChrW(10) & "GO" & Global.Microsoft.VisualBasic.ChrW(10) & "CREATE TABLE Table1" & Global.Microsoft.VisualBasic.ChrW(10) & "(" & Global.Microsoft.VisualBasic.ChrW(10) & Global.Microsoft.VisualBasic.ChrW(9) & "ID UNIQUEIDENTIFIER" & Global.Microsoft.VisualBasic.ChrW(10) & ")"
+        Me.rtb1.Text = ""
         Me.rtb1.WordWrap = False
         '
         'Button1
@@ -62,15 +62,17 @@ Partial Class Form1
         '
         'ProgressBar1
         '
+        Me.ProgressBar1.BackColor = System.Drawing.Color.WhiteSmoke
         Me.ProgressBar1.Location = New System.Drawing.Point(12, 221)
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(439, 23)
+        Me.ProgressBar1.Size = New System.Drawing.Size(874, 36)
         Me.ProgressBar1.TabIndex = 2
         '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.BackColor = System.Drawing.Color.WhiteSmoke
         Me.ClientSize = New System.Drawing.Size(886, 497)
         Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.Button1)
