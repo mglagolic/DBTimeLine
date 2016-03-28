@@ -33,8 +33,6 @@ Public Class DBSqlGenerator
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlCreate(CType(dbObject, IDBView))
 
-        Else
-            Throw New NotImplementedException()
         End If
 
         Return ret
@@ -42,6 +40,7 @@ Public Class DBSqlGenerator
 
     Public Overridable Function GetSqlModify(dbObject As IDBObject) As String Implements IDBSqlGenerator.GetSqlModify
         Dim ret As String = ""
+
         If TypeOf dbObject Is IDBSchema Then
             ret = DBSchemaGenerator.GetSqlModify(dbObject)
 
@@ -60,10 +59,7 @@ Public Class DBSqlGenerator
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlModify(CType(dbObject, IDBView))
 
-        Else
-            Throw New NotImplementedException()
         End If
-
 
         Return ret
     End Function
@@ -89,8 +85,6 @@ Public Class DBSqlGenerator
         ElseIf TypeOf dbObject Is IDBForeignKeyConstraint Then
             ret = DBForeignKeyConstraintGenerator.GetSqlDelete(CType(dbObject, IDBForeignKeyConstraint))
 
-        Else
-            Throw New NotImplementedException()
         End If
 
         Return ret
