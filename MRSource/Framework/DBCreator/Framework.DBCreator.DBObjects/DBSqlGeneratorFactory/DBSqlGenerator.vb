@@ -7,6 +7,7 @@ Public Class DBSqlGenerator
     Public Property DBFieldGenerator As IDBFieldGenerator Implements IDBSqlGenerator.DBFieldGenerator
     Public Property DBSchemaGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBSchemaGenerator
     Public Property DBTableGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBTableGenerator
+    Public Property DBPrimaryKeyConstraintGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBPrimaryKeyConstraintGenerator
 
     'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
 
@@ -23,25 +24,8 @@ Public Class DBSqlGenerator
             ret = DBFieldGenerator.GetSqlCreate(dbObject)
 
         ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
-            With DirectCast(dbObject, IDBPrimaryKeyConstraint)
-                Dim descriptor As IDBPrimaryKeyConstraintDescriptor = DirectCast(.Descriptor, IDBPrimaryKeyConstraintDescriptor)
+            ret = DBPrimaryKeyConstraintGenerator.GetSqlCreate(dbObject)
 
-                Dim constraintName As String = descriptor.ConstraintName
-                Dim columns As String = ""
-                For Each col As String In descriptor.Columns
-                    columns &= col & ","
-                Next
-                columns = columns.TrimEnd(","c)
-
-                If String.IsNullOrWhiteSpace(constraintName) Then
-                    constraintName = "PK_" & .SchemaName & "_" & DirectCast(.Parent, IDBObject).Name & "_" & columns.Replace(","c, "_")
-                End If
-
-                ret = String.Format("ALTER TABLE {0}.{1}
-ADD CONSTRAINT {2} PRIMARY KEY ({3})
-", .SchemaName, DirectCast(.Parent, IDBObject).Name, constraintName, columns)
-
-            End With
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlCreate(CType(dbObject, IDBView))
         End If
@@ -56,6 +40,9 @@ ADD CONSTRAINT {2} PRIMARY KEY ({3})
 
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlModify(CType(dbObject, IDBView))
+
+        ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
+            ret = DBPrimaryKeyConstraintGenerator.GetSqlModify(dbObject)
 
         ElseIf TypeOf dbObject Is IDBSchema Then
             ret = DBSchemaGenerator.GetSqlModify(dbObject)
@@ -81,24 +68,7 @@ ADD CONSTRAINT {2} PRIMARY KEY ({3})
             ret = DBFieldGenerator.GetSqlDelete(dbObject)
 
         ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
-            With DirectCast(dbObject, IDBPrimaryKeyConstraint)
-                Dim descriptor As IDBPrimaryKeyConstraintDescriptor = DirectCast(.Descriptor, IDBPrimaryKeyConstraintDescriptor)
-                Dim columns As String = ""
-                For Each col As String In descriptor.Columns
-                    columns &= col & ","
-                Next
-                columns = columns.TrimEnd(","c)
-
-                Dim constraintName As String = descriptor.ConstraintName
-                If String.IsNullOrWhiteSpace(constraintName) Then
-                    constraintName = "PK_" & .SchemaName & "_" & DirectCast(.Parent, IDBObject).Name & "_" & columns.Replace(","c, "_")
-                End If
-
-                ret = String.Format("ALTER TABLE {0}.{1}
-DROP Constraint {2}
-", .SchemaName, DirectCast(.Parent, IDBObject).Name, constraintName)
-
-            End With
+            ret = DBPrimaryKeyConstraintGenerator.GetSqlDelete(dbObject)
 
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlDelete(CType(dbObject, IDBView))

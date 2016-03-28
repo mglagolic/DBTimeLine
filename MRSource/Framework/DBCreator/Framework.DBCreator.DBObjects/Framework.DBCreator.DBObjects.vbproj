@@ -74,6 +74,7 @@
     <Compile Include="DBRevision.vb" />
     <Compile Include="DBSchema.vb" />
     <Compile Include="DBSchemaDescriptor.vb" />
+    <Compile Include="DBSqlGeneratorFactory\DBPrimaryKeyConstraintGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBTableGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSqlGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSqlGeneratorFactory.vb" />

@@ -74,12 +74,18 @@
     <Compile Include="Enums\eDBType.vb" />
     <Compile Include="EventArgs\BatchExecutingEventArgs.vb" />
     <Compile Include="EventArgs\BatchExecutedEventArgs.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBFieldDescriptor.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBPrimaryKeyConstraintDescriptor.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBSchemaDescriptor.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBTableDescriptor.vb" />
     <Compile Include="Interfaces\IDBView.vb" />
-    <Compile Include="Interfaces\IDBViewDescriptor.vb" />
-    <Compile Include="Interfaces\IDBConstraintDescriptor.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBViewDescriptor.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBConstraintDescriptor.vb" />
     <Compile Include="Interfaces\IDBPrimaryKeyConstraint.vb" />
-    <Compile Include="Interfaces\IDBSqlGeneratorFactory.vb" />
-    <Compile Include="Interfaces\IDBSqlGenerator.vb" />
+    <Compile Include="Interfaces\SqlGenerators\IDBFieldGenerator.vb" />
+    <Compile Include="Interfaces\SqlGenerators\IDBObjectGenerator.vb" />
+    <Compile Include="Interfaces\SqlGenerators\IDBSqlGeneratorFactory.vb" />
+    <Compile Include="Interfaces\SqlGenerators\IDBSqlGenerator.vb" />
     <Compile Include="DBSqlRevision.vb" />
     <Compile Include="Enums\eDBObjectType.vb" />
     <Compile Include="Enums\eDBFieldType.vb" />
@@ -88,11 +94,12 @@
     <Compile Include="Interfaces\IDBChained.vb" />
     <Compile Include="Interfaces\IDBObject.vb" />
     <Compile Include="Interfaces\IDBField.vb" />
-    <Compile Include="Interfaces\IDBObjectDescriptor.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBObjectDescriptor.vb" />
     <Compile Include="Interfaces\IDBParent.vb" />
     <Compile Include="Interfaces\IDBRevision.vb" />
     <Compile Include="Interfaces\IDBTable.vb" />
     <Compile Include="Interfaces\IDBSchema.vb" />
+    <Compile Include="Interfaces\SqlGenerators\IDBTableGenerator.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

@@ -1,12 +1,4 @@
-﻿Public Interface IDBPrimaryKeyConstraintDescriptor
-    Inherits IDBConstraintDescriptor
-
-
-    ReadOnly Property Columns As List(Of String)
-
-End Interface
-
-Public Interface IDBPrimaryKeyConstraint
+﻿Public Interface IDBPrimaryKeyConstraint
     Inherits IDBObject
 
 End Interface

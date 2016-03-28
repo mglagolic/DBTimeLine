@@ -13,6 +13,7 @@ Public Class DBSqlGeneratorFactory
                 ret.DBFieldGenerator = New DBFieldGenerator
                 ret.DBSchemaGenerator = New DBSchemaGenerator
                 ret.DBTableGenerator = New DBTableGenerator With {.Parent = ret}
+                ret.DBPrimaryKeyConstraintGenerator = New DBPrimaryKeyConstraintGenerator
             Case eDBType.SqlServer
                 ret = New DBSqlGeneratorSqlServer
                 ret.DBViewGenerator = New DBViewGenerator
@@ -20,6 +21,7 @@ Public Class DBSqlGeneratorFactory
                 ret.DBSchemaGenerator = New DBSchemaGenerator
                 ret.DBTableGenerator = New DBTableGenerator
                 ret.DBTableGenerator = New DBTableGenerator With {.Parent = ret}
+                ret.DBPrimaryKeyConstraintGenerator = New DBPrimaryKeyConstraintGenerator
             Case eDBType.MySql
                 Throw New NotSupportedException()
             Case Else
