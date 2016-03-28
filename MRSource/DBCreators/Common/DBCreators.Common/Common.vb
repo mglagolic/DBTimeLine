@@ -129,6 +129,16 @@ Public Class CorePlace
 
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Delete))
                 End With
+
+                .AddField("Table1ID", New DBFieldDescriptor With {.FieldType = eDBFieldType.Guid},
+                                 New DBRevision(DateSerial(2016, 3, 26), 0, eDBRevisionType.Create))
+
+                With .AddConstraint(New DBForeignKeyConstraintDescriptor(New List(Of String)({"Table1ID"}), "Place", "Table1", New List(Of String)({"ID"})),
+                               New DBRevision(DateSerial(2016, 3, 30), 1, eDBRevisionType.Create))
+
+                    .AddRevision(New DBRevision(DateSerial(2016, 3, 30), 2, eDBRevisionType.Delete))
+                End With
+
             End With
 
         End With

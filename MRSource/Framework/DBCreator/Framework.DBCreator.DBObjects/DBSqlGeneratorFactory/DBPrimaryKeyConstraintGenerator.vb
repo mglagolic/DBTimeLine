@@ -8,6 +8,7 @@
             Dim descriptor As IDBPrimaryKeyConstraintDescriptor = DirectCast(.Descriptor, IDBPrimaryKeyConstraintDescriptor)
 
             Dim constraintName As String = descriptor.ConstraintName
+
             Dim columns As String = ""
             For Each col As String In descriptor.Columns
                 columns &= col & ","
@@ -15,7 +16,7 @@
             columns = columns.TrimEnd(","c)
 
             If String.IsNullOrWhiteSpace(constraintName) Then
-                constraintName = "PK_" & .SchemaName & "_" & DirectCast(.Parent, IDBObject).Name & "_" & columns.Replace(","c, "_")
+                constraintName = descriptor.GetConstraintName(.SchemaName, DirectCast(.Parent, IDBObject).Name)
             End If
 
             ret = String.Format("ALTER TABLE {0}.{1}
@@ -32,15 +33,12 @@ ADD CONSTRAINT {2} PRIMARY KEY ({3})
 
         With DirectCast(dbObject, IDBPrimaryKeyConstraint)
             Dim descriptor As IDBPrimaryKeyConstraintDescriptor = DirectCast(.Descriptor, IDBPrimaryKeyConstraintDescriptor)
-            Dim columns As String = ""
-            For Each col As String In descriptor.Columns
-                columns &= col & ","
-            Next
-            columns = columns.TrimEnd(","c)
 
             Dim constraintName As String = descriptor.ConstraintName
             If String.IsNullOrWhiteSpace(constraintName) Then
-                constraintName = "PK_" & .SchemaName & "_" & DirectCast(.Parent, IDBObject).Name & "_" & columns.Replace(","c, "_")
+                If String.IsNullOrWhiteSpace(constraintName) Then
+                    constraintName = descriptor.GetConstraintName(.SchemaName, DirectCast(.Parent, IDBObject).Name)
+                End If
             End If
 
             ret = String.Format("ALTER TABLE {0}.{1}

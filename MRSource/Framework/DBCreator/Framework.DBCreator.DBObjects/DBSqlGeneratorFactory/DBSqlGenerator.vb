@@ -8,6 +8,7 @@ Public Class DBSqlGenerator
     Public Property DBSchemaGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBSchemaGenerator
     Public Property DBTableGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBTableGenerator
     Public Property DBPrimaryKeyConstraintGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBPrimaryKeyConstraintGenerator
+    Public Property DBForeignKeyConstraintGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBForeignKeyConstraintGenerator
 
     'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
 
@@ -26,8 +27,14 @@ Public Class DBSqlGenerator
         ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
             ret = DBPrimaryKeyConstraintGenerator.GetSqlCreate(dbObject)
 
+        ElseIf TypeOf dbObject Is IDBForeignKeyConstraint Then
+            ret = DBForeignKeyConstraintGenerator.GetSqlCreate(dbObject)
+
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlCreate(CType(dbObject, IDBView))
+
+        Else
+            Throw New NotImplementedException()
         End If
 
         Return ret
@@ -35,20 +42,26 @@ Public Class DBSqlGenerator
 
     Public Overridable Function GetSqlModify(dbObject As IDBObject) As String Implements IDBSqlGenerator.GetSqlModify
         Dim ret As String = ""
-        If TypeOf dbObject Is IDBField Then
-            ret = DBFieldGenerator.GetSqlModify(dbObject)
-
-        ElseIf TypeOf dbObject Is IDBView Then
-            ret = DBViewGenerator.GetSqlModify(CType(dbObject, IDBView))
-
-        ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
-            ret = DBPrimaryKeyConstraintGenerator.GetSqlModify(dbObject)
-
-        ElseIf TypeOf dbObject Is IDBSchema Then
+        If TypeOf dbObject Is IDBSchema Then
             ret = DBSchemaGenerator.GetSqlModify(dbObject)
 
         ElseIf TypeOf dbObject Is IDBTable Then
             ret = DBTableGenerator.GetSqlModify(dbObject)
+
+        ElseIf TypeOf dbObject Is IDBField Then
+            ret = DBFieldGenerator.GetSqlModify(dbObject)
+
+        ElseIf TypeOf dbObject Is IDBPrimaryKeyConstraint Then
+            ret = DBPrimaryKeyConstraintGenerator.GetSqlModify(dbObject)
+
+        ElseIf TypeOf dbObject Is IDBForeignKeyConstraint Then
+            ret = DBForeignKeyConstraintGenerator.GetSqlModify(dbObject)
+
+        ElseIf TypeOf dbObject Is IDBView Then
+            ret = DBViewGenerator.GetSqlModify(CType(dbObject, IDBView))
+
+        Else
+            Throw New NotImplementedException()
         End If
 
 
@@ -72,6 +85,12 @@ Public Class DBSqlGenerator
 
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlDelete(CType(dbObject, IDBView))
+
+        ElseIf TypeOf dbObject Is IDBForeignKeyConstraint Then
+            ret = DBForeignKeyConstraintGenerator.GetSqlDelete(CType(dbObject, IDBForeignKeyConstraint))
+
+        Else
+            Throw New NotImplementedException()
         End If
 
         Return ret

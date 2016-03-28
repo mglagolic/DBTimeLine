@@ -64,8 +64,10 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBForeignKeyConstraint.vb" />
     <Compile Include="DBPrimaryKeyConstraint.vb" />
     <Compile Include="DBField.vb" />
+    <Compile Include="DBForeignKeyConstraintDescriptor.vb" />
     <Compile Include="DBPrimaryKeyConstraintDescriptor.vb" />
     <Compile Include="DBFieldDescriptor.vb" />
     <Compile Include="DBModule.vb" />
@@ -74,6 +76,7 @@
     <Compile Include="DBRevision.vb" />
     <Compile Include="DBSchema.vb" />
     <Compile Include="DBSchemaDescriptor.vb" />
+    <Compile Include="DBSqlGeneratorFactory\DBForeignKeyConstraintGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBPrimaryKeyConstraintGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBTableGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSqlGenerator.vb" />

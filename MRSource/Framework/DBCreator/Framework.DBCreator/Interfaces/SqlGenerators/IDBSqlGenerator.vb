@@ -9,5 +9,6 @@
     Property DBTableGenerator As IDBObjectGenerator
     Property DBFieldGenerator As IDBFieldGenerator
     Property DBPrimaryKeyConstraintGenerator As IDBObjectGenerator
+    Property DBForeignKeyConstraintGenerator As IDBObjectGenerator
 
 End Interface
