@@ -30,11 +30,7 @@ Public MustInherit Class MRPersister
             Return "select * from " & DataBaseTableName
         End Get
     End Property
-    'Public Overridable ReadOnly Property MainWhere As String Implements IMRPersister.MainWhere
-    '    Get
-    '        Return ""
-    '    End Get
-    'End Property
+
     Public Property Where As String Implements IMRPersister.Where
 
 

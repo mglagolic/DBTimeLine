@@ -8,6 +8,28 @@ Imports System.ComponentModel
 Public Class Form1
 
 
+    Public Class myPersister
+        Inherits Framework.Persisting.Persister
+
+        Public Overrides ReadOnly Property DataBaseTableName As String
+            Get
+                Return "Common.BigOne"
+            End Get
+        End Property
+        Public Overrides ReadOnly Property Sql As String
+            Get
+                Return _
+"
+SELECT  
+	t1.ID,
+	t2.Naziv
+FROM 
+	Common.BigOne t1
+	INNER JOIN Common.BigOne t2 on t1.id = t2.id
+"
+            End Get
+        End Property
+    End Class
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Button1.PerformClick()
@@ -62,6 +84,9 @@ Public Class Form1
 
         MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+
+        Dim per As New myPersister
+
 
         Dim dbSqlFactory As New DBSqlGeneratorFactory
 

@@ -132,6 +132,10 @@
       <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
       <Name>Framework.DBCreator</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Framework\Persisting\Framework.Persisting\Framework.Persisting.csproj">
+      <Project>{1ec4a870-bcdf-4bb7-805b-8bd5f88da6fb}</Project>
+      <Name>Framework.Persisting</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Framework\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
       <Project>{e177c8d6-b8df-4de4-81af-3f2d17e23a05}</Project>
       <Name>MRFramework.MRPersisting.Factory</Name>

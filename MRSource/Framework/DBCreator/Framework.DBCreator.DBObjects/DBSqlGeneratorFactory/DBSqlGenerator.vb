@@ -11,6 +11,14 @@ Public Class DBSqlGenerator
     Public Property DBForeignKeyConstraintGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBForeignKeyConstraintGenerator
 
     'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
+    Public Sub New()
+        DBViewGenerator = New DBViewGenerator
+        DBFieldGenerator = New DBFieldGenerator
+        DBSchemaGenerator = New DBSchemaGenerator
+        DBTableGenerator = New DBTableGenerator With {.Parent = Me}
+        DBPrimaryKeyConstraintGenerator = New DBPrimaryKeyConstraintGenerator
+        DBForeignKeyConstraintGenerator = New DBForeignKeyConstraintGenerator
+    End Sub
 
     Public Overridable Function GetSqlCreate(dbObject As IDBObject) As String Implements IDBSqlGenerator.GetSqlCreate
         Dim ret As String = ""

@@ -9,21 +9,8 @@ Public Class DBSqlGeneratorFactory
         Select Case dbType
             Case eDBType.TransactSQL
                 ret = New DBSqlGenerator
-                ret.DBViewGenerator = New DBViewGenerator
-                ret.DBFieldGenerator = New DBFieldGenerator
-                ret.DBSchemaGenerator = New DBSchemaGenerator
-                ret.DBTableGenerator = New DBTableGenerator With {.Parent = ret}
-                ret.DBPrimaryKeyConstraintGenerator = New DBPrimaryKeyConstraintGenerator
-                ret.DBForeignKeyConstraintGenerator = New DBForeignKeyConstraintGenerator
             Case eDBType.SqlServer
                 ret = New DBSqlGeneratorSqlServer
-                ret.DBViewGenerator = New DBViewGenerator
-                ret.DBFieldGenerator = New DBFieldGenerator
-                ret.DBSchemaGenerator = New DBSchemaGenerator
-                ret.DBTableGenerator = New DBTableGenerator
-                ret.DBTableGenerator = New DBTableGenerator With {.Parent = ret}
-                ret.DBPrimaryKeyConstraintGenerator = New DBPrimaryKeyConstraintGenerator
-                ret.DBForeignKeyConstraintGenerator = New DBForeignKeyConstraintGenerator
             Case eDBType.MySql
                 Throw New NotSupportedException()
             Case Else
