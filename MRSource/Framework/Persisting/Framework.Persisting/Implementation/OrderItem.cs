@@ -20,7 +20,7 @@ namespace Framework.Persisting.Implementation
             }
         }
 
-        public string Name { get; set; }
+        public string SqlName { get; set; }
 
     }
 }

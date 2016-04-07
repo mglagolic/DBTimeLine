@@ -4,7 +4,7 @@ namespace Framework.Persisting.Interfaces
 {
     public interface IOrderItem
     {
-        string Name { get; set; }
+        string SqlName { get; set; }
         eOrderDirection Direction { get; set; }
     }
 }

@@ -20,15 +20,12 @@ Public Class Form1
         Public Overrides ReadOnly Property Sql As String
             Get
                 Return _
-"
-SELECT  
+"SELECT
 	t1.ID,
-	t1.DatumOd,
-	t2.Title
-FROM 
+    Table2Naziv = t2.Naziv
+FROM
 	Place.Table1 t1
-	LEFT JOIN Place.Table2 t2 on t1.Table2Key = t2.[Key]
-"
+	LEFT JOIN Place.Table2 t2 on t1.Table2Key = t2.TableKey"
             End Get
         End Property
     End Class
@@ -42,8 +39,8 @@ FROM
 
         Dim per As New myPersister
         per.CNN = MRC.GetConnection
-        per.Where = "Title = 'test'"
-        per.OrderItems.Add(New Implementation.OrderItem() With {.Name = "Title"})
+        per.Where = "t1.Broj = 1"
+        per.OrderItems.Add(New Implementation.OrderItem() With {.SqlName = "t2.Naziv"})
         Dim data = per.GetData()
 
     End Sub

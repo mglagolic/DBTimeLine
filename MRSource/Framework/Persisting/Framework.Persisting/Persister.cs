@@ -53,9 +53,12 @@ namespace Framework.Persisting
         {
             var ret = new Dictionary<object, IDlo>();
 
-            string sql = SqlGenerator.GetSql(Sql, Where, GetOrderByClause());
+            string sql = SqlGenerator.GetSql(Sql, Where, GetOrderByClause(), 1, 10);
 
-            SetPrimaryKey();
+            // TODO - razmisliti jel treba zamijeniti IDlo s ovim dyn anonimusom ili napraviti binding IDlo-a u dyn
+            var dyn = new { P1 = "Pero", P2 = 2};
+            
+            //SetPrimaryKey();
 
             return ret;
             
@@ -67,7 +70,7 @@ namespace Framework.Persisting
             var sb = new StringBuilder();
             foreach (var oi in OrderItems)
             {
-                sb.Append(oi.Name + " ");
+                sb.Append(oi.SqlName + " ");
                 if (oi.Direction == Enums.eOrderDirection.Descending)
                 {
                     sb.Append("DESC ");
@@ -75,7 +78,10 @@ namespace Framework.Persisting
                 sb.Append(",");
                 
             }
-            sb.Remove(sb.Length - 1, 1);
+            if (sb.Length > 0)
+            {
+                sb.Remove(sb.Length - 1, 1);
+            }
 
             return sb.ToString().Trim();
         }
