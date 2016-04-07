@@ -41,8 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Enums\eDBType.cs" />
     <Compile Include="Enums\eOrderItem.cs" />
+    <Compile Include="Globals.cs" />
+    <Compile Include="Implementation\OrderItem.cs" />
+    <Compile Include="Implementation\SqlGenerator.cs" />
+    <Compile Include="Implementation\SqlGeneratorFactory.cs" />
+    <Compile Include="Interfaces\IDlo.cs" />
+    <Compile Include="Interfaces\IPersister.cs" />
     <Compile Include="Interfaces\IOrderItem.cs" />
+    <Compile Include="Interfaces\ISqlGenerator.cs" />
+    <Compile Include="Interfaces\ISqlGeneratorFactory.cs" />
     <Compile Include="Persister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -52,6 +61,7 @@
       <Name>MRFramework.MRPersisting.Factory</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

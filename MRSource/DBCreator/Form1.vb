@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports Framework.Persisting
 Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBCreator
 Imports Framework.DBCreator.DBObjects
@@ -13,7 +14,7 @@ Public Class Form1
 
         Public Overrides ReadOnly Property DataBaseTableName As String
             Get
-                Return "Common.BigOne"
+                Return "Place.Table1"
             End Get
         End Property
         Public Overrides ReadOnly Property Sql As String
@@ -22,17 +23,29 @@ Public Class Form1
 "
 SELECT  
 	t1.ID,
-	t2.Naziv
+	t1.DatumOd,
+	t2.Title
 FROM 
-	Common.BigOne t1
-	INNER JOIN Common.BigOne t2 on t1.id = t2.id
+	Place.Table1 t1
+	LEFT JOIN Place.Table2 t2 on t1.Table2Key = t2.[Key]
 "
             End Get
         End Property
     End Class
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Button1.PerformClick()
+        'Button1.PerformClick()
+
+        MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
+        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
+
+        Dim per As New myPersister
+        per.CNN = MRC.GetConnection
+        per.Where = "Title = 'test'"
+        per.OrderItems.Add(New Implementation.OrderItem() With {.Name = "Title"})
+        Dim data = per.GetData()
+
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -84,9 +97,7 @@ FROM
 
         MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
-
         Dim per As New myPersister
-
 
         Dim dbSqlFactory As New DBSqlGeneratorFactory
 

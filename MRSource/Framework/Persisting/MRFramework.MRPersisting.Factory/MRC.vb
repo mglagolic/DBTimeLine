@@ -5,6 +5,7 @@ Public Class MRC
     Private Shared syncObject As New Object
     Private Shared _Factory As DbProviderFactory = Nothing
 
+    'Public Property DBType As eDBType = eDBType.TransactSQL
     Public Property ProviderName As String
     Public Property ConnectionString As String
 

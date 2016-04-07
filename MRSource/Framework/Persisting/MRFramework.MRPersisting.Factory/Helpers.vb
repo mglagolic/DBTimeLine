@@ -1,4 +1,29 @@
-﻿Public Module Helpers
+﻿Imports System.Data.Common
+
+Public Module PersistingFactoryHelpers
+
+    Public Function GetSchema(sql As String) As DataTable
+        Dim ret As DataTable = Nothing
+
+        Using lookupCnn As DbConnection = MRC.GetConnection()
+            Using cmd As DbCommand = MRC.GetCommand(lookupCnn)
+                cmd.CommandText = sql
+                Try
+                    lookupCnn.Open()
+                    Using reader As DbDataReader = cmd.ExecuteReader(CommandBehavior.Default Or CommandBehavior.KeyInfo Or CommandBehavior.SchemaOnly)
+                        ret = reader.GetSchemaTable()
+                        If Not reader.IsClosed Then
+                            reader.Close()
+                        End If
+                    End Using
+                Catch ex As Exception
+                    Throw New Exception("Error connection to database.", ex)
+                End Try
+            End Using
+        End Using
+
+        Return ret
+    End Function
 
     Public Function GetNewGuid() As Guid
         Dim ret As Guid = Nothing
