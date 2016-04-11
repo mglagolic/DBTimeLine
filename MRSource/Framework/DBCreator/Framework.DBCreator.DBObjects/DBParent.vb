@@ -12,6 +12,7 @@
             DBObjects.Add(objectName, newDBObject)
         End If
         Dim dbObject As IDBObject = DBObjects(objectName)
+        dbObject.Descriptor = descriptor
 
         If createRevision IsNot Nothing Then
             dbObject.AddRevision(createRevision)

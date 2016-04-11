@@ -15,13 +15,5 @@ namespace Framework.Persisting.Implementation
             }
         }
 
-        private Dictionary<string, object> _PrimaryKeyValues = new Dictionary<string, object>();
-        public Dictionary<string, object> PrimaryKeyValues
-        {
-            get
-            {
-                return _PrimaryKeyValues;
-            }
-        }
     }
 }

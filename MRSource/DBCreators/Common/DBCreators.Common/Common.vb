@@ -51,23 +51,6 @@ end
             End With
         End With
 
-
-        'With AddSchema("dbo", New DBSchemaDescriptor())
-        '    Dim dt As IDBTable
-        '    dt = .AddTable("Table1", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eFieldType.Guid}},
-        '                   New DBRevision(rev))
-        '    With dt
-        '        With dt.DBObjects(CType(.Descriptor, IDBTableDescriptor).CreatorFieldName)
-        '            .AddRevision(New DBRevision(DateSerial(2016, 3, 16), 1, eDBRevisionType.Modify),
-        '                  New DBFieldDescriptor(CType(.Descriptor, DBFieldDescriptor)) With {.FieldType = eFieldType.Nvarchar, .Size = 50})
-
-        '        End With
-        '        With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eFieldType.Datetime, .Nullable = True})
-        '            .AddRevision(New DBRevision(DateSerial(2016, 3, 18), 0, eDBRevisionType.Create))
-        '        End With
-        '    End With
-        'End With
-
     End Sub
 
 End Class
@@ -98,21 +81,7 @@ Public Class CorePlace
                     .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Modify),
                                  New DBFieldDescriptor(.Descriptor) With {.FieldType = eDBFieldType.Guid})
 
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 24), 2, eDBRevisionType.Modify),
-                                 New DBFieldDescriptor(.Descriptor) With {.Nullable = False})
                 End With
-
-                With .AddField("DatumOd", New DBFieldDescriptor With {.FieldType = eDBFieldType.Datetime, .Nullable = True})
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 23), 0, eDBRevisionType.Delete))
-
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 24), 1, eDBRevisionType.Create))
-                End With
-
-                .AddField("DatumDo", New DBFieldDescriptor With {.FieldType = eDBFieldType.Nvarchar, .Size = -1, .Nullable = False},
-                                 New DBRevision(DateSerial(2016, 3, 18), 0, eDBRevisionType.Create))
-
-                .AddConstraint(New DBPrimaryKeyConstraintDescriptor("ID"),
-                               New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
 
                 With .AddField("Name", New DBFieldDescriptor With {.FieldType = eDBFieldType.Nvarchar, .Size = -1, .Nullable = True},
                                  New DBRevision(DateSerial(2016, 3, 26), 0, eDBRevisionType.Create))
@@ -121,25 +90,6 @@ Public Class CorePlace
 
             End With
 
-            With .AddTable("Table2", New DBTableDescriptor() With {.CreatorFieldName = "ID", .CreatorFieldDescriptor = New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid}},
-                        New DBRevision(rev))
-
-                With .AddConstraint(New DBPrimaryKeyConstraintDescriptor("ID") With {.ConstraintName = "peroConstraint"},
-                               New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Create))
-
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 25), 0, eDBRevisionType.Delete))
-                End With
-
-                .AddField("Table1ID", New DBFieldDescriptor With {.FieldType = eDBFieldType.Guid},
-                                 New DBRevision(DateSerial(2016, 3, 26), 0, eDBRevisionType.Create))
-
-                With .AddConstraint(New DBForeignKeyConstraintDescriptor(New List(Of String)({"Table1ID"}), "Place", "Table1", New List(Of String)({"ID"})),
-                               New DBRevision(DateSerial(2016, 3, 30), 1, eDBRevisionType.Create))
-
-                    .AddRevision(New DBRevision(DateSerial(2016, 3, 30), 2, eDBRevisionType.Delete))
-                End With
-
-            End With
 
         End With
 

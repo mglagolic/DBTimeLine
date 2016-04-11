@@ -20,6 +20,7 @@ namespace Framework.Persisting
                 return instance;
             }
         }
+
         private eDBType dBType = eDBType.TransactSQL;
         public eDBType DBType
         {
@@ -32,6 +33,7 @@ namespace Framework.Persisting
                 dBType = value;
             }
         }
+
         public ISqlGeneratorFactory SqlGeneratorFactory { get; set; }
 
         private ISqlGenerator sqlGenerator = null;
@@ -43,10 +45,11 @@ namespace Framework.Persisting
                 {
                     sqlGenerator = SqlGeneratorFactory.GetSqlGenerator(DBType);
                 }
+
                 return sqlGenerator;
             }
         }
 
+        public int DefaultPageSize { get; set; } = 20;
     }
 }
-

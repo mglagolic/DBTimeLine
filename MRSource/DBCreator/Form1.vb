@@ -6,13 +6,15 @@ Imports Framework.DBCreator
 Imports Framework.DBCreator.DBObjects
 Imports System.ComponentModel
 
+Imports Framework.Persisting.Interfaces
+
 Public Class Form1
 
 
     Public Class myPersister
-        Inherits Framework.Persisting.Persister
+        Inherits Persister
 
-        Public Overrides ReadOnly Property DataBaseTableName As String
+        Protected Overrides ReadOnly Property DataBaseTableName As String
             Get
                 Return "Place.Table1"
             End Get
@@ -22,7 +24,8 @@ Public Class Form1
                 Return _
 "SELECT
 	t1.ID,
-    Table2Naziv = t2.Naziv
+    Table2Naziv = t2.Naziv,
+    Table2ID = t2.TableKey
 FROM
 	Place.Table1 t1
 	LEFT JOIN Place.Table2 t2 on t1.Table2Key = t2.TableKey"
@@ -37,14 +40,18 @@ FROM
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
         PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
 
-        Dim per As New myPersister
+        Dim per As IPersister = New myPersister
         per.CNN = MRC.GetConnection
         per.Where = "t1.Broj = 1"
         per.OrderItems.Add(New Implementation.OrderItem() With {.SqlName = "t2.Naziv"})
         per.CNN.Open()
-        Dim data = per.GetData()
+        Dim ts1 = New TimeSpan(Now.Ticks)
+        Dim data = per.GetData(Nothing)
+        Dim dataPage = per.GetData(Nothing, 20)
+        Dim ts2 = New TimeSpan(Now.Ticks)
+        Console.Write(ts2 - ts1)
         per.CNN.Close()
-
+        Dim o = data.Single(Function(itm) CType(itm.ColumnValues("ID"), Guid) = New Guid("3aca7383-5ae4-4a17-b9b0-000a761a505c"))
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click

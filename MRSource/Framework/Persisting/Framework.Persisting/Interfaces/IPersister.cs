@@ -5,9 +5,15 @@ namespace Framework.Persisting.Interfaces
 {
     public interface IPersister
     {
-        List<IOrderItem> OrderItems { get; }
-        string Where { get; set; }
-        HashSet<IDlo> GetData(DbTransaction transaction = null);
+        DbConnection CNN { get; set; }
 
+        string Sql { get; }
+        string Where { get; set; }
+        List<IOrderItem> OrderItems { get; }
+        int PageSize { get; set; }
+        
+        HashSet<IDlo> GetData(DbTransaction transaction, int pageNumber = -1);
     }
+
+
 }

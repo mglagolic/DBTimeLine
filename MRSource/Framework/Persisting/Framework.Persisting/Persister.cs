@@ -3,101 +3,22 @@ using Framework.Persisting.Interfaces;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System;
 using System.Text;
 using Framework.Persisting.Implementation;
-using System.Linq;
 
 namespace Framework.Persisting
 {
-    // TODO  - iskoristiti entity framework da se ne gubi vrijeme i malo za skolu
     public abstract class Persister : IPersister
     {
         public Persister()
         {
             SqlGenerator = PersistingSettings.Instance.SqlGenerator;
         }
+
         private ISqlGenerator SqlGenerator { get; set; }
 
-        public abstract string DataBaseTableName { get; }
-
-        protected string SqlBase
-        {
-            get
-            {
-                return "SELECT * FROM " + DataBaseTableName;
-            }
-        }
-
-        public virtual string Sql
-        {
-            get
-            {
-                return SqlBase;
-            }
-        }
-
-        public DbConnection CNN { get; set; }
-
-        
-        private List<IOrderItem> _OrderItems = new List<IOrderItem>();
-        public List<IOrderItem> OrderItems
-        {
-            get
-            {
-                return _OrderItems;
-            }
-        }
-
-        public string Where { get; set; }
-
-        public HashSet<IDlo> GetData(DbTransaction transaction = null)
-        {
-            var ret = new HashSet<IDlo>();
-            SetPrimaryKey();
-            using (DbCommand cmd = MRC.GetCommand(CNN))
-            {
-                //string sql = SqlGenerator.GetSql(Sql, Where, GetOrderByClause(), 1, 10);
-                cmd.CommandText = SqlGenerator.GetSql(Sql, Where, GetOrderByClause());
-                cmd.Transaction = transaction;
-                
-                //var lsDataColumn = new List<DataColumn>();
-                //lsDataColumn.AddRange(PrimaryKey);
-
-                using (DbDataReader reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        var dlo = new Dlo();
-                        for (int i = 0; i < reader.FieldCount; i++)
-                        {
-                            var columPK = PrimaryKey.Where(dc => dc.ColumnName == reader.GetName(i)).ToList();
-                            string columnName = reader.GetName(i);
-                            object value = reader.GetValue(i);
-
-                            if (columPK != null && columPK.Count > 0)
-                            {
-                                dlo.PrimaryKeyValues.Add(columnName, value);
-                            }
-                            dlo.ColumnValues.Add(columnName, value);
-                        }
-                        ret.Add(dlo);
-                    }
-                }
-
-            }
-             
-
-
-            
-
-            var dyn = new { P1 = "Pero", P2 = 2};
-            
-            //SetPrimaryKey();
-
-            return ret;
-            
-        }
+        protected abstract string DataBaseTableName { get; }
+        public abstract string Sql { get; }
 
         #region private
         private string GetOrderByClause()
@@ -121,7 +42,12 @@ namespace Framework.Persisting
             return sb.ToString().Trim();
         }
 
-        private void SetPrimaryKey()
+        private void SetSchemaTableIfNull()
+        {
+            if (SchemaTable == null) SchemaTable = PersistingFactoryHelpers.GetSchema(Sql);
+        }
+
+        private void SetPrimaryKeyIfNull()
         {
             if (PrimaryKey.Count == 0)
             {
@@ -129,38 +55,63 @@ namespace Framework.Persisting
             }
         }
 
-        private DataTable _SchemaTable = null;
-        private DataTable SchemaTable
-        {
-            get
-            {
-                if (_SchemaTable == null)
-                {
-                    _SchemaTable = PersistingFactoryHelpers.GetSchema(Sql);
-                }
-                return _SchemaTable;
-            }
-        }
+        private DataTable SchemaTable { get; set; } = null;
 
-        private List<DataColumn> _PrimaryKey = new List<DataColumn>();
-        private List<DataColumn> PrimaryKey
-        {
-            get
-            {
-                return _PrimaryKey;
-            }
-        }
-        
+        private List<DataColumn> PrimaryKey { get; } = new List<DataColumn>();
+
         private List<DataColumn> GetPrimaryKeyFromDB()
         {
             List<DataColumn> ret = null;
-            DataRow[] drows = SchemaTable.Select("ISKEY = 1 AND ISHIDDEN = 0");
-            if (drows != null && drows.Length > 0)
+            // TODO - dohvatiti PK na ispravan nacin, ovo dolje je krivo. uzeti schemu base selecta pa onda naci mozda naci key ili koristiti datatable.fillschema i primary key property
+
+            //DataRow[] drows = SchemaTable.Select("ISKEY = 1 AND ISHIDDEN = 0");
+            //if (drows != null && drows.Length > 0)
+            //{
+            //    ret = new List<DataColumn>();
+            //    for (int i = 0; i < drows.Length; i++)
+            //    {
+            //        ret.Add(new DataColumn(drows[i]["ColumnName"].ToString()));
+            //    }
+            //}
+            return ret;
+        }
+
+        #endregion
+
+        #region IPersister
+
+        public DbConnection CNN { get; set; }
+       
+        public string Where { get; set; }
+
+        public List<IOrderItem> OrderItems { get; } = new List<IOrderItem>();
+
+        public int PageSize { get; set; } = PersistingSettings.Instance.DefaultPageSize;
+        
+        public HashSet<IDlo> GetData(DbTransaction transaction, int pageNumber = -1)
+        {
+            var ret = new HashSet<IDlo>();
+
+            SetSchemaTableIfNull();
+            SetPrimaryKeyIfNull();            
+
+            using (DbCommand cmd = MRC.GetCommand(CNN))
             {
-                ret = new List<DataColumn>();
-                for (int i = 0; i < drows.Length; i++)
+                cmd.CommandText = SqlGenerator.GetSql(Sql, Where, GetOrderByClause(), pageNumber, PageSize);
+                cmd.Transaction = transaction;
+
+                using (DbDataReader reader = cmd.ExecuteReader())
                 {
-                    ret.Add(new DataColumn(drows[i]["ColumnName"].ToString()));
+                    while (reader.Read())
+                    {
+                        var dlo = new Dlo();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            // CONSIDER - treba li poslusati best practices dbreadera (Stringove vracati s reader.GetString, decimali reader.GetDecimal, itd.) testirati performance profilerom
+                            dlo.ColumnValues.Add(reader.GetName(i), reader.GetValue(i));
+                        }
+                        ret.Add(dlo);
+                    }
                 }
             }
             return ret;
