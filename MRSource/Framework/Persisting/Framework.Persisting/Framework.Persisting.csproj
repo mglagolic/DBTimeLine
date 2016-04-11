@@ -44,6 +44,7 @@
     <Compile Include="Enums\eDBType.cs" />
     <Compile Include="Enums\eOrderItem.cs" />
     <Compile Include="Globals.cs" />
+    <Compile Include="Implementation\Dlo.cs" />
     <Compile Include="Implementation\OrderItem.cs" />
     <Compile Include="Implementation\SqlGenerator.cs" />
     <Compile Include="Implementation\SqlGeneratorFactory.cs" />
