@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.Common;
 using System;
 using System.Text;
+using Framework.Persisting.Implementation;
+using System.Linq;
 
 namespace Framework.Persisting
 {
@@ -49,13 +51,46 @@ namespace Framework.Persisting
 
         public string Where { get; set; }
 
-        public Dictionary<object, IDlo> GetData(DbTransaction transaction = null)
+        public HashSet<IDlo> GetData(DbTransaction transaction = null)
         {
-            var ret = new Dictionary<object, IDlo>();
+            var ret = new HashSet<IDlo>();
+            SetPrimaryKey();
+            using (DbCommand cmd = MRC.GetCommand(CNN))
+            {
+                //string sql = SqlGenerator.GetSql(Sql, Where, GetOrderByClause(), 1, 10);
+                cmd.CommandText = SqlGenerator.GetSql(Sql, Where, GetOrderByClause());
+                cmd.Transaction = transaction;
+                
+                //var lsDataColumn = new List<DataColumn>();
+                //lsDataColumn.AddRange(PrimaryKey);
 
-            string sql = SqlGenerator.GetSql(Sql, Where, GetOrderByClause(), 1, 10);
+                using (DbDataReader reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        var dlo = new Dlo();
+                        for (int i = 0; i < reader.FieldCount; i++)
+                        {
+                            var columPK = PrimaryKey.Where(dc => dc.ColumnName == reader.GetName(i)).ToList();
+                            string columnName = reader.GetName(i);
+                            object value = reader.GetValue(i);
 
-            // TODO - razmisliti jel treba zamijeniti IDlo s ovim dyn anonimusom ili napraviti binding IDlo-a u dyn
+                            if (columPK != null && columPK.Count > 0)
+                            {
+                                dlo.PrimaryKeyValues.Add(columnName, value);
+                            }
+                            dlo.ColumnValues.Add(columnName, value);
+                        }
+                        ret.Add(dlo);
+                    }
+                }
+
+            }
+             
+
+
+            
+
             var dyn = new { P1 = "Pero", P2 = 2};
             
             //SetPrimaryKey();
@@ -88,9 +123,9 @@ namespace Framework.Persisting
 
         private void SetPrimaryKey()
         {
-                if (PrimaryKey == null)
+            if (PrimaryKey.Count == 0)
             {
-                _PrimaryKey = GetPrimaryKeyFromDB();
+                PrimaryKey.AddRange(GetPrimaryKeyFromDB());
             }
         }
 
@@ -107,31 +142,30 @@ namespace Framework.Persisting
             }
         }
 
-        private DataColumn[] _PrimaryKey = null;
-        private DataColumn[] PrimaryKey
+        private List<DataColumn> _PrimaryKey = new List<DataColumn>();
+        private List<DataColumn> PrimaryKey
         {
             get
             {
                 return _PrimaryKey;
             }
         }
-
-        private DataColumn[] GetPrimaryKeyFromDB()
+        
+        private List<DataColumn> GetPrimaryKeyFromDB()
         {
-            DataColumn[] ret = null;
+            List<DataColumn> ret = null;
             DataRow[] drows = SchemaTable.Select("ISKEY = 1 AND ISHIDDEN = 0");
             if (drows != null && drows.Length > 0)
             {
-                ret = new DataColumn[drows.Length];
+                ret = new List<DataColumn>();
                 for (int i = 0; i < drows.Length; i++)
                 {
-                    ret[i] = new DataColumn(drows[i]["ColumnName"].ToString());
+                    ret.Add(new DataColumn(drows[i]["ColumnName"].ToString()));
                 }
             }
             return ret;
         }
-
-
+        
         #endregion
     }
 }

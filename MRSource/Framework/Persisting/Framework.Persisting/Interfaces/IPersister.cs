@@ -7,7 +7,7 @@ namespace Framework.Persisting.Interfaces
     {
         List<IOrderItem> OrderItems { get; }
         string Where { get; set; }
-        Dictionary<object, IDlo> GetData(DbTransaction transaction = null);
+        HashSet<IDlo> GetData(DbTransaction transaction = null);
 
     }
 }

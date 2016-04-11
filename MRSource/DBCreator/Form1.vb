@@ -41,7 +41,9 @@ FROM
         per.CNN = MRC.GetConnection
         per.Where = "t1.Broj = 1"
         per.OrderItems.Add(New Implementation.OrderItem() With {.SqlName = "t2.Naziv"})
+        per.CNN.Open()
         Dim data = per.GetData()
+        per.CNN.Close()
 
     End Sub
 
