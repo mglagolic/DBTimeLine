@@ -2,6 +2,29 @@
 
 Public Module PersistingFactoryHelpers
 
+    Public Function GetPrimaryKeyFromDB(dataBaseTableName As String) As List(Of DataColumn)
+        Dim ret As List(Of DataColumn) = Nothing
+
+        Using cnn As DbConnection = MRC.GetConnection()
+            Using da As DbDataAdapter = MRC.GetDataAdapter()
+                Using cmd As DbCommand = MRC.GetCommand(cnn)
+                    cmd.CommandText = String.Format("SELECT * FROM {0}", dataBaseTableName)
+                    da.SelectCommand = cmd
+                    Try
+                        cnn.Open()
+                        Using table As New DataTable(dataBaseTableName)
+                            ret = da.FillSchema(table, SchemaType.Mapped).PrimaryKey.ToList()
+                        End Using
+                    Catch ex As System.Exception
+                        Throw New System.Exception("Error connecting to database.", ex)
+                    End Try
+                End Using
+            End Using
+        End Using
+
+        Return ret
+    End Function
+
     Public Function GetSchema(sql As String) As DataTable
         Dim ret As DataTable = Nothing
 

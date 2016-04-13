@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.Common;
 using System.Text;
 using Framework.Persisting.Implementation;
+using Framework.Persisting.Enums;
 
 namespace Framework.Persisting
 {
@@ -18,30 +19,10 @@ namespace Framework.Persisting
         private ISqlGenerator SqlGenerator { get; set; }
 
         protected abstract string DataBaseTableName { get; }
-        public abstract string Sql { get; }
+        protected abstract string Sql { get; }
 
         #region private
-        private string GetOrderByClause()
-        {
-            var sb = new StringBuilder();
-            foreach (var oi in OrderItems)
-            {
-                sb.Append(oi.SqlName + " ");
-                if (oi.Direction == Enums.eOrderDirection.Descending)
-                {
-                    sb.Append("DESC ");
-                }
-                sb.Append(",");
-                
-            }
-            if (sb.Length > 0)
-            {
-                sb.Remove(sb.Length - 1, 1);
-            }
-
-            return sb.ToString().Trim();
-        }
-
+        
         private void SetSchemaTableIfNull()
         {
             if (SchemaTable == null) SchemaTable = PersistingFactoryHelpers.GetSchema(Sql);
@@ -51,30 +32,13 @@ namespace Framework.Persisting
         {
             if (PrimaryKey.Count == 0)
             {
-                PrimaryKey.AddRange(GetPrimaryKeyFromDB());
+                PrimaryKey.AddRange(PersistingFactoryHelpers.GetPrimaryKeyFromDB(DataBaseTableName));
             }
         }
 
         private DataTable SchemaTable { get; set; } = null;
 
         private List<DataColumn> PrimaryKey { get; } = new List<DataColumn>();
-
-        private List<DataColumn> GetPrimaryKeyFromDB()
-        {
-            List<DataColumn> ret = null;
-            // TODO - dohvatiti PK na ispravan nacin, ovo dolje je krivo. uzeti schemu base selecta pa onda naci mozda naci key ili koristiti datatable.fillschema i primary key property
-
-            //DataRow[] drows = SchemaTable.Select("ISKEY = 1 AND ISHIDDEN = 0");
-            //if (drows != null && drows.Length > 0)
-            //{
-            //    ret = new List<DataColumn>();
-            //    for (int i = 0; i < drows.Length; i++)
-            //    {
-            //        ret.Add(new DataColumn(drows[i]["ColumnName"].ToString()));
-            //    }
-            //}
-            return ret;
-        }
 
         #endregion
 
@@ -93,11 +57,11 @@ namespace Framework.Persisting
             var ret = new HashSet<IDlo>();
 
             SetSchemaTableIfNull();
-            SetPrimaryKeyIfNull();            
+            SetPrimaryKeyIfNull();         
 
             using (DbCommand cmd = MRC.GetCommand(CNN))
             {
-                cmd.CommandText = SqlGenerator.GetSql(Sql, Where, GetOrderByClause(), pageNumber, PageSize);
+                cmd.CommandText = SqlGenerator.GetSql(Sql, Where, SqlGenerator.GetOrderByClause(OrderItems), pageNumber, PageSize);
                 cmd.Transaction = transaction;
 
                 using (DbDataReader reader = cmd.ExecuteReader())

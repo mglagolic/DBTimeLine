@@ -7,7 +7,10 @@ namespace Framework.Persisting
     {
         private static PersistingSettings instance;
 
-        private PersistingSettings() { }
+        private PersistingSettings()
+        {
+         
+        }
         
         public static PersistingSettings Instance
         {
@@ -21,32 +24,41 @@ namespace Framework.Persisting
             }
         }
 
-        private eDBType dBType = eDBType.TransactSQL;
+        private eDBType _DBType = eDBType.TransactSQL;
         public eDBType DBType
         {
             get
             {
-                return dBType;
+                return _DBType;
             }
             set
             {
-                dBType = value;
+                if (_DBType != value)
+                {
+                    _DBType = value;
+                    _SqlGenerator = SqlGeneratorFactory.GetSqlGenerator(DBType);
+                }
             }
         }
 
-        public ISqlGeneratorFactory SqlGeneratorFactory { get; set; }
+        private ISqlGeneratorFactory _SqlGeneratorFactory = null;
+        public ISqlGeneratorFactory SqlGeneratorFactory { get { return _SqlGeneratorFactory; }
+            set
+            {
+                if (_SqlGeneratorFactory != value)
+                {
+                    _SqlGeneratorFactory = value;
+                    _SqlGenerator = SqlGeneratorFactory.GetSqlGenerator(DBType);
+                }
+            }
+        }
 
-        private ISqlGenerator sqlGenerator = null;
+        private ISqlGenerator _SqlGenerator = null;
         public ISqlGenerator SqlGenerator
         {
             get
             {
-                if (sqlGenerator == null)
-                {
-                    sqlGenerator = SqlGeneratorFactory.GetSqlGenerator(DBType);
-                }
-
-                return sqlGenerator;
+                return _SqlGenerator;
             }
         }
 
