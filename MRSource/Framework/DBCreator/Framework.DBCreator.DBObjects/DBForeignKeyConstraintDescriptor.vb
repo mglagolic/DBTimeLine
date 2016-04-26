@@ -15,13 +15,14 @@
 
     End Sub
 
-    Public Sub New(FKTableColumns As List(Of String), PKTableSchemaName As String, PKTableName As String, PKTableColumns As List(Of String))
+    Public Sub New(FKTableColumns As List(Of String), PKFullTableName As String, PKTableColumns As List(Of String))
         MyClass.New()
 
         Me.FKTableColumns.AddRange(FKTableColumns)
-        Me.PKTableSchemaName = PKTableSchemaName
-        Me.PKTableName = PKTableName
+        PKTableSchemaName = PKFullTableName.Split(".")(0)
+        PKTableName = PKFullTableName.Split(".")(1)
         Me.PKTableColumns.AddRange(PKTableColumns)
+
     End Sub
 
     Public Function GetConstraintName(schemaName As String, tableName As String) As String Implements IDBConstraintDescriptor.GetConstraintName

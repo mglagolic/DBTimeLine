@@ -1,4 +1,6 @@
-﻿Public Class DBTable
+﻿Option Strict On
+
+Public Class DBTable
     Inherits DBObject
     Implements IDBTable
 
@@ -21,12 +23,12 @@
         End Get
     End Property
 
-    Public Function AddConstraint(descriptor As IDBConstraintDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddConstraint
-        Return MyBase.AddDBObject(descriptor.GetConstraintName(SchemaName, Name), descriptor, createRevision)
+    Public Function AddConstraint(descriptor As IDBConstraintDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBConstraint Implements IDBTable.AddConstraint
+        Return CType(MyBase.AddDBObject(descriptor.GetConstraintName(SchemaName, Name), descriptor, createRevision), IDBConstraint)
     End Function
 
-    Public Function AddField(fieldName As String, descriptor As IDBFieldDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBObject Implements IDBTable.AddField
-        Return MyBase.AddDBObject(fieldName, descriptor, createRevision)
+    Public Function AddField(fieldName As String, descriptor As IDBFieldDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBField Implements IDBTable.AddField
+        Return CType(MyBase.AddDBObject(fieldName, descriptor, createRevision), IDBField)
     End Function
 
 End Class

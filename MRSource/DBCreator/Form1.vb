@@ -19,6 +19,7 @@ Public Class Form1
                 Return "Place.Table1"
             End Get
         End Property
+
         Protected Overrides ReadOnly Property Sql As String
             Get
                 Return _
@@ -31,14 +32,10 @@ FROM
 	LEFT JOIN Place.Table2 t2 on t1.Table2Key = t2.TableKey"
             End Get
         End Property
+
     End Class
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'Button1.PerformClick()
-
-        MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
-        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
-        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
+    Private Sub persistingTests()
 
         Dim per As IPersister = New myPersister
         per.CNN = MRC.GetConnection
@@ -63,6 +60,17 @@ FROM
         Console.WriteLine((ts4 - ts2).ToString & " ukupno stranica:" & totalPages.ToString())
         per.CNN.Close()
         Dim o = data.Single(Function(itm) CType(itm.ColumnValues("ID"), Guid) = New Guid("3aca7383-5ae4-4a17-b9b0-000a761a505c"))
+
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'Button1.PerformClick()
+
+        MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
+        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
+
+        'persistingTests()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -82,10 +90,13 @@ FROM
             Exit Sub
         End If
         rtb1.SelectionColor = Color.Yellow
-        rtb1.AppendText("EXECUTING..." & vbNewLine)
+        rtb1.AppendText("-- EXECUTING..." & vbNewLine)
         rtb1.SelectionColor = Color.LawnGreen
         rtb1.AppendText(e.Sql & vbNewLine)
         rtb1.ScrollToCaret()
+
+
+
     End Sub
 
     Delegate Sub BatchExecutedCallback(sender As Object, e As BatchExecutedEventArgs)
@@ -105,32 +116,27 @@ FROM
             rtb1.AppendText(e.ErrorMessage & vbNewLine)
         End If
         rtb1.SelectionColor = Color.Yellow
-        rtb1.AppendText("Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine)
+        rtb1.AppendText("-- Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine)
         rtb1.ScrollToCaret()
     End Sub
 
     Private Sub DbCreate()
-        ' TODO - ovo sve u progressbar i thread
-
         MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
         Dim per As New myPersister
 
         Dim dbSqlFactory As New DBSqlGeneratorFactory
 
-
         Dim creator As New Framework.DBCreator.DBCreator With {.DBSqlGenerator = dbSqlFactory.GetDBSqlGenerator(eDBType.TransactSQL)}
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
-
 
         creator.CreateSystemObjects()
 
         ' TODO  - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
         '       - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
 
-        creator.AddModule(New DBCreators.Common.DBO)
-        creator.AddModule(New DBCreators.Common.CorePlace)
+        creator.AddModule(New DBCreators.DS)
 
         'creator.LoadModuleKeysFromDB()
 
@@ -158,6 +164,7 @@ FROM
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
                 trn.Rollback()
+                'trn.Commit()
             End Using
 
         End Using

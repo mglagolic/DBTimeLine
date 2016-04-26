@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ConnectionStringTest" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test2;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DefaultProvider" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ProviderSqlServer</Value>

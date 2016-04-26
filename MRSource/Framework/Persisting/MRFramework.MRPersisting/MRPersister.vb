@@ -413,7 +413,9 @@ Public MustInherit Class MRPersister
                             Dim nr As DataRow = dt.NewRow
                             For Each col As DataColumn In dt.Columns
                                 'If Not col.AutoIncrement Then
-                                nr(col.ColumnName) = typeConverter.GetValue(dlo.ColumnValues(col.ColumnName))
+                                If dlo.ColumnValues.ContainsKey(col.ColumnName) Then
+                                    nr(col.ColumnName) = typeConverter.GetValue(dlo.ColumnValues(col.ColumnName))
+                                End If
                                 'End If
                             Next
                             dt.Rows.Add(nr)

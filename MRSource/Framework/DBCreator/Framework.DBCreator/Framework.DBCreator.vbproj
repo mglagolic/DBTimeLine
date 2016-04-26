@@ -80,6 +80,7 @@
     <Compile Include="Interfaces\DBObjectDescriptors\IDBSchemaDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBTableDescriptor.vb" />
     <Compile Include="Interfaces\IDBForeignKeyConstraint.vb" />
+    <Compile Include="Interfaces\IDBConstraint.vb" />
     <Compile Include="Interfaces\IDBView.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBViewDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBConstraintDescriptor.vb" />

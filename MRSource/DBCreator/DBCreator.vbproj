@@ -118,11 +118,16 @@
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DBCreators\Common\DBCreators.Common\DBCreators.Common.vbproj">
       <Project>{acdff559-b744-4236-ac07-8f0a6ca92846}</Project>
       <Name>DBCreators.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DBCreators\DBCreators\DBCreators.csproj">
+      <Project>{91f233d0-86f9-4597-947e-d1fdf4fa17f4}</Project>
+      <Name>DBCreators</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework\DBCreator\Framework.DBCreator.DBObjects\Framework.DBCreator.DBObjects.vbproj">
       <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>

@@ -34,7 +34,7 @@ Public Class DBRevision
         Dim sbSql As New StringBuilder()
 
         If PreSqlTask IsNot Nothing Then
-            sbSql.Append(PreSqlTask.Invoke(Me))
+            sbSql.Append(PreSqlTask.Invoke(Me) & vbNewLine)
         End If
         If Parent IsNot Nothing Then
             Select Case DBRevisionType
@@ -44,12 +44,14 @@ Public Class DBRevision
                     sbSql.Append(Parent.GetSqlModify(Parent.DBCreator.DBSqlGenerator))
                 Case eDBRevisionType.Delete
                     sbSql.Append(Parent.GetSqlDelete(Parent.DBCreator.DBSqlGenerator))
+                Case eDBRevisionType.Task, eDBRevisionType.AlwaysExecute
+                    ' Do nothing, tasks do not change db structure
                 Case Else
                     Throw New NotSupportedException("eDBRevisionType")
             End Select
         End If
         If PostSqlTask IsNot Nothing Then
-            sbSql.Append(PostSqlTask.Invoke(Me))
+            sbSql.Append(vbNewLine & PostSqlTask.Invoke(Me))
         End If
 
         Return sbSql.ToString

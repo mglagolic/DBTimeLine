@@ -69,11 +69,6 @@ Public Class DBCreator
                 .Add(New MRCore.MROrderItem("ObjectName", MRCore.Enums.eOrderDirection.Ascending))
             End With
 
-            ' TODO - per.GetData generira bezvezan query, treba smisliti nesto drugo, stignem
-            ' ovako:
-            ' SELECT Case ID, Created, Granulation, DBObjectType, DBRevisionType, DBObjectFullName, DBObjectName, SchemaName FROM Common.Revision
-            ' ORDER BY  Created ASC, Granulation ASC, DBObjectType ASC, DBRevisionType ASC, DBObjectFullName ASC OFFSET 0 ROWS FETCH NEXT 1 ROWS ONLY
-
             Dim dicExecutedRevisions As Dictionary(Of Object, IMRDLO) = per.GetData(trn)
             For Each kv As KeyValuePair(Of Object, IMRDLO) In dicExecutedRevisions
                 Dim sqlRevision As New DBSqlRevision(kv.Value, Me)
@@ -100,12 +95,12 @@ Public Class DBCreator
     Public Sub OnBatchExecuted(sender As Object, e As BatchExecutedEventArgs)
         RaiseEvent BatchExecuted(sender, e)
     End Sub
+
     Private Function ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction) As Boolean
         Dim success As Boolean = True
         Dim batches As List(Of String) = SplitSqlStatements(script).ToList
         For Each batch As String In batches
             If success Then
-
 
                 Dim ts1 As TimeSpan
                 Dim ts2 As TimeSpan
@@ -121,26 +116,23 @@ Public Class DBCreator
                         cmd.ExecuteNonQuery()
 
                         Dim dlos As New List(Of IMRDLO)
-                        For Each rev As DBSqlRevision In revisions
-                            Dim dlo As IMRDLO = rev.GetDlo
-                            dlo.ColumnValues.Add("ID", Guid.NewGuid)
-                            dlos.Add(dlo)
-                        Next
+                        revisions.ForEach(
+                            Sub(rev)
+                                Dim dlo As IMRDLO = rev.GetDlo
+                                dlo.ColumnValues.Add("ID", Guid.NewGuid)
+                                dlo.ColumnValues.Add("Executed", Now())
+                                dlos.Add(dlo)
+                            End Sub)
+
                         Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
                             per.InsertBulk(dlos, trn)
                         End Using
 
                         ts2 = New TimeSpan(Now.Ticks)
                     Catch ex As SqlClient.SqlException
-                        'If Debugger.IsAttached Then
-                        '    Debugger.Break()
-                        'End If
                         errorMessage = ex.Message
                         success = False
                     Catch ex As Exception
-                        'If Debugger.IsAttached Then
-                        '    Debugger.Break()
-                        'End If
                         errorMessage = ex.Message
                         success = False
                     Finally
@@ -159,8 +151,7 @@ Public Class DBCreator
         Return success
     End Function
 
-    Public Function ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction) As String
-        Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+    Private Function ExecuteDBSqlRevisionBatches(notExecutedRevisions As List(Of DBSqlRevision), cnn As DbConnection, trn As DbTransaction) As String
         notExecutedRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
         Dim newExecutedRevisions As New List(Of DBSqlRevision)
@@ -185,6 +176,18 @@ Public Class DBCreator
         Next
 
         Return sqlScriptBuilder.ToString()
+    End Function
+
+    Public Function ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction) As String
+        Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecute).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+        Dim alwaysExecutingTasks As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType = eDBRevisionType.AlwaysExecute).ToList
+
+        Dim ret As String = ""
+
+        ret &= ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn)
+        ret &= ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn)
+
+        Return ret
     End Function
 
 #Region "System objects"
@@ -212,7 +215,7 @@ BEGIN
         [SchemaName] [varchar](50),
         [SchemaObjectName] [varchar](150),
         [ObjectName] [varchar](150) NOT NULL,
-		
+		[Executed] [datetime] NOT NULL CONSTRAINT DF_DBCreator_Revision_Executed DEFAULT GETDATE(),
         [ObjectFullName] [varchar](100) NOT NULL,
         [Description] [nvarchar](MAX) NULL
 	)

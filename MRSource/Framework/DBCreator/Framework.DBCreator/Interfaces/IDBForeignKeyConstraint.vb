@@ -1,4 +1,4 @@
 ﻿Public Interface IDBForeignKeyConstraint
-    Inherits IDBObject
+    Inherits IDBConstraint
 
 End Interface
