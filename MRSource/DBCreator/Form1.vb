@@ -95,8 +95,6 @@ FROM
         rtb1.AppendText(e.Sql & vbNewLine)
         rtb1.ScrollToCaret()
 
-
-
     End Sub
 
     Delegate Sub BatchExecutedCallback(sender As Object, e As BatchExecutedEventArgs)

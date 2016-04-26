@@ -23,9 +23,35 @@ namespace DBCreators
             Osoba(sch);
             Grad(sch);
             Drzava(sch);
+
+            OsobaGrad(sch);
+
             InitialFill(sch);
         }
 
+        private IDBView OsobaGrad(IDBSchema sch)
+        {
+            IDBView v = null;
+            DBRevision rev = new DBRevision(new DateTime(2016, 4, 26), 2, eDBRevisionType.Create);
+
+            v = sch.AddView("OsobaGrad", new DBViewDescriptor()
+            {
+                WithSchemaBinding = true,
+                Body =
+@"SELECT
+    oso.ID,
+    Naziv = oso.Ime + ' ' + oso.Prezime,
+    GradNaziv = grad.Naziv,
+    DrzavaNaziv = drz.Naziv
+FROM
+    DS.Osoba oso
+    LEFT JOIN DS.Grad grad ON oso.GradID = grad.ID
+    LEFT JOIN DS.Drzava drz ON grad.DrzavaID = drz.ID
+"
+            }, new DBRevision(rev));
+
+            return v;
+        }
         private IDBTable Osoba(IDBSchema sch)
         {
             IDBTable t = null;
