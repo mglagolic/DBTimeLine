@@ -17,6 +17,12 @@ Public Class DBCreator
     Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public Property RevisionBatchSize As Integer = 1
     Public Property Parent As IDBChained Implements IDBChained.Parent
+    Public Property DBType As eDBType = eDBType.TransactSQL
+
+    Public Sub New(dBType As eDBType, dbSqlFactory As IDBSqlGeneratorFactory)
+        Me.DBType = dBType
+        DBSqlGenerator = dbSqlFactory.GetDBSqlGenerator(dBType)
+    End Sub
 
     Public Function AddModule(dBModule As IDBModule) As IDBModule
         DBModules.Add(dBModule)

@@ -114,7 +114,7 @@ FROM
             return t;
         }
 
-        private string UpdateGradDrzavom(IDBRevision sender)
+        private string UpdateGradDrzavom(IDBRevision sender, eDBType dBType)
         {
             return @"GO
 UPDATE DS.Grad 
@@ -122,7 +122,7 @@ SET DrzavaID = '37D047AF-E2DA-4E08-B25C-5B79EFA94927'
 ";
         }
 
-        private string InitialFillDrzava(IDBRevision sender)
+        private string InitialFillDrzava(IDBRevision sender, eDBType dBType)
         {
             
             return @"
@@ -130,7 +130,7 @@ SET DrzavaID = '37D047AF-E2DA-4E08-B25C-5B79EFA94927'
 INSERT INTO DS.Drzava (ID, Naziv) SELECT '37D047AF-E2DA-4E08-B25C-5B79EFA94927', 'Hrvatska'";
         }
 
-        private string InitialFillGrad(IDBRevision sender)
+        private string InitialFillGrad(IDBRevision sender, eDBType dBType)
         {
             return @"
 IF NOT EXISTS (SELECT TOP 1 1 FROM DS.Grad WHERE ID = '57568560-B3CB-42B9-A018-45DAD9632519')
@@ -146,7 +146,7 @@ END
 ";
         }
 
-        private string InitialFillOsoba(IDBRevision sender)
+        private string InitialFillOsoba(IDBRevision sender, eDBType dBType)
         {
             return @"
 INSERT INTO DS.Osoba (ID, Ime, Prezime, GradID) 

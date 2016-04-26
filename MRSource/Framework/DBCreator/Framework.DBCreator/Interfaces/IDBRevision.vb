@@ -1,4 +1,4 @@
-﻿Public Delegate Function RevisionTaskDelegate(sender As IDBRevision) As String
+﻿Public Delegate Function RevisionTaskDelegate(sender As IDBRevision, dBType As eDBType) As String
 
 Public Interface IDBRevision
     Property DBRevisionType As eDBRevisionType

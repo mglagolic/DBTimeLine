@@ -34,7 +34,7 @@ Public Class DBRevision
         Dim sbSql As New StringBuilder()
 
         If PreSqlTask IsNot Nothing Then
-            sbSql.Append(PreSqlTask.Invoke(Me) & vbNewLine)
+            sbSql.Append(PreSqlTask.Invoke(Me, Parent.DBCreator.DBType) & vbNewLine)
         End If
         If Parent IsNot Nothing Then
             Select Case DBRevisionType
@@ -51,7 +51,7 @@ Public Class DBRevision
             End Select
         End If
         If PostSqlTask IsNot Nothing Then
-            sbSql.Append(vbNewLine & PostSqlTask.Invoke(Me))
+            sbSql.Append(vbNewLine & PostSqlTask.Invoke(Me, Parent.DBCreator.DBType))
         End If
 
         Return sbSql.ToString

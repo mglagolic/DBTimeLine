@@ -85,8 +85,10 @@
     <Compile Include="DBSqlGeneratorFactory\DBViewGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSchemaGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\SqlServer\DBSqlGeneratorSqlServer.vb" />
+    <Compile Include="DBIndex.vb" />
     <Compile Include="DBView.vb" />
     <Compile Include="DBTable.vb" />
+    <Compile Include="DBIndexDescriptor.vb" />
     <Compile Include="DBViewDescriptor.vb" />
     <Compile Include="DBTableDescriptor.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />

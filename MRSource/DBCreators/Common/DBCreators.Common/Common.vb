@@ -11,11 +11,11 @@ Public Class DBO
         End Get
     End Property
 
-    Private Function preTask(sender As IDBRevision) As String
+    Private Function preTask(sender As IDBRevision, dBtype As eDBType) As String
         Return ""
     End Function
 
-    Private Function postTask(sender As IDBRevision) As String
+    Private Function postTask(sender As IDBRevision, dBtype As eDBType) As String
         Dim sql As String = "
 GO 
 SELECT Stupac = 'Ovo je post sql: bok kaj ima'
