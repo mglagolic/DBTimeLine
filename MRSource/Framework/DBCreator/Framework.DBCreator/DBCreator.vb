@@ -15,7 +15,7 @@ Public Class DBCreator
 
     Public ReadOnly Property SourceDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
-    Public Property RevisionBatchSize As Integer = 1
+    Public Property RevisionBatchSize As Integer = 10
     Public Property Parent As IDBChained Implements IDBChained.Parent
     Public Property DBType As eDBType = eDBType.TransactSQL
 
@@ -132,9 +132,17 @@ Public Class DBCreator
                     End Using
                     ts2 = New TimeSpan(Now.Ticks)
                 Catch ex As SqlClient.SqlException
+                    If Debugger.IsAttached Then
+                        Debugger.Break()
+                    End If
+
                     errorMessage = ex.Message
                     Throw
                 Catch ex As Exception
+                    If Debugger.IsAttached Then
+                        Debugger.Break()
+                    End If
+
                     errorMessage = ex.Message
                     Throw
                 Finally
@@ -181,9 +189,8 @@ Public Class DBCreator
             ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn)
             ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn)
         Catch ex As Exception
-            If Debugger.IsAttached Then
-                Debugger.Break()
-            End If
+            ' CONSIDER - do some logging
+
         End Try
     End Sub
 
@@ -198,6 +205,8 @@ Public Class DBCreator
                         cnn.Open()
                     End If
 
+                    ' TODO - popraviti clustered index, u bazi revizije nisu dobro sortirane. Dodati revision key u bazu i clustered index po tom jednom polju
+                    ' TODO - ovaj query preseliti u sql generator tako da radi za sve tipove baza
                     cmd.CommandText = "
 IF OBJECT_ID('DBCreator.Revision') IS NULL
 BEGIN

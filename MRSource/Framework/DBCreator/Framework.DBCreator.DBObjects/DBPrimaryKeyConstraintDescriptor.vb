@@ -2,6 +2,7 @@
     Implements IDBPrimaryKeyConstraintDescriptor
 
     Public Property ConstraintName As String Implements IDBPrimaryKeyConstraintDescriptor.ConstraintName
+
     Public ReadOnly Property Columns As New List(Of String) Implements IDBPrimaryKeyConstraintDescriptor.Columns
 
     Public Overridable Function GetDBObjectInstance(Optional parent As IDBChained = Nothing) As IDBObject Implements IDBObjectDescriptor.GetDBObjectInstance

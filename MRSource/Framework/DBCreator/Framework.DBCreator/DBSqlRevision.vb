@@ -2,8 +2,10 @@
 Imports MRFramework.MRPersisting.Core
 
 Public Class DBSqlRevision
-    Public Property Created As Date
     Private Const MaxGranulationPower As Integer = 3
+
+    Public Property Created As Date
+
     Private _Granulation As Integer = 0
     Public Property Granulation As Integer
         Get
@@ -16,21 +18,25 @@ Public Class DBSqlRevision
             _Granulation = value
         End Set
     End Property
+
     Public Property ObjectFullName As String
+
     Public Property ObjectType As eDBObjectType
     Public ReadOnly Property ObjectTypeName As String
         Get
+            'Return CInt(ObjectType).ToString.PadLeft(3, "0"c) & "_" & [Enum].GetName(GetType(eDBObjectType), ObjectType)
             Return [Enum].GetName(GetType(eDBObjectType), ObjectType)
         End Get
     End Property
+
     Public Property RevisionType As eDBRevisionType
     Public ReadOnly Property RevisionTypeName As String
         Get
             Return [Enum].GetName(GetType(eDBRevisionType), RevisionType)
         End Get
     End Property
-    Public Property Parent As IDBRevision
 
+    Public Property Parent As IDBRevision
     Public Property ModuleKey As String
     Public Property SchemaName As String
     Public Property SchemaObjectName As String

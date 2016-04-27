@@ -40,16 +40,22 @@ namespace DBCreators
                 Body =
 @"SELECT
     oso.ID,
+    oso.GradID,    
     Naziv = oso.Ime + ' ' + oso.Prezime,
     GradNaziv = grad.Naziv,
     DrzavaNaziv = drz.Naziv
 FROM
     DS.Osoba oso
-    LEFT JOIN DS.Grad grad ON oso.GradID = grad.ID
-    LEFT JOIN DS.Drzava drz ON grad.DrzavaID = drz.ID
+    INNER JOIN DS.Grad grad ON oso.GradID = grad.ID
+    INNER JOIN DS.Drzava drz ON grad.DrzavaID = drz.ID
 "
             }, new DBRevision(rev));
 
+            //v.AddIndex(new DBIndexDescriptor(new List<string>() { "GradID", "ID" }, new List<string>() { "Naziv" }) { Clustered = true}, new DBRevision(rev));
+            IDBIndex i = v.AddIndex(new DBIndexDescriptor(new List<string>() { "GradID", "ID" }) { Unique = true, Clustered = true }, new DBRevision(rev));
+
+            i.AddRevision(new DBRevision(new DateTime(2016, 4, 28), 0, eDBRevisionType.Delete));
+            
             return v;
         }
         private IDBTable Osoba(IDBSchema sch)

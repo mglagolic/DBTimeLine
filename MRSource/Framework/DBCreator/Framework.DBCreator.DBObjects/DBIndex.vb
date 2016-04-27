@@ -1,6 +1,6 @@
-﻿Public Class DBField
+﻿Public Class DBIndex
     Inherits DBObject
-    Implements IDBField
+    Implements IDBIndex
 
     Public Sub New()
 
@@ -8,7 +8,7 @@
 
     Public Overrides ReadOnly Property ObjectType As eDBObjectType
         Get
-            Return eDBObjectType.Field
+            Return eDBObjectType.Index
         End Get
     End Property
 

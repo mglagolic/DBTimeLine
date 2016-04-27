@@ -27,6 +27,10 @@ Partial Class Form1
         Me.backWorker = New System.ComponentModel.BackgroundWorker()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.WebBrowser1 = New System.Windows.Forms.WebBrowser()
+        Me.zoomRtb = New System.Windows.Forms.TrackBar()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'rtb1
@@ -34,7 +38,7 @@ Partial Class Form1
         Me.rtb1.AutoWordSelection = True
         Me.rtb1.BackColor = System.Drawing.Color.Black
         Me.rtb1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.rtb1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.rtb1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.rtb1.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(238, Byte))
         Me.rtb1.ForeColor = System.Drawing.Color.LawnGreen
         Me.rtb1.Location = New System.Drawing.Point(0, 0)
@@ -42,9 +46,9 @@ Partial Class Form1
         Me.rtb1.ReadOnly = True
         Me.rtb1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
         Me.rtb1.ShowSelectionMargin = True
-        Me.rtb1.Size = New System.Drawing.Size(886, 175)
+        Me.rtb1.Size = New System.Drawing.Size(866, 156)
         Me.rtb1.TabIndex = 0
-        Me.rtb1.Text = ""
+        Me.rtb1.Text = "bok" & Global.Microsoft.VisualBasic.ChrW(10) & "kaj" & Global.Microsoft.VisualBasic.ChrW(10) & "ima"
         Me.rtb1.WordWrap = False
         '
         'Button1
@@ -77,18 +81,47 @@ Partial Class Form1
         Me.WebBrowser1.Size = New System.Drawing.Size(817, 156)
         Me.WebBrowser1.TabIndex = 3
         '
+        'zoomRtb
+        '
+        Me.zoomRtb.AutoSize = False
+        Me.zoomRtb.Dock = System.Windows.Forms.DockStyle.Right
+        Me.zoomRtb.LargeChange = 10
+        Me.zoomRtb.Location = New System.Drawing.Point(866, 0)
+        Me.zoomRtb.Maximum = 50
+        Me.zoomRtb.Minimum = 10
+        Me.zoomRtb.Name = "zoomRtb"
+        Me.zoomRtb.Orientation = System.Windows.Forms.Orientation.Vertical
+        Me.zoomRtb.Size = New System.Drawing.Size(20, 156)
+        Me.zoomRtb.SmallChange = 5
+        Me.zoomRtb.TabIndex = 4
+        Me.zoomRtb.TickFrequency = 5
+        Me.zoomRtb.TickStyle = System.Windows.Forms.TickStyle.None
+        Me.zoomRtb.Value = 30
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.rtb1)
+        Me.Panel1.Controls.Add(Me.zoomRtb)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.Panel1.Location = New System.Drawing.Point(0, 0)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(886, 156)
+        Me.Panel1.TabIndex = 5
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.WhiteSmoke
         Me.ClientSize = New System.Drawing.Size(886, 497)
+        Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.WebBrowser1)
         Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.Button1)
-        Me.Controls.Add(Me.rtb1)
         Me.Name = "Form1"
         Me.Text = "Form1"
+        CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel1.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -98,4 +131,6 @@ Partial Class Form1
     Friend WithEvents backWorker As System.ComponentModel.BackgroundWorker
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents WebBrowser1 As WebBrowser
+    Friend WithEvents zoomRtb As TrackBar
+    Friend WithEvents Panel1 As Panel
 End Class

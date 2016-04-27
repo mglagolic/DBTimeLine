@@ -1,6 +1,4 @@
-﻿Imports Framework.DBCreator
-
-Public Class DBSqlGenerator
+﻿Public Class DBSqlGenerator
     Implements IDBSqlGenerator
 
     Public Property DBViewGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBViewGenerator
@@ -9,8 +7,8 @@ Public Class DBSqlGenerator
     Public Property DBTableGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBTableGenerator
     Public Property DBPrimaryKeyConstraintGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBPrimaryKeyConstraintGenerator
     Public Property DBForeignKeyConstraintGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBForeignKeyConstraintGenerator
+    Public Property DBIndexGenerator As IDBIndexGenerator Implements IDBSqlGenerator.DBIndexGenerator
 
-    'TODO - ovisno o ovdje izvrsavati batcheve, GO split mozda svuda i bok ...
     Public Sub New()
         DBViewGenerator = New DBViewGenerator
         DBFieldGenerator = New DBFieldGenerator
@@ -18,6 +16,7 @@ Public Class DBSqlGenerator
         DBTableGenerator = New DBTableGenerator With {.Parent = Me}
         DBPrimaryKeyConstraintGenerator = New DBPrimaryKeyConstraintGenerator
         DBForeignKeyConstraintGenerator = New DBForeignKeyConstraintGenerator
+        DBIndexGenerator = New DBIndexGenerator
     End Sub
 
     Public Overridable Function GetSqlCreate(dbObject As IDBObject) As String Implements IDBSqlGenerator.GetSqlCreate
@@ -39,7 +38,10 @@ Public Class DBSqlGenerator
             ret = DBForeignKeyConstraintGenerator.GetSqlCreate(dbObject)
 
         ElseIf TypeOf dbObject Is IDBView Then
-            ret = DBViewGenerator.GetSqlCreate(CType(dbObject, IDBView))
+            ret = DBViewGenerator.GetSqlCreate(dbObject)
+
+        ElseIf TypeOf dbObject Is IDBIndex Then
+            ret = DBIndexGenerator.GetSqlCreate(dbObject)
 
         End If
 
@@ -67,6 +69,9 @@ Public Class DBSqlGenerator
         ElseIf TypeOf dbObject Is IDBView Then
             ret = DBViewGenerator.GetSqlModify(CType(dbObject, IDBView))
 
+        ElseIf TypeOf dbObject Is IDBIndex Then
+            ret = DBIndexGenerator.GetSqlModify(dbObject)
+
         End If
 
         Return ret
@@ -92,6 +97,9 @@ Public Class DBSqlGenerator
 
         ElseIf TypeOf dbObject Is IDBForeignKeyConstraint Then
             ret = DBForeignKeyConstraintGenerator.GetSqlDelete(CType(dbObject, IDBForeignKeyConstraint))
+
+        ElseIf TypeOf dbObject Is IDBIndex Then
+            ret = DBIndexGenerator.GetSqlDelete(dbObject)
 
         End If
 

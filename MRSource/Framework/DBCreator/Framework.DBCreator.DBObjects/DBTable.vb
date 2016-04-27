@@ -1,5 +1,4 @@
 ﻿Option Strict On
-
 Public Class DBTable
     Inherits DBObject
     Implements IDBTable
@@ -31,4 +30,7 @@ Public Class DBTable
         Return CType(MyBase.AddDBObject(fieldName, descriptor, createRevision), IDBField)
     End Function
 
+    Public Function AddIndex(descriptor As IDBIndexDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBIndex Implements IDBTable.AddIndex
+        Return CType(MyBase.AddDBObject(descriptor.GetIndexName(SchemaName, Name), descriptor, createRevision), IDBIndex)
+    End Function
 End Class

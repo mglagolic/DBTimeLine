@@ -18,4 +18,8 @@
         End Get
     End Property
 
+    Public Function AddIndex(descriptor As IDBIndexDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBIndex Implements IDBView.AddIndex
+        Return CType(MyBase.AddDBObject(descriptor.GetIndexName(SchemaName, Name), descriptor, createRevision), IDBIndex)
+    End Function
+
 End Class

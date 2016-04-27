@@ -7,6 +7,7 @@
     Public ReadOnly Property PKTableColumns As New List(Of String) Implements IDBForeignKeyConstraintDescriptor.PKTableColumns
     Public Property PKTableSchemaName As String Implements IDBForeignKeyConstraintDescriptor.PKTableSchemaName
     Public Property PKTableName As String Implements IDBForeignKeyConstraintDescriptor.PKTableName
+
     Public Overridable Function GetDBObjectInstance(Optional parent As IDBChained = Nothing) As IDBObject Implements IDBObjectDescriptor.GetDBObjectInstance
         Return New DBForeignKeyConstraint() With {.parent = parent, .Descriptor = Me}
     End Function

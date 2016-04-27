@@ -1,6 +1,4 @@
-﻿Imports Framework.DBCreator
-
-Public Class DBSqlGeneratorFactory
+﻿Public Class DBSqlGeneratorFactory
     Implements IDBSqlGeneratorFactory
 
     'TODO - implementirati eDBType.MySql

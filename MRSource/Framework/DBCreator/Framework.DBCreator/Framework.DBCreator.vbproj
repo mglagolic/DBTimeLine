@@ -74,11 +74,13 @@
     <Compile Include="Enums\eDBType.vb" />
     <Compile Include="EventArgs\BatchExecutingEventArgs.vb" />
     <Compile Include="EventArgs\BatchExecutedEventArgs.vb" />
+    <Compile Include="Interfaces\DBObjectDescriptors\IDBIndexDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBFieldDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBForeignKeyConstraintDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBPrimaryKeyConstraintDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBSchemaDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBTableDescriptor.vb" />
+    <Compile Include="Interfaces\IDBIndex.vb" />
     <Compile Include="Interfaces\IDBForeignKeyConstraint.vb" />
     <Compile Include="Interfaces\IDBConstraint.vb" />
     <Compile Include="Interfaces\IDBView.vb" />
@@ -102,6 +104,7 @@
     <Compile Include="Interfaces\IDBRevision.vb" />
     <Compile Include="Interfaces\IDBTable.vb" />
     <Compile Include="Interfaces\IDBSchema.vb" />
+    <Compile Include="Interfaces\SqlGenerators\IDBIndexGenerator.vb" />
     <Compile Include="Interfaces\SqlGenerators\IDBTableGenerator.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">

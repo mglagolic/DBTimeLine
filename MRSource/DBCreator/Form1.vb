@@ -9,8 +9,6 @@ Imports System.ComponentModel
 Imports Framework.Persisting.Interfaces
 
 Public Class Form1
-
-
     Public Class myPersister
         Inherits Persister
 
@@ -63,6 +61,9 @@ FROM
 
     End Sub
 
+    Dim ts1 As TimeSpan
+    Dim ts2 As TimeSpan
+
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Button1.PerformClick()
 
@@ -74,6 +75,7 @@ FROM
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        ts1 = New TimeSpan(Now.Ticks)
         rtb1.Text = ""
         If backWorker.IsBusy Then
             backWorker.CancelAsync()
@@ -180,5 +182,24 @@ FROM
 
     Private Sub backWorker_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles backWorker.RunWorkerCompleted
         ProgressBar1.Value = 100
+        ts2 = New TimeSpan(Now.Ticks)
+
+        rtb1.SelectionColor = Color.LightBlue
+        rtb1.AppendText("-- Total time: " & (ts2 - ts1).ToString() & vbNewLine & vbNewLine)
+        rtb1.ScrollToCaret()
+    End Sub
+
+    Private Sub zoomRtb_Scroll(sender As Object, e As EventArgs) Handles zoomRtb.Scroll
+        Dim tb As TrackBar = CType(sender, TrackBar)
+        Dim value As Decimal = tb.Value - tb.Minimum
+
+        Dim zoomFactor As Decimal = value / (tb.Maximum - tb.Minimum) * 2
+        If zoomFactor <= 0.015625D Then
+            zoomFactor = 0.02D
+        ElseIf zoomFactor >= 64 Then
+            zoomFactor = 63D
+        End If
+
+        rtb1.ZoomFactor = zoomFactor
     End Sub
 End Class
