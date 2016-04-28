@@ -88,7 +88,8 @@ Public Class DBSqlRevision
 
         ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
 
-        Key = GetDBSqlRevisionKey()
+        'Key = GetDBSqlRevisionKey()
+        Key = CStr(dlo.ColumnValues("RevisionKey"))
 
         Parent = FindParent(dBCreator)
     End Sub
@@ -113,7 +114,7 @@ Public Class DBSqlRevision
             Case eDBObjectType.Table, eDBObjectType.View
                 sbFullName.Append(".")
                 sbFullName.Append(SchemaObjectName)
-            Case eDBObjectType.Field, eDBObjectType.Constraint
+            Case eDBObjectType.Field, eDBObjectType.Constraint, eDBObjectType.Index
                 sbFullName.Append(".")
                 sbFullName.Append(SchemaObjectName)
                 sbFullName.Append(".")
@@ -152,6 +153,7 @@ Public Class DBSqlRevision
             .Add("ObjectFullName", ObjectFullName)
             .Add("Description", Description)
 
+            .Add("RevisionKey", Key)
         End With
         Return dlo
     End Function
@@ -197,7 +199,7 @@ Public Class DBSqlRevision
         End Property
         Public Overrides ReadOnly Property SQL As String
             Get
-                Return "SELECT ID, Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName, ObjectFullName FROM " & DataBaseTableName
+                Return "SELECT ID, RevisionKey, Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName, ObjectFullName FROM " & DataBaseTableName
             End Get
         End Property
     End Class

@@ -65,15 +65,9 @@ Public Class DBCreator
 
         Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn, .PagingEnabled = False}
             With per.OrderItems
-                .Add(New MRCore.MROrderItem("Created", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("Granulation", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("ObjectType", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("RevisionType", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("ModuleKey", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("SchemaName", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("SchemaObjectName", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("ObjectName", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("RevisionKey", MRCore.Enums.eOrderDirection.Ascending))
             End With
+            per.Where = "RevisionType <> 'AlwaysExecute'"
 
             Dim dicExecutedRevisions As Dictionary(Of Object, IMRDLO) = per.GetData(trn)
             For Each kv As KeyValuePair(Of Object, IMRDLO) In dicExecutedRevisions
@@ -102,7 +96,7 @@ Public Class DBCreator
         RaiseEvent BatchExecuted(sender, e)
     End Sub
 
-    Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction)
+    Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean)
         Dim batches As List(Of String) = SplitSqlStatements(script).ToList
 
         For Each batch As String In batches
@@ -114,12 +108,16 @@ Public Class DBCreator
                     cmd.CommandText = batch
                     cmd.Transaction = trn
 
-                    OnBatchExecuting(Me, New BatchExecutingEventArgs With {.Cancel = False, .Sql = batch})
+                    If Not cancelEvents Then
+                        OnBatchExecuting(Me, New BatchExecutingEventArgs With {.Cancel = False, .Sql = batch})
+                        ts1 = New TimeSpan(Now.Ticks)
+                    End If
 
-                    ts1 = New TimeSpan(Now.Ticks)
                     cmd.ExecuteNonQuery()
-                    ts2 = New TimeSpan(Now.Ticks)
 
+                    If Not cancelEvents Then
+                        ts2 = New TimeSpan(Now.Ticks)
+                    End If
                 Catch ex As SqlClient.SqlException
                     If Debugger.IsAttached Then
                         Debugger.Break()
@@ -135,7 +133,8 @@ Public Class DBCreator
                     errorMessage = ex.Message
                     Throw
                 Finally
-                    OnBatchExecuted(Me, New BatchExecutedEventArgs With {
+                    If Not cancelEvents Then
+                        OnBatchExecuted(Me, New BatchExecutedEventArgs With {
                                             .Sql = batch,
                                             .Duration = ts2 - ts1,
                                             .ResultType = CType(IIf(errorMessage = "", eBatchExecutionResultType.Success, eBatchExecutionResultType.Failed), eBatchExecutionResultType),
@@ -143,6 +142,7 @@ Public Class DBCreator
                                             .TotalRevisionsCount = 0,
                                             .ErrorMessage = errorMessage
                                         })
+                    End If
                 End Try
             End Using
 
@@ -151,7 +151,7 @@ Public Class DBCreator
     End Sub
 
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction)
-        ExecuteScriptBatches(script, cnn, trn)
+        ExecuteScriptBatches(script, cnn, trn, False)
 
         Dim dlos As New List(Of IMRDLO)
         revisions.ForEach(
@@ -212,7 +212,7 @@ Public Class DBCreator
                 End If
 
                 ' TODO - popraviti clustered index, u bazi revizije nisu dobro sortirane. Dodati revision key u bazu i clustered index po tom jednom polju
-                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemRevisionTable(), CType(cnn, DbConnection), Nothing)
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemRevisionTable(), CType(cnn, DbConnection), Nothing, True)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()
@@ -252,7 +252,7 @@ Public Class DBCreator
                 If cnn.State <> ConnectionState.Open Then
                     cnn.Open()
                 End If
-                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing)
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing, True)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()

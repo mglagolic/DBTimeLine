@@ -136,6 +136,7 @@ BEGIN
 	CREATE TABLE [DBCreator].[Revision]
 	(
 		[ID] [uniqueidentifier] NOT NULL PRIMARY KEY NONCLUSTERED,
+        [RevisionKey] [varchar](800) NOT NULL,
 		[Created] [date] NOT NULL,
 		[Granulation] [int] NOT NULL,
         [ObjectType] [varchar](50) NOT NULL,        
@@ -152,7 +153,7 @@ BEGIN
 	BEGIN
 		DROP INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision 
 	END
-	CREATE CLUSTERED INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision (Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName)
+    CREATE CLUSTERED INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision (RevisionKey, ID)
 END
 "
 
