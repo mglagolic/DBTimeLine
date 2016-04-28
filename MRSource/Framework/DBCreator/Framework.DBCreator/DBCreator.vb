@@ -102,8 +102,9 @@ Public Class DBCreator
         RaiseEvent BatchExecuted(sender, e)
     End Sub
 
-    Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction)
+    Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction)
         Dim batches As List(Of String) = SplitSqlStatements(script).ToList
+
         For Each batch As String In batches
             Dim ts1 As TimeSpan
             Dim ts2 As TimeSpan
@@ -117,20 +118,8 @@ Public Class DBCreator
 
                     ts1 = New TimeSpan(Now.Ticks)
                     cmd.ExecuteNonQuery()
-
-                    Dim dlos As New List(Of IMRDLO)
-                    revisions.ForEach(
-                            Sub(rev)
-                                Dim dlo As IMRDLO = rev.GetDlo
-                                dlo.ColumnValues.Add("ID", Guid.NewGuid)
-                                dlo.ColumnValues.Add("Executed", Now())
-                                dlos.Add(dlo)
-                            End Sub)
-
-                    Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
-                        per.InsertBulk(dlos, trn)
-                    End Using
                     ts2 = New TimeSpan(Now.Ticks)
+
                 Catch ex As SqlClient.SqlException
                     If Debugger.IsAttached Then
                         Debugger.Break()
@@ -150,13 +139,32 @@ Public Class DBCreator
                                             .Sql = batch,
                                             .Duration = ts2 - ts1,
                                             .ResultType = CType(IIf(errorMessage = "", eBatchExecutionResultType.Success, eBatchExecutionResultType.Failed), eBatchExecutionResultType),
-                                            .ExecutedRevisionsCount = executedRevisionsCount,
-                                            .TotalRevisionsCount = totalRevisionsCount,
+                                            .ExecutedRevisionsCount = 0,
+                                            .TotalRevisionsCount = 0,
                                             .ErrorMessage = errorMessage
                                         })
                 End Try
             End Using
+
         Next
+
+    End Sub
+
+    Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction)
+        ExecuteScriptBatches(script, cnn, trn)
+
+        Dim dlos As New List(Of IMRDLO)
+        revisions.ForEach(
+                            Sub(rev)
+                                Dim dlo As IMRDLO = rev.GetDlo
+                                dlo.ColumnValues.Add("ID", Guid.NewGuid)
+                                dlo.ColumnValues.Add("Executed", Now())
+                                dlos.Add(dlo)
+                            End Sub)
+
+        Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
+            per.InsertBulk(dlos, trn)
+        End Using
     End Sub
 
     Private Sub ExecuteDBSqlRevisionBatches(notExecutedRevisions As List(Of DBSqlRevision), cnn As DbConnection, trn As DbTransaction)
@@ -198,49 +206,19 @@ Public Class DBCreator
 
     Private Sub CreateRevisionTable()
         Using cnn As IDbConnection = MRC.GetConnection
-            Using cmd As IDbCommand = MRC.GetCommand()
-                Try
-                    cmd.Connection = cnn
-                    If cnn.State <> ConnectionState.Open Then
-                        cnn.Open()
-                    End If
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
 
-                    ' TODO - popraviti clustered index, u bazi revizije nisu dobro sortirane. Dodati revision key u bazu i clustered index po tom jednom polju
-                    ' TODO - ovaj query preseliti u sql generator tako da radi za sve tipove baza
-                    cmd.CommandText = "
-IF OBJECT_ID('DBCreator.Revision') IS NULL
-BEGIN
-	CREATE TABLE [DBCreator].[Revision]
-	(
-		[ID] [uniqueidentifier] NOT NULL PRIMARY KEY NONCLUSTERED,
-		[Created] [date] NOT NULL,
-		[Granulation] [int] NOT NULL,
-        [ObjectType] [varchar](50) NOT NULL,        
-        [RevisionType] [varchar](50) NOT NULL,
-        [ModuleKey] [varchar](50),
-        [SchemaName] [varchar](50),
-        [SchemaObjectName] [varchar](150),
-        [ObjectName] [varchar](150) NOT NULL,
-		[Executed] [datetime] NOT NULL CONSTRAINT DF_DBCreator_Revision_Executed DEFAULT GETDATE(),
-        [ObjectFullName] [varchar](100) NOT NULL,
-        [Description] [nvarchar](MAX) NULL
-	)
-	IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorRevision_Clustered' AND object_id = OBJECT_ID('DBCreator.Revision'))
-	BEGIN
-		DROP INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision 
-	END
-	CREATE CLUSTERED INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision (Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName)
-END
-"
-                    cmd.ExecuteNonQuery()
-
-                Catch ex As Exception
-                    If Debugger.IsAttached Then
-                        Debugger.Break()
-                    End If
-                    Throw
-                End Try
-            End Using
+                ' TODO - popraviti clustered index, u bazi revizije nisu dobro sortirane. Dodati revision key u bazu i clustered index po tom jednom polju
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemRevisionTable(), CType(cnn, DbConnection), Nothing)
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
         End Using
     End Sub
 
@@ -253,9 +231,9 @@ END
                         cnn.Open()
                     End If
 
-                    cmd.CommandText = "SELECT TOP 1 1 FROM sys.schemas WHERE name = 'DBCreator'"
+                    cmd.CommandText = DBSqlGenerator.GetSqlCheckIfSchemaExists()
                     If cmd.ExecuteScalar() Is Nothing Then
-                        cmd.CommandText = "CREATE SCHEMA DBCreator"
+                        cmd.CommandText = DBSqlGenerator.GetSqlCreateSystemSchema()
                         cmd.ExecuteNonQuery()
                     End If
                 Catch ex As Exception
@@ -270,34 +248,17 @@ END
 
     Private Sub CreateModuleTable()
         Using cnn As IDbConnection = MRC.GetConnection
-            Using cmd As IDbCommand = MRC.GetCommand()
-                Try
-                    cmd.Connection = cnn
-                    If cnn.State <> ConnectionState.Open Then
-                        cnn.Open()
-                    End If
-
-                    cmd.CommandText = "
-IF OBJECT_ID('DBCreator.Module') IS NULL
-BEGIN
-	CREATE  TABLE [DBCreator].[Module]
-	(
-        [ModuleKey] [varchar](50) NOT NULL PRIMARY KEY,
-        [Name] [nvarchar](50) NOT NULL,
-        [Created] [datetime] NOT NULL,
-        [Active] bit NOT NULL,
-        [Description] [nvarchar](MAX) NULL
-	)
-END
-"
-                    cmd.ExecuteNonQuery()
-                Catch ex As Exception
-                    If Debugger.IsAttached Then
-                        Debugger.Break()
-                    End If
-                    Throw
-                End Try
-            End Using
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing)
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
         End Using
     End Sub
 

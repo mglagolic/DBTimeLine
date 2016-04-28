@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test2;Integrated Security=True")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test3;Integrated Security=True")>  _
         Public ReadOnly Property ConnectionStringTest() As String
             Get
                 Return CType(Me("ConnectionStringTest"),String)

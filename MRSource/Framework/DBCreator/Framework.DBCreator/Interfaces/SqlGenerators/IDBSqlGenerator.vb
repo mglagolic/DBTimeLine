@@ -3,6 +3,10 @@
     Function GetSqlModify(dbObject As IDBObject) As String
     Function GetSqlDelete(dbObject As IDBObject) As String
 
+    Function GetSqlCreateSystemModuleTable() As String
+    Function GetSqlCreateSystemSchema() As String
+    Function GetSqlCreateSystemRevisionTable() As String
+    Function GetSqlCheckIfSchemaExists() As String
 
     Property DBSchemaGenerator As IDBObjectGenerator
     Property DBViewGenerator As IDBObjectGenerator

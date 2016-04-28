@@ -106,4 +106,62 @@
         Return ret
     End Function
 
+    Public Overridable Function GetSqlCreateSystemModuleTable() As String Implements IDBSqlGenerator.GetSqlCreateSystemModuleTable
+        Dim ret As String = "
+IF OBJECT_ID('DBCreator.Module') IS NULL
+BEGIN
+	CREATE  TABLE [DBCreator].[Module]
+	(
+        [ModuleKey] [varchar](50) NOT NULL PRIMARY KEY,
+        [Name] [nvarchar](50) NOT NULL,
+        [Created] [datetime] NOT NULL,
+        [Active] bit NOT NULL,
+        [Description] [nvarchar](MAX) NULL
+	)
+END
+"
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlCreateSystemSchema() As String Implements IDBSqlGenerator.GetSqlCreateSystemSchema
+        Dim ret As String = "CREATE SCHEMA DBCreator"
+
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlCreateSystemRevisionTable() As String Implements IDBSqlGenerator.GetSqlCreateSystemRevisionTable
+        Dim ret As String = "
+IF OBJECT_ID('DBCreator.Revision') IS NULL
+BEGIN
+	CREATE TABLE [DBCreator].[Revision]
+	(
+		[ID] [uniqueidentifier] NOT NULL PRIMARY KEY NONCLUSTERED,
+		[Created] [date] NOT NULL,
+		[Granulation] [int] NOT NULL,
+        [ObjectType] [varchar](50) NOT NULL,        
+        [RevisionType] [varchar](50) NOT NULL,
+        [ModuleKey] [varchar](50),
+        [SchemaName] [varchar](50),
+        [SchemaObjectName] [varchar](150),
+        [ObjectName] [varchar](150) NOT NULL,
+		[Executed] [datetime] NOT NULL CONSTRAINT DF_DBCreator_Revision_Executed DEFAULT GETDATE(),
+        [ObjectFullName] [varchar](100) NOT NULL,
+        [Description] [nvarchar](MAX) NULL
+	)
+	IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorRevision_Clustered' AND object_id = OBJECT_ID('DBCreator.Revision'))
+	BEGIN
+		DROP INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision 
+	END
+	CREATE CLUSTERED INDEX IX_DBCreatorRevision_Clustered ON DBCreator.Revision (Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName)
+END
+"
+
+        Return ret
+    End Function
+
+    Public Overridable Function GetSqlCheckIfSystemSchemaExists() As String Implements IDBSqlGenerator.GetSqlCheckIfSchemaExists
+        Dim ret As String = "SELECT TOP 1 1 FROM sys.schemas WHERE name = 'DBCreator'"
+
+        Return ret
+    End Function
 End Class
