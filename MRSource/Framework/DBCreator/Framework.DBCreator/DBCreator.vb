@@ -195,6 +195,7 @@ Public Class DBCreator
             Dim alwaysExecutingTasks As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType = eDBRevisionType.AlwaysExecute).ToList
 
             ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn)
+            'TODO - always executing tasks u drugu DB tablicu
             ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn)
         Catch ex As Exception
             ' CONSIDER - do some logging
