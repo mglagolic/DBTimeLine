@@ -106,6 +106,36 @@
         Return ret
     End Function
 
+    Public Overridable Function GetSqlCreateSystemAlwaysExecutingTaskTable() As String Implements IDBSqlGenerator.GetSqlCreateSystemAlwaysExecutingTaskTable
+        Dim ret As String = "
+IF OBJECT_ID('DBCreator.AlwaysExecutingTask') IS NULL
+BEGIN
+	CREATE TABLE [DBCreator].[AlwaysExecutingTask]
+	(
+		[ID] [uniqueidentifier] NOT NULL PRIMARY KEY NONCLUSTERED,
+        [RevisionKey] [varchar](800) NOT NULL,
+		[Created] [date] NOT NULL,
+		[Granulation] [int] NOT NULL,
+        [ObjectType] [varchar](50) NOT NULL,        
+        [RevisionType] [varchar](50) NOT NULL,
+        [ModuleKey] [varchar](50),
+        [SchemaName] [varchar](50),
+        [SchemaObjectName] [varchar](150),
+        [ObjectName] [varchar](150) NOT NULL,
+		[Executed] [datetime] NOT NULL CONSTRAINT DF_DBCreator_AlwaysExecutingTask_Executed DEFAULT GETDATE(),
+        [ObjectFullName] [varchar](100) NOT NULL,
+        [Description] [nvarchar](MAX) NULL
+	)
+	IF EXISTS(SELECT TOP 1 1 FROM sys.indexes WHERE name='IX_DBCreatorAlwaysExecutingTask_Clustered' AND object_id = OBJECT_ID('DBCreator.AlwaysExecutingTask'))
+	BEGIN
+		DROP INDEX IX_DBCreatorAlwaysExecutingTask_Clustered ON DBCreator.AlwaysExecutingTask 
+	END
+    CREATE CLUSTERED INDEX IX_DBCreatorAlwaysExecutingTask_Clustered ON DBCreator.AlwaysExecutingTask (Executed, ID)
+END
+"
+
+        Return ret
+    End Function
     Public Overridable Function GetSqlCreateSystemModuleTable() As String Implements IDBSqlGenerator.GetSqlCreateSystemModuleTable
         Dim ret As String = "
 IF OBJECT_ID('DBCreator.Module') IS NULL

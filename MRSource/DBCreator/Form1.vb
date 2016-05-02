@@ -131,10 +131,14 @@ FROM
 
         creator.CreateSystemObjects()
 
-        ' TODO  - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
-        '       - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
+        ' TODO - isprogramirati podrsku za triggere, store
+        ' TODO - odraditi code generation adventureWorks baze
+        ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
+        ' TODO - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
+        '      - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
+        ' TODO - isprogramirati podršku za Role
 
-        creator.AddModule(New DBCreators.DS)
+        creator.AddModule(New DBCreators.DS())
 
         'creator.LoadModuleKeysFromDB()
 
@@ -171,6 +175,7 @@ FROM
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
     End Sub
 
+    ' TODO - ovo odraditi reactive programmingom
     Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
         DbCreate()

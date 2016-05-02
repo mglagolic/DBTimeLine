@@ -3,7 +3,7 @@
     Inherits IDBParent
 
     ReadOnly Property ModuleKey As String
-    Function LoadRevisions() As Object
+    Sub LoadRevisions()
     Function AddSchema(schemaName As String, descriptor As IDBSchemaDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBSchema
 
 End Interface

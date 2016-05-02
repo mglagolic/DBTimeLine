@@ -6,6 +6,7 @@
     Function GetSqlCreateSystemModuleTable() As String
     Function GetSqlCreateSystemSchema() As String
     Function GetSqlCreateSystemRevisionTable() As String
+    Function GetSqlCreateSystemAlwaysExecutingTaskTable() As String
     Function GetSqlCheckIfSchemaExists() As String
 
     Property DBSchemaGenerator As IDBObjectGenerator

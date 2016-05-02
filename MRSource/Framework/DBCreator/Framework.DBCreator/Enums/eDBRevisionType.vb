@@ -2,6 +2,6 @@
     Create = 0
     Modify = 1
     Delete = 2
-    AlwaysExecute = 3
+    AlwaysExecuteTask = 3
     Task = 4
 End Enum

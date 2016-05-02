@@ -44,7 +44,7 @@ Public Class DBRevision
                     sbSql.Append(Parent.GetSqlModify(Parent.DBCreator.DBSqlGenerator))
                 Case eDBRevisionType.Delete
                     sbSql.Append(Parent.GetSqlDelete(Parent.DBCreator.DBSqlGenerator))
-                Case eDBRevisionType.Task, eDBRevisionType.AlwaysExecute
+                Case eDBRevisionType.Task, eDBRevisionType.AlwaysExecuteTask
                     ' Do nothing, tasks do not change db structure
                 Case Else
                     Throw New NotSupportedException("eDBRevisionType")

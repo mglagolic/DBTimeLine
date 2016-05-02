@@ -203,6 +203,20 @@ Public Class DBSqlRevision
             End Get
         End Property
     End Class
+    Public Class DBSqlAlwaysExecutingTaskPersister
+        Inherits MRPersisting.MRPersister
+
+        Public Overrides ReadOnly Property DataBaseTableName As String
+            Get
+                Return "DBCreator.AlwaysExecutingTask"
+            End Get
+        End Property
+        Public Overrides ReadOnly Property SQL As String
+            Get
+                Return "SELECT Key, ID FROM " & DataBaseTableName
+            End Get
+        End Property
+    End Class
 
 #End Region
 

@@ -13,12 +13,8 @@ Public MustInherit Class DBModule
 
     MustOverride Sub CreateTimeLine()
 
-    Public Function LoadRevisions() As Object Implements IDBModule.LoadRevisions
-        Dim ret As Object = Nothing
-
+    Public Sub LoadRevisions() Implements IDBModule.LoadRevisions
         CreateTimeLine()
-
-        Return ret
-    End Function
+    End Sub
 
 End Class

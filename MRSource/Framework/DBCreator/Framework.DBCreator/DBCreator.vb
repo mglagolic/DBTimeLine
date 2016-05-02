@@ -66,8 +66,8 @@ Public Class DBCreator
         Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn, .PagingEnabled = False}
             With per.OrderItems
                 .Add(New MRCore.MROrderItem("RevisionKey", MRCore.Enums.eOrderDirection.Ascending))
+                .Add(New MRCore.MROrderItem("ID", MRCore.Enums.eOrderDirection.Ascending))
             End With
-            per.Where = "RevisionType <> 'AlwaysExecute'"
 
             Dim dicExecutedRevisions As Dictionary(Of Object, IMRDLO) = per.GetData(trn)
             For Each kv As KeyValuePair(Of Object, IMRDLO) In dicExecutedRevisions
@@ -150,24 +150,36 @@ Public Class DBCreator
 
     End Sub
 
-    Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction)
+    Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
         ExecuteScriptBatches(script, cnn, trn, False)
 
         Dim dlos As New List(Of IMRDLO)
         revisions.ForEach(
                             Sub(rev)
-                                Dim dlo As IMRDLO = rev.GetDlo
+                                Dim dlo As IMRDLO = Nothing
+                                dlo = rev.GetDlo()
                                 dlo.ColumnValues.Add("ID", Guid.NewGuid)
                                 dlo.ColumnValues.Add("Executed", Now())
                                 dlos.Add(dlo)
                             End Sub)
+        Dim per As IMRPersister = Nothing
+        Try
+            If alwaysExecutingTask Then
+                per = New DBSqlRevision.DBSqlAlwaysExecutingTaskPersister With {.CNN = cnn}
+            Else
+                per = New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
+            End If
 
-        Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
             per.InsertBulk(dlos, trn)
-        End Using
+        Catch
+            Throw
+        Finally
+            per.Dispose()
+            per = Nothing
+        End Try
     End Sub
 
-    Private Sub ExecuteDBSqlRevisionBatches(notExecutedRevisions As List(Of DBSqlRevision), cnn As DbConnection, trn As DbTransaction)
+    Private Sub ExecuteDBSqlRevisionBatches(notExecutedRevisions As List(Of DBSqlRevision), cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
         notExecutedRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
         Dim newExecutedRevisions As New List(Of DBSqlRevision)
@@ -182,7 +194,7 @@ Public Class DBCreator
 
             newExecutedRevisions.Add(rev)
             If i = notExecutedRevisions.Count - 1 OrElse (i + 1) Mod RevisionBatchSize = 0 Then
-                ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn)
+                ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn, alwaysExecutingTask)
                 sqlBatchScriptBuilder.Clear()
                 newExecutedRevisions.Clear()
             End If
@@ -191,19 +203,35 @@ Public Class DBCreator
 
     Public Sub ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction)
         Try
-            Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecute).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
-            Dim alwaysExecutingTasks As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType = eDBRevisionType.AlwaysExecute).ToList
+            Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+            Dim alwaysExecutingTasks As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType = eDBRevisionType.AlwaysExecuteTask).ToList
 
-            ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn)
-            'TODO - always executing tasks u drugu DB tablicu
-            ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn)
+            ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn, False)
+            ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn, True)
         Catch ex As Exception
             ' CONSIDER - do some logging
-
         End Try
     End Sub
 
 #Region "System objects"
+
+    Private Sub CreateAlwaysExecutingTaskTable()
+        Using cnn As IDbConnection = MRC.GetConnection
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
+
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemAlwaysExecutingTaskTable(), CType(cnn, DbConnection), Nothing, True)
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
+        End Using
+    End Sub
+
 
     Private Sub CreateRevisionTable()
         Using cnn As IDbConnection = MRC.GetConnection
@@ -212,7 +240,6 @@ Public Class DBCreator
                     cnn.Open()
                 End If
 
-                ' TODO - popraviti clustered index, u bazi revizije nisu dobro sortirane. Dodati revision key u bazu i clustered index po tom jednom polju
                 ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemRevisionTable(), CType(cnn, DbConnection), Nothing, True)
             Catch ex As Exception
                 If Debugger.IsAttached Then
@@ -266,6 +293,7 @@ Public Class DBCreator
     Public Sub CreateSystemObjects()
         CreateSchema()
         CreateRevisionTable()
+        CreateAlwaysExecutingTaskTable()
         CreateModuleTable()
     End Sub
 

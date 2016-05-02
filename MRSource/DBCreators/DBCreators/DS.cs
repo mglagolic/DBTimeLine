@@ -164,7 +164,7 @@ SELECT newid(), 'Miro', 'Glagolić', '57568560-B3CB-42B9-A018-45DAD9632519'";
         {
             IDBTable t = sch.AddTable("Grad", null);
             t.AddRevision(new DBRevision(new DateTime(2016, 4, 25), 2, eDBRevisionType.Task, InitialFillGrad));
-            t.AddRevision(new DBRevision(new DateTime(2016, 4, 25), 3, eDBRevisionType.AlwaysExecute, InitialFillGrad));
+            t.AddRevision(new DBRevision(new DateTime(2016, 4, 25), 3, eDBRevisionType.AlwaysExecuteTask, InitialFillGrad));
 
             t = sch.AddTable("Osoba", null);
             t.AddRevision(new DBRevision(new DateTime(2016, 4, 25), 3, eDBRevisionType.Task, InitialFillOsoba));
