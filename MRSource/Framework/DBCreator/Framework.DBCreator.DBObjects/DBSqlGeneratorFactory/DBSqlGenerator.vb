@@ -143,9 +143,10 @@ BEGIN
 	CREATE  TABLE [DBCreator].[Module]
 	(
         [ModuleKey] [varchar](50) NOT NULL PRIMARY KEY,
-        [Name] [nvarchar](50) NOT NULL,
+        [Name] [nvarchar](250) NOT NULL,
         [Created] [datetime] NOT NULL,
         [Active] bit NOT NULL,
+        [PluginDllName] [nvarchar](250) NULL,
         [Description] [nvarchar](MAX) NULL
 	)
 END

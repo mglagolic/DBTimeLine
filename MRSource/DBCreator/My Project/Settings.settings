@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="ConnectionStringTest" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test3;Integrated Security=True</Value>
+      <Value Profile="(Default)">Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test4;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DefaultProvider" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ProviderSqlServer</Value>
@@ -15,7 +15,7 @@
       <Value Profile="(Default)">Data Source=localhost;Initial Catalog=Test2;Integrated Security=True</Value>
     </Setting>
     <Setting Name="DefaultConnectionString" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">OmegaLocalConnectionString</Value>
+      <Value Profile="(Default)">ConnectionStringTest</Value>
     </Setting>
   </Settings>
 </SettingsFile>

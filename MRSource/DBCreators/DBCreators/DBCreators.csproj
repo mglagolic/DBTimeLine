@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Nadzor.cs" />
     <Compile Include="DS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

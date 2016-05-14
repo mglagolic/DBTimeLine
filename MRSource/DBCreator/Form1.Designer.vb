@@ -46,14 +46,14 @@ Partial Class Form1
         Me.rtb1.ReadOnly = True
         Me.rtb1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
         Me.rtb1.ShowSelectionMargin = True
-        Me.rtb1.Size = New System.Drawing.Size(866, 156)
+        Me.rtb1.Size = New System.Drawing.Size(911, 298)
         Me.rtb1.TabIndex = 0
         Me.rtb1.Text = "bok" & Global.Microsoft.VisualBasic.ChrW(10) & "kaj" & Global.Microsoft.VisualBasic.ChrW(10) & "ima"
         Me.rtb1.WordWrap = False
         '
         'Button1
         '
-        Me.Button1.Location = New System.Drawing.Point(380, 290)
+        Me.Button1.Location = New System.Drawing.Point(401, 376)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 1
@@ -68,17 +68,17 @@ Partial Class Form1
         'ProgressBar1
         '
         Me.ProgressBar1.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.ProgressBar1.Location = New System.Drawing.Point(12, 221)
+        Me.ProgressBar1.Location = New System.Drawing.Point(12, 319)
         Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(874, 36)
         Me.ProgressBar1.TabIndex = 2
         '
         'WebBrowser1
         '
-        Me.WebBrowser1.Location = New System.Drawing.Point(31, 319)
+        Me.WebBrowser1.Location = New System.Drawing.Point(31, 417)
         Me.WebBrowser1.MinimumSize = New System.Drawing.Size(20, 20)
         Me.WebBrowser1.Name = "WebBrowser1"
-        Me.WebBrowser1.Size = New System.Drawing.Size(817, 156)
+        Me.WebBrowser1.Size = New System.Drawing.Size(817, 58)
         Me.WebBrowser1.TabIndex = 3
         '
         'zoomRtb
@@ -86,12 +86,12 @@ Partial Class Form1
         Me.zoomRtb.AutoSize = False
         Me.zoomRtb.Dock = System.Windows.Forms.DockStyle.Right
         Me.zoomRtb.LargeChange = 10
-        Me.zoomRtb.Location = New System.Drawing.Point(866, 0)
+        Me.zoomRtb.Location = New System.Drawing.Point(911, 0)
         Me.zoomRtb.Maximum = 50
         Me.zoomRtb.Minimum = 10
         Me.zoomRtb.Name = "zoomRtb"
         Me.zoomRtb.Orientation = System.Windows.Forms.Orientation.Vertical
-        Me.zoomRtb.Size = New System.Drawing.Size(20, 156)
+        Me.zoomRtb.Size = New System.Drawing.Size(20, 298)
         Me.zoomRtb.SmallChange = 5
         Me.zoomRtb.TabIndex = 4
         Me.zoomRtb.TickFrequency = 5
@@ -105,7 +105,7 @@ Partial Class Form1
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Top
         Me.Panel1.Location = New System.Drawing.Point(0, 0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(886, 156)
+        Me.Panel1.Size = New System.Drawing.Size(931, 298)
         Me.Panel1.TabIndex = 5
         '
         'Form1
@@ -113,7 +113,7 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.ClientSize = New System.Drawing.Size(886, 497)
+        Me.ClientSize = New System.Drawing.Size(931, 497)
         Me.Controls.Add(Me.Panel1)
         Me.Controls.Add(Me.WebBrowser1)
         Me.Controls.Add(Me.ProgressBar1)
