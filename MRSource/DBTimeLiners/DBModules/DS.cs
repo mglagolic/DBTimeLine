@@ -19,7 +19,7 @@ namespace DBModules
         {
             DBRevision rev = new DBRevision(new DateTime(2016, 4, 25), 0, eDBRevisionType.Create);
 
-            IDBSchema sch = AddSchema("DS", new DBSchemaDescriptor(), new DBRevision(rev));
+            IDBSchema sch = AddSchema(DefaultSchemaName, new DBSchemaDescriptor(), new DBRevision(rev));
             Osoba(sch);
             Grad(sch);
             Drzava(sch);
@@ -38,17 +38,17 @@ namespace DBModules
             {
                 WithSchemaBinding = true,
                 Body =
-@"SELECT
+string.Format(@"SELECT
     oso.ID,
     oso.GradID,    
     Naziv = oso.Ime + ' ' + oso.Prezime,
     GradNaziv = grad.Naziv,
     DrzavaNaziv = drz.Naziv
 FROM
-    DS.Osoba oso
-    INNER JOIN DS.Grad grad ON oso.GradID = grad.ID
-    INNER JOIN DS.Drzava drz ON grad.DrzavaID = drz.ID
-"
+    {0}.Osoba oso
+    INNER JOIN {0}.Grad grad ON oso.GradID = grad.ID
+    INNER JOIN {0}.Drzava drz ON grad.DrzavaID = drz.ID
+", DefaultSchemaName)
             }, new DBRevision(rev));
 
             //v.AddIndex(new DBIndexDescriptor(new List<string>() { "GradID", "ID" }, new List<string>() { "Naziv" }) { Clustered = true}, new DBRevision(rev));
@@ -74,7 +74,7 @@ FROM
             t.AddField("GradID", new DBFieldDescriptor() { FieldType = eDBFieldType.Guid}, 
                 new DBRevision(rev));
 
-            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "GradID" }, "DS.Grad", new List<string>() { "ID" }),
+            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "GradID" }, DefaultSchemaName + ".Grad", new List<string>() { "ID" }),
                 new DBRevision(new DateTime(2016, 4, 25), 1, eDBRevisionType.Create));
             return t;
         }
@@ -94,7 +94,7 @@ FROM
             IDBField fld = t.AddField("DrzavaID", new DBFieldDescriptor() { FieldType = eDBFieldType.Guid, Nullable = true },
                 new DBRevision(new DateTime(2016, 4, 26), 1, eDBRevisionType.Create, null, UpdateGradDrzavom));
 
-            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "DrzavaID" }, "DS.Drzava", new List<string>() { "ID" }),
+            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "DrzavaID" }, DefaultSchemaName + ".Drzava", new List<string>() { "ID" }),
                 new DBRevision(new DateTime(2016, 4, 26), 1, eDBRevisionType.Create));
 
             fld.AddRevision(
@@ -122,42 +122,42 @@ FROM
 
         private string UpdateGradDrzavom(IDBRevision sender, eDBType dBType)
         {
-            return @"GO
-UPDATE DS.Grad 
+            return string.Format(@"GO
+UPDATE {0}.Grad 
 SET DrzavaID = '37D047AF-E2DA-4E08-B25C-5B79EFA94927'
-";
+", DefaultSchemaName);
         }
 
         private string InitialFillDrzava(IDBRevision sender, eDBType dBType)
         {
             
-            return @"
+            return string.Format(@"
 
-INSERT INTO DS.Drzava (ID, Naziv) SELECT '37D047AF-E2DA-4E08-B25C-5B79EFA94927', 'Hrvatska'";
+INSERT INTO {0}.Drzava (ID, Naziv) SELECT '37D047AF-E2DA-4E08-B25C-5B79EFA94927', 'Hrvatska'", DefaultSchemaName);
         }
 
         private string InitialFillGrad(IDBRevision sender, eDBType dBType)
         {
-            return @"
-IF NOT EXISTS (SELECT TOP 1 1 FROM DS.Grad WHERE ID = '57568560-B3CB-42B9-A018-45DAD9632519')
+            return string.Format(@"
+IF NOT EXISTS (SELECT TOP 1 1 FROM {0}.Grad WHERE ID = '57568560-B3CB-42B9-A018-45DAD9632519')
 BEGIN
-    INSERT INTO DS.Grad (ID, Naziv) 
+    INSERT INTO {0}.Grad (ID, Naziv) 
     SELECT '57568560-B3CB-42B9-A018-45DAD9632519', 'Zagreb' 
 END
-IF NOT EXISTS (SELECT TOP 1 1 FROM DS.Grad WHERE ID = '559B02AB-AB0D-484B-8E7B-224E708F9E38')
+IF NOT EXISTS (SELECT TOP 1 1 FROM {0}.Grad WHERE ID = '559B02AB-AB0D-484B-8E7B-224E708F9E38')
 BEGIN
-    INSERT INTO DS.Grad (ID, Naziv) 
+    INSERT INTO {0}.Grad (ID, Naziv) 
     SELECT '559B02AB-AB0D-484B-8E7B-224E708F9E38', 'Marija Bistrica'
 END
-";
+", DefaultSchemaName);
         }
 
         private string InitialFillOsoba(IDBRevision sender, eDBType dBType)
         {
-            return @"
-INSERT INTO DS.Osoba (ID, Ime, Prezime, GradID) 
+            return string.Format(@"
+INSERT INTO {0}.Osoba (ID, Ime, Prezime, GradID) 
 SELECT newid(), 'Jelena', 'Stinčić Glagolić', '559B02AB-AB0D-484B-8E7B-224E708F9E38' UNION ALL
-SELECT newid(), 'Miro', 'Glagolić', '57568560-B3CB-42B9-A018-45DAD9632519'";
+SELECT newid(), 'Miro', 'Glagolić', '57568560-B3CB-42B9-A018-45DAD9632519'", DefaultSchemaName);
         }
 
         private void InitialFill(IDBSchema sch)

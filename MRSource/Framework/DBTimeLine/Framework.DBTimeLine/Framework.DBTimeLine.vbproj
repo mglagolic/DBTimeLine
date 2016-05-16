@@ -72,6 +72,7 @@
     <Compile Include="DBModulePersister.vb" />
     <Compile Include="Enums\eBatchExecutionResultType.vb" />
     <Compile Include="Enums\eDBType.vb" />
+    <Compile Include="EventArgs\ModuleLoadedEventArgs.vb" />
     <Compile Include="EventArgs\BatchExecutingEventArgs.vb" />
     <Compile Include="EventArgs\BatchExecutedEventArgs.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBIndexDescriptor.vb" />
@@ -87,8 +88,6 @@
     <Compile Include="Interfaces\DBObjectDescriptors\IDBViewDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBConstraintDescriptor.vb" />
     <Compile Include="Interfaces\IDBPrimaryKeyConstraint.vb" />
-    <Compile Include="Interfaces\SqlGenerators\IDBFieldGenerator.vb" />
-    <Compile Include="Interfaces\SqlGenerators\IDBObjectGenerator.vb" />
     <Compile Include="Interfaces\SqlGenerators\IDBSqlGeneratorFactory.vb" />
     <Compile Include="Interfaces\SqlGenerators\IDBSqlGenerator.vb" />
     <Compile Include="DBSqlRevision.vb" />
@@ -104,8 +103,6 @@
     <Compile Include="Interfaces\IDBRevision.vb" />
     <Compile Include="Interfaces\IDBTable.vb" />
     <Compile Include="Interfaces\IDBSchema.vb" />
-    <Compile Include="Interfaces\SqlGenerators\IDBIndexGenerator.vb" />
-    <Compile Include="Interfaces\SqlGenerators\IDBTableGenerator.vb" />
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>

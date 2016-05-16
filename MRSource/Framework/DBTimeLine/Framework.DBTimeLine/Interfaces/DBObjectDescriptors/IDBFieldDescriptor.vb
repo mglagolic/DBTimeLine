@@ -8,4 +8,5 @@
     Property Nullable As Boolean
     Property DefaultValue As String
 
+
 End Interface

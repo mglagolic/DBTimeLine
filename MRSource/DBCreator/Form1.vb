@@ -121,6 +121,24 @@ FROM
         rtb1.ScrollToCaret()
     End Sub
 
+    Delegate Sub ModuleLoadedCallback(sender As Object, e As ModuleLoadedEventArgs)
+    Private Sub ModuleLoadedHandler(sender As Object, e As ModuleLoadedEventArgs)
+        If rtb1.InvokeRequired Then
+            Dim d As New ModuleLoadedCallback(AddressOf ModuleLoadedHandler)
+            rtb1.Invoke(d, sender, e)
+            Exit Sub
+        End If
+        If e.Message <> "" Then
+            rtb1.SelectionColor = Color.Yellow
+            rtb1.AppendText("/* " & e.Message.ToString() & "*/" & vbNewLine)
+
+        End If
+        If e.ErrorMessage <> "" Then
+            rtb1.SelectionColor = Color.Red
+            rtb1.AppendText("/* " & e.ErrorMessage.ToString() & "*/" & vbNewLine)
+        End If
+    End Sub
+
     Private Sub DbCreate()
         MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
@@ -129,6 +147,7 @@ FROM
         Dim creator As New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
+        AddHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
 
         creator.CreateSystemObjects()
 
@@ -143,17 +162,17 @@ FROM
 
         ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
 
-        creator.AddModule(New DBModules.DS())
-        creator.AddModule(New DBModules.DS())
-        creator.AddModule(New DBModules.Nadzor())
+        creator.LoadModulesFromDB()
 
-
-        creator.LoadModuleKeysFromDB()
+        'creator.AddModule(New DBModules.DS())
+        'creator.AddModule(New DBModules.DS())
+        'creator.AddModule(New DBModules.Nadzor())
 
         For i As Integer = 0 To creator.DBModules.Count - 1
-            If creator.ActiveModuleKeys.Contains(creator.DBModules(i).ModuleKey) Then
-                creator.DBModules(i).LoadRevisions()
-            End If
+            'If creator.ActiveModules.ContainsKey(creator.DBModules(i).ModuleKey) Then
+            '    creator.DBModules(i).LoadRevisions()
+            'End If
+            creator.DBModules(i).LoadRevisions()
         Next
 
         'For i As Integer = 0 To creator.DBModules.Count - 1
@@ -182,6 +201,7 @@ FROM
 
         RemoveHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
+        RemoveHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
     End Sub
 
     ' TODO - ovo odraditi reactive programmingom

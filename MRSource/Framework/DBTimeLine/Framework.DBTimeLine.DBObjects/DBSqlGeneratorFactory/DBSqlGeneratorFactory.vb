@@ -1,7 +1,6 @@
 ﻿Public Class DBSqlGeneratorFactory
     Implements IDBSqlGeneratorFactory
 
-    'TODO - implementirati eDBType.MySql
     Public Function GetDBSqlGenerator(dbType As eDBType) As IDBSqlGenerator Implements IDBSqlGeneratorFactory.GetDBSqlGenerator
         Dim ret As IDBSqlGenerator
         Select Case dbType

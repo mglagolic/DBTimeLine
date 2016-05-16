@@ -79,15 +79,8 @@
     <Compile Include="DBRevision.vb" />
     <Compile Include="DBSchema.vb" />
     <Compile Include="DBSchemaDescriptor.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBForeignKeyConstraintGenerator.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBPrimaryKeyConstraintGenerator.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBIndexGenerator.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBTableGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSqlGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\DBSqlGeneratorFactory.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBFieldGenerator.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBViewGenerator.vb" />
-    <Compile Include="DBSqlGeneratorFactory\DBSchemaGenerator.vb" />
     <Compile Include="DBSqlGeneratorFactory\SqlServer\DBSqlGeneratorSqlServer.vb" />
     <Compile Include="DBView.vb" />
     <Compile Include="DBTable.vb" />

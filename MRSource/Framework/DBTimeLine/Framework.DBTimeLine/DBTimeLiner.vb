@@ -9,7 +9,7 @@ Public Class DBTimeLiner
     Implements IDBChained
 
     Public Property DBSqlGenerator As IDBSqlGenerator
-    Public Property ActiveModuleKeys As New List(Of String)
+    'Public Property ActiveModules As New Dictionary(Of String, String)
     Public ReadOnly Property DBModules As New List(Of IDBModule)
     Public ReadOnly Property SourceDBRevisions As New Dictionary(Of String, IDBRevision)
 
@@ -27,11 +27,20 @@ Public Class DBTimeLiner
     Public Function AddModule(dBModule As IDBModule) As IDBModule
         DBModules.Add(dBModule)
         dBModule.Parent = Me
+        'If ActiveModules.ContainsKey(dBModule.ModuleKey) Then
+        '    dBModule.DefaultSchemaName = ActiveModules(dBModule.ModuleKey)
+        'End If
 
         Return dBModule
     End Function
 
-    Public Function LoadModuleKeysFromDB() As List(Of IDBModule)
+    Public Event ModuleLoaded(sender As Object, e As ModuleLoadedEventArgs)
+    Public Sub OnModuleLoaded(sender As Object, e As ModuleLoadedEventArgs)
+        RaiseEvent ModuleLoaded(sender, e)
+    End Sub
+
+
+    Public Function LoadModulesFromDB() As List(Of IDBModule)
         Dim ret As New List(Of IDBModule)
 
         Using cnn As DbConnection = MRC.GetConnection
@@ -45,13 +54,40 @@ Public Class DBTimeLiner
                     per.CNN = cnn
                     Dim res As Dictionary(Of Object, IMRDLO) = per.GetData()
                     For Each key As Object In res.Keys
-                        ActiveModuleKeys.Add(CStr(key))
+                        Dim errorMessage As String = ""
+                        Dim message As String = ""
+                        Dim className As String = ""
+                        Dim assemblyName As String = "DBModules"
+                        Dim defaultSchemaName As String = ""
+                        Try
+                            className = CType(res(key).ColumnValues("ClassName"), String)
+                            If Not IsDBNull(res(key).ColumnValues("AssemblyName")) Then
+                                assemblyName = CType(res(key).ColumnValues("AssemblyName"), String)
+                            End If
+                            defaultSchemaName = CStr(res(key).ColumnValues("DefaultSchemaName"))
+
+                            Dim m As IDBModule = CType(Activator.CreateInstance(assemblyName, assemblyName & "." & className).Unwrap, IDBModule)
+                            m.DefaultSchemaName = defaultSchemaName
+
+                            AddModule(m)
+
+                            message = String.Format(
+"Successfully created module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2})." _
+, className, assemblyName, defaultSchemaName)
+
+                        Catch ex As Exception
+                            errorMessage = String.Format(
+"Error creating module from database config (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}), 
+ErrorMessage: 
+{3}
+", className, assemblyName, defaultSchemaName, ex.Message)
+                            Throw New Exception(errorMessage, ex)
+                        Finally
+                            OnModuleLoaded(Me, New ModuleLoadedEventArgs() With {.ErrorMessage = errorMessage, .Message = message})
+                        End Try
                     Next
                 End Using
             Catch ex As Exception
-                If Debugger.IsAttached Then
-                    Debugger.Break()
-                End If
                 Throw
             End Try
 

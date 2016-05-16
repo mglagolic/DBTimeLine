@@ -10,7 +10,7 @@ Public Class DBModulePersister
     End Property
     Public Overrides ReadOnly Property SQL As String
         Get
-            Return "SELECT ModuleKey, Active FROM " & DataBaseTableName
+            Return "SELECT ID, ClassName, AssemblyName, DefaultSchemaName, Active FROM " & DataBaseTableName
         End Get
     End Property
 End Class

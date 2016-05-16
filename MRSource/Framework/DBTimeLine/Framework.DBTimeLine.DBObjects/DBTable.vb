@@ -34,4 +34,32 @@ Public Class DBTable
     Public Function AddIndex(descriptor As IDBIndexDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBIndex Implements IDBTable.AddIndex
         Return CType(MyBase.AddDBObject(descriptor.GetIndexName(SchemaName, Name), descriptor, createRevision), IDBIndex)
     End Function
+
+    Public Overrides Function GetSqlCreate(dBType As eDBType) As String
+        Dim ret As String = ""
+
+        ret = String.Format("CREATE TABLE {0}.{1}
+(
+    {2} {3}
+)
+", SchemaName, Name, CType(Descriptor, IDBTableDescriptor).CreatorFieldName, (New DBField() With {.Descriptor = CType(Descriptor, IDBTableDescriptor).CreatorFieldDescriptor}).GetFieldTypeSql(dBType))
+
+        Return ret
+
+    End Function
+
+    Public Overrides Function GetSqlModify(dBType As eDBType) As String
+        Throw New NotImplementedException()
+    End Function
+
+    Public Overrides Function GetSqlDelete(dBType As eDBType) As String
+        Dim ret As String = ""
+
+        ret = String.Format("DROP TABLE {0}.{1}
+", SchemaName, Name)
+
+        Return ret
+    End Function
+
 End Class
+

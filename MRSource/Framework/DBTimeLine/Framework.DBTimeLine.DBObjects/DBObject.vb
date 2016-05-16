@@ -66,29 +66,11 @@ Public MustInherit Class DBObject
         Return sbFullName.ToString().TrimEnd("."c)
     End Function
 
-    Public Overridable Function GetSqlCreate(sqlGenerator As IDBSqlGenerator) As String Implements IDBObject.GetSqlCreate
-        Dim ret As String = ""
+    Public MustOverride Function GetSqlModify(dBType As eDBType) As String Implements IDBObject.GetSqlModify
 
-        ret = sqlGenerator.GetSqlCreate(Me)
+    Public MustOverride Function GetSqlDelete(dBType As eDBType) As String Implements IDBObject.GetSqlDelete
 
-        Return ret
-    End Function
-
-    Public Overridable Function GetSqlModify(sqlGenerator As IDBSqlGenerator) As String Implements IDBObject.GetSqlModify
-        Dim ret As String = ""
-
-        ret = sqlGenerator.GetSqlModify(Me)
-
-        Return ret
-    End Function
-
-    Public Overridable Function GetSqlDelete(sqlGenerator As IDBSqlGenerator) As String Implements IDBObject.GetSqlDelete
-        Dim ret As String = ""
-
-        ret = sqlGenerator.GetSqlDelete(Me)
-
-        Return ret
-    End Function
+    Public MustOverride Function GetSqlCreate(dBType As eDBType) As String Implements IDBObject.GetSqlCreate
 
     ReadOnly Property ModuleKey() As String Implements IDBObject.ModuleKey
         Get

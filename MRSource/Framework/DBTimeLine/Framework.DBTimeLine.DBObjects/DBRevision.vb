@@ -38,11 +38,11 @@ Public Class DBRevision
         If Parent IsNot Nothing Then
             Select Case DBRevisionType
                 Case eDBRevisionType.Create
-                    sbSql.Append(Parent.GetSqlCreate(Parent.DBTimeLiner.DBSqlGenerator))
+                    sbSql.Append(Parent.GetSqlCreate(Parent.DBTimeLiner.DBType))
                 Case eDBRevisionType.Modify
-                    sbSql.Append(Parent.GetSqlModify(Parent.DBTimeLiner.DBSqlGenerator))
+                    sbSql.Append(Parent.GetSqlModify(Parent.DBTimeLiner.DBType))
                 Case eDBRevisionType.Delete
-                    sbSql.Append(Parent.GetSqlDelete(Parent.DBTimeLiner.DBSqlGenerator))
+                    sbSql.Append(Parent.GetSqlDelete(Parent.DBTimeLiner.DBType))
                 Case eDBRevisionType.Task, eDBRevisionType.AlwaysExecuteTask
                     ' Do nothing, tasks do not change db structure
                 Case Else
