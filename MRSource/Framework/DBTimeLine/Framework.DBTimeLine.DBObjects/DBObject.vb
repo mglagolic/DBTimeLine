@@ -43,9 +43,9 @@ Public MustInherit Class DBObject
         Dim sqlRevision As New DBSqlRevision(revision)
         DBTimeLiner.SourceDBSqlRevisions.Add(sqlRevision)
 
-        'If Not DBCreator.SourceDBRevisions.ContainsKey(sqlRevision.Key) Then
-        DBTimeLiner.SourceDBRevisions.Add(sqlRevision.Key, revision)
-        'End If
+        If Not DBTimeLiner.SourceDBRevisions.ContainsKey(sqlRevision.Key) Then
+            DBTimeLiner.SourceDBRevisions.Add(sqlRevision.Key, revision)
+        End If
 
         Return revision
     End Function
