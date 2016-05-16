@@ -1,6 +1,4 @@
-﻿Imports Framework.DBCreator
-
-Public MustInherit Class DBModule
+﻿Public MustInherit Class DBModule
     Inherits DBParent
     Implements IDBModule
 

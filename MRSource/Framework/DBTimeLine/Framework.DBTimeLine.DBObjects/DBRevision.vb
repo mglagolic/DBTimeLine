@@ -1,6 +1,5 @@
 ﻿Option Strict On
 Imports System.Text
-Imports Framework.DBCreator
 
 Public Class DBRevision
     Implements IDBRevision

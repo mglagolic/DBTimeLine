@@ -1,6 +1,4 @@
-﻿Imports Framework.DBCreator
-
-Public Class DBSchema
+﻿Public Class DBSchema
     Inherits DBObject
     Implements IDBSchema
 

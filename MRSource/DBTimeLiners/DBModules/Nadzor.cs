@@ -3,7 +3,7 @@ using Framework.DBTimeLine;
 using System;
 using Framework.DBTimeLine.DBObjects;
 
-namespace DBCreators
+namespace DBModules
 {
     public class Nadzor : DBModule
     {

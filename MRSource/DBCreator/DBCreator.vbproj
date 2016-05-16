@@ -121,21 +121,17 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DBCreators\Common\DBCreators.Common\DBCreators.Common.vbproj">
-      <Project>{acdff559-b744-4236-ac07-8f0a6ca92846}</Project>
-      <Name>DBCreators.Common</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DBCreators\DBCreators\DBCreators.csproj">
+    <ProjectReference Include="..\DBTimeLiners\DBModules\DBModules.csproj">
       <Project>{91f233d0-86f9-4597-947e-d1fdf4fa17f4}</Project>
-      <Name>DBCreators</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Framework\DBCreator\Framework.DBCreator\Framework.DBCreator.vbproj">
-      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
-      <Name>Framework.DBCreator</Name>
+      <Name>DBModules</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
       <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
       <Name>Framework.DBTimeLine.DBObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj">
+      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
+      <Name>Framework.DBTimeLine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Framework\Persisting\Framework.Persisting\Framework.Persisting.csproj">
       <Project>{1ec4a870-bcdf-4bb7-805b-8bd5f88da6fb}</Project>

@@ -3,7 +3,7 @@ using Framework.DBTimeLine.DBObjects;
 using Framework.DBTimeLine;
 using System;
 
-namespace DBCreators
+namespace DBModules
 {
     public class DS : DBModule
     {

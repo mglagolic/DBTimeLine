@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
+
 Imports Framework.Persisting
 Imports MRFramework.MRPersisting.Factory
-Imports Framework.DBCreator
+Imports Framework.DBTimeLine
 Imports System.ComponentModel
 
 Imports Framework.Persisting.Interfaces
@@ -141,9 +142,8 @@ FROM
 
         ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
 
-        creator.AddModule(New DBCreators.DS())
-        creator.AddModule(New DBCreators.Nadzor())
-        creator.AddModule(New DBCreators.Common.DBO())
+        creator.AddModule(New DBModules.DS())
+        creator.AddModule(New DBModules.Nadzor())
 
         creator.LoadModuleKeysFromDB()
 

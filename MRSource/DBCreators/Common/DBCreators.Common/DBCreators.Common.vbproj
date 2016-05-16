@@ -107,13 +107,13 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Framework\DBCreator\Framework.DBCreator\Framework.DBCreator.vbproj">
-      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
-      <Name>Framework.DBCreator</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\..\Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
       <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
       <Name>Framework.DBTimeLine.DBObjects</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj">
+      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
+      <Name>Framework.DBTimeLine</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

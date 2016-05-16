@@ -1,6 +1,4 @@
-﻿Imports Framework.DBCreator
-
-Public Class DBIndexDescriptor
+﻿Public Class DBIndexDescriptor
     Implements IDBIndexDescriptor
 
     Public Property Unique As Boolean Implements IDBIndexDescriptor.Unique

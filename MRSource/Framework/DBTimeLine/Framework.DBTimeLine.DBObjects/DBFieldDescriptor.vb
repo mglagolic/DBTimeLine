@@ -1,6 +1,4 @@
-﻿Imports Framework.DBCreator
-
-Public Class DBFieldDescriptor
+﻿Public Class DBFieldDescriptor
     Implements IDBFieldDescriptor
 
     Public Property FieldType As eDBFieldType Implements IDBFieldDescriptor.FieldType

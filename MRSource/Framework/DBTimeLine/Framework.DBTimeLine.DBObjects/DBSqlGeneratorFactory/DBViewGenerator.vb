@@ -1,5 +1,4 @@
-﻿Imports Framework.DBCreator
-Public Class DBViewGenerator
+﻿Public Class DBViewGenerator
     Implements IDBObjectGenerator
 
     Public Function GetSqlCreate(dbObject As IDBObject) As String Implements IDBObjectGenerator.GetSqlCreate

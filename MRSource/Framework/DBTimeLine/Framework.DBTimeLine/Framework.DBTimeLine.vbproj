@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Framework.DBCreator</RootNamespace>
-    <AssemblyName>Framework.DBCreator</AssemblyName>
+    <RootNamespace>Framework.DBTimeLine</RootNamespace>
+    <AssemblyName>Framework.DBTimeLine</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -19,7 +19,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Framework.DBCreator.xml</DocumentationFile>
+    <DocumentationFile>Framework.DBTimeLine.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
@@ -30,7 +30,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Framework.DBCreator.xml</DocumentationFile>
+    <DocumentationFile>Framework.DBTimeLine.xml</DocumentationFile>
     <NoWarn>
     </NoWarn>
     <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>

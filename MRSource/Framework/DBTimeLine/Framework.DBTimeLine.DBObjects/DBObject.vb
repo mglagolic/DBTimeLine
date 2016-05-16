@@ -1,5 +1,4 @@
 ﻿Option Strict On
-Imports Framework.DBCreator
 
 Public MustInherit Class DBObject
     Inherits DBParent

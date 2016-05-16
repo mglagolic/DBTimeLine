@@ -53,7 +53,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Import Include="Framework.DBCreator" />
+    <Import Include="Framework.DBTimeLine" />
     <Import Include="Microsoft.VisualBasic" />
     <Import Include="System" />
     <Import Include="System.Collections" />
@@ -129,9 +129,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DBCreator\Framework.DBCreator\Framework.DBCreator.vbproj">
+    <ProjectReference Include="..\Framework.DBTimeLine\Framework.DBTimeLine.vbproj">
       <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
-      <Name>Framework.DBCreator</Name>
+      <Name>Framework.DBTimeLine</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
