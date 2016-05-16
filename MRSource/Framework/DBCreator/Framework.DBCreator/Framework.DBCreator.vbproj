@@ -68,7 +68,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DBTimeLine.vb" />
+    <Compile Include="DBTimeLiner.vb" />
     <Compile Include="DBModulePersister.vb" />
     <Compile Include="Enums\eBatchExecutionResultType.vb" />
     <Compile Include="Enums\eDBType.vb" />

@@ -64,9 +64,9 @@ Namespace My
     Friend Module MySettingsProperty
         
         <Global.System.ComponentModel.Design.HelpKeywordAttribute("My.Settings")>  _
-        Friend ReadOnly Property Settings() As Global.Framework.DBCreator.DBObjects.My.MySettings
+        Friend ReadOnly Property Settings() As Global.Framework.DBTimeLine.DBObjects.My.MySettings
             Get
-                Return Global.Framework.DBCreator.DBObjects.My.MySettings.Default
+                Return Global.Framework.DBTimeLine.DBObjects.My.MySettings.Default
             End Get
         End Property
     End Module

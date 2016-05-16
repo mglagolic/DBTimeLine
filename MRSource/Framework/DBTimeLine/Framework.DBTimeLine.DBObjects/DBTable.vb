@@ -1,4 +1,6 @@
 ﻿Option Strict On
+Imports Framework.DBCreator
+
 Public Class DBTable
     Inherits DBObject
     Implements IDBTable

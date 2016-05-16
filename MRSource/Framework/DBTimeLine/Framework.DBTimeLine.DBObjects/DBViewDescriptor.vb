@@ -1,4 +1,6 @@
-﻿Public Class DBViewDescriptor
+﻿Imports Framework.DBCreator
+
+Public Class DBViewDescriptor
     Implements IDBViewDescriptor
 
     Public Property Body As String Implements IDBViewDescriptor.Body

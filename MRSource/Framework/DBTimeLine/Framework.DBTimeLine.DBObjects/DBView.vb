@@ -1,4 +1,6 @@
-﻿Public Class DBView
+﻿Imports Framework.DBCreator
+
+Public Class DBView
     Inherits DBObject
     Implements IDBView
 

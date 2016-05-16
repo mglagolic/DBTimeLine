@@ -1,4 +1,5 @@
-﻿Public Class DBTableGenerator
+﻿Imports Framework.DBCreator
+Public Class DBTableGenerator
     Implements IDBTableGenerator
 
     Public Property Parent As IDBSqlGenerator Implements IDBTableGenerator.Parent

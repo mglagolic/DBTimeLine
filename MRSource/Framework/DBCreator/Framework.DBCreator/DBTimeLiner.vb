@@ -5,7 +5,7 @@ Imports MRFramework
 Imports MRFramework.MRPersisting.Core
 Imports MRFramework.MRPersisting.Factory
 
-Public Class DBTimeLine
+Public Class DBTimeLiner
     Implements IDBChained
 
     Public Property DBSqlGenerator As IDBSqlGenerator

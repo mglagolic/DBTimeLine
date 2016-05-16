@@ -3,10 +3,10 @@
 Imports Framework.Persisting
 Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBCreator
-Imports Framework.DBCreator.DBObjects
 Imports System.ComponentModel
 
 Imports Framework.Persisting.Interfaces
+Imports Framework.DBTimeLine.DBObjects
 
 Public Class Form1
     Public Class myPersister
@@ -125,7 +125,7 @@ FROM
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
         Dim per As New myPersister
 
-        Dim creator As New DBTimeLine(eDBType.TransactSQL, New DBSqlGeneratorFactory)
+        Dim creator As New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
 

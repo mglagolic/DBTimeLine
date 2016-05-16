@@ -1,5 +1,4 @@
 ﻿Option Strict On
-Imports Framework.DBCreator.DBObjects
 Imports Framework.DBCreator
 
 Public Class DBO

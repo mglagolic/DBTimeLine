@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{986EF2D7-7F89-459F-B9EE-A9077CDCD147}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Framework.DBCreator.DBObjects</RootNamespace>
-    <AssemblyName>Framework.DBCreator.DBObjects</AssemblyName>
+    <RootNamespace>Framework.DBTimeLine.DBObjects</RootNamespace>
+    <AssemblyName>Framework.DBTimeLine.DBObjects</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
@@ -19,7 +19,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Framework.DBCreator.DBObjects.xml</DocumentationFile>
+    <DocumentationFile>Framework.DBTimeLine.DBObjects.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -28,7 +28,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Framework.DBCreator.DBObjects.xml</DocumentationFile>
+    <DocumentationFile>Framework.DBTimeLine.DBObjects.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -53,6 +53,7 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Import Include="Framework.DBCreator" />
     <Import Include="Microsoft.VisualBasic" />
     <Import Include="System" />
     <Import Include="System.Collections" />
@@ -128,7 +129,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Framework.DBCreator\Framework.DBCreator.vbproj">
+    <ProjectReference Include="..\..\DBCreator\Framework.DBCreator\Framework.DBCreator.vbproj">
       <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
       <Name>Framework.DBCreator</Name>
     </ProjectReference>

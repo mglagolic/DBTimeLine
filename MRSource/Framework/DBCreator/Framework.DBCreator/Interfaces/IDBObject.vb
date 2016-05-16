@@ -5,7 +5,7 @@
     Property Name As String
     Property Descriptor As IDBObjectDescriptor
 
-    ReadOnly Property DBTimeLine As DBTimeLine
+    ReadOnly Property DBTimeLiner As DBTimeLiner
 
     ReadOnly Property ModuleKey() As String
     ReadOnly Property SchemaName As String

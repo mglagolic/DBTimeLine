@@ -1,4 +1,5 @@
-﻿Public Class DBSqlGenerator
+﻿Imports Framework.DBCreator
+Public Class DBSqlGenerator
     Implements IDBSqlGenerator
 
     Public Property DBViewGenerator As IDBObjectGenerator Implements IDBSqlGenerator.DBViewGenerator

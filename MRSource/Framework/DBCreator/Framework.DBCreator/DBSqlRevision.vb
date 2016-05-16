@@ -74,7 +74,7 @@ Public Class DBSqlRevision
         End With
     End Sub
 
-    Public Sub New(dlo As IMRDLO, dBTimeLine As DBTimeLine)
+    Public Sub New(dlo As IMRDLO, dBTimeLiner As DBTimeLiner)
         Created = CDate(dlo.ColumnValues("Created"))
         Granulation = CInt(dlo.ColumnValues("Granulation"))
 
@@ -91,7 +91,7 @@ Public Class DBSqlRevision
         'Key = GetDBSqlRevisionKey()
         Key = CStr(dlo.ColumnValues("RevisionKey"))
 
-        Parent = FindParent(dBTimeLine)
+        Parent = FindParent(dBTimeLiner)
     End Sub
 
     Public Function GetDBSqlRevisionKey() As String
@@ -126,11 +126,11 @@ Public Class DBSqlRevision
         Return ret
     End Function
 
-    Private Function FindParent(dBTimeLine As DBTimeLine) As IDBRevision
+    Private Function FindParent(dBTimeLiner As DBTimeLiner) As IDBRevision
         Dim ret As IDBRevision = Nothing
 
-        If dBTimeLine.SourceDBRevisions.ContainsKey(Key) Then
-            ret = dBTimeLine.SourceDBRevisions(Key)
+        If dBTimeLiner.SourceDBRevisions.ContainsKey(Key) Then
+            ret = dBTimeLiner.SourceDBRevisions(Key)
         End If
 
         Return ret

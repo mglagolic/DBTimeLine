@@ -1,4 +1,5 @@
 ﻿Option Strict On
+Imports Framework.DBCreator
 
 Public MustInherit Class DBObject
     Inherits DBParent
@@ -13,14 +14,14 @@ Public MustInherit Class DBObject
 
     Public MustOverride ReadOnly Property ObjectType As eDBObjectType Implements IDBObject.ObjectType
 
-    Public ReadOnly Property DBTimeLine As DBTimeLine Implements IDBObject.DBTimeLine
+    Public ReadOnly Property DBTimeLiner As DBTimeLiner Implements IDBObject.DBTimeLiner
         Get
-            Dim ret As DBTimeLine = Nothing
+            Dim ret As DBTimeLiner = Nothing
 
             Dim p As IDBChained = Me
             While p IsNot Nothing
-                If TypeOf p Is DBTimeLine Then
-                    ret = CType(p, DBTimeLine)
+                If TypeOf p Is DBTimeLiner Then
+                    ret = CType(p, DBTimeLiner)
                     Exit While
                 Else
                     p = p.Parent
@@ -41,10 +42,10 @@ Public MustInherit Class DBObject
         End If
 
         Dim sqlRevision As New DBSqlRevision(revision)
-        DBTimeLine.SourceDBSqlRevisions.Add(sqlRevision)
+        DBTimeLiner.SourceDBSqlRevisions.Add(sqlRevision)
 
         'If Not DBCreator.SourceDBRevisions.ContainsKey(sqlRevision.Key) Then
-        DBTimeLine.SourceDBRevisions.Add(sqlRevision.Key, revision)
+        DBTimeLiner.SourceDBRevisions.Add(sqlRevision.Key, revision)
         'End If
 
         Return revision

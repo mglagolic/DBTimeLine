@@ -1,4 +1,6 @@
-﻿Public Class DBParent
+﻿Imports Framework.DBCreator
+
+Public Class DBParent
     Implements IDBParent
 
     Public ReadOnly Property DBObjects As New Dictionary(Of String, IDBObject) Implements IDBParent.DBObjects
