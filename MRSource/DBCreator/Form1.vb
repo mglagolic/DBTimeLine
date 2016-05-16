@@ -138,12 +138,15 @@ FROM
         ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
         ' TODO - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
         '      - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
+        ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
         ' TODO - isprogramirati podršku za Role
 
         ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
 
         creator.AddModule(New DBModules.DS())
+        creator.AddModule(New DBModules.DS())
         creator.AddModule(New DBModules.Nadzor())
+
 
         creator.LoadModuleKeysFromDB()
 
