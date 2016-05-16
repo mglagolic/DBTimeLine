@@ -5,7 +5,7 @@ Public Class DBModulePersister
 
     Public Overrides ReadOnly Property DataBaseTableName As String
         Get
-            Return "DBCreator.Module"
+            Return "DBTimeLine.Module"
         End Get
     End Property
     Public Overrides ReadOnly Property SQL As String

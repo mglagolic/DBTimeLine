@@ -34,16 +34,16 @@ Public Class DBRevision
         Dim sbSql As New StringBuilder()
 
         If PreSqlTask IsNot Nothing Then
-            sbSql.Append(PreSqlTask.Invoke(Me, Parent.DBCreator.DBType) & vbNewLine)
+            sbSql.Append(PreSqlTask.Invoke(Me, Parent.DBTimeLine.DBType) & vbNewLine)
         End If
         If Parent IsNot Nothing Then
             Select Case DBRevisionType
                 Case eDBRevisionType.Create
-                    sbSql.Append(Parent.GetSqlCreate(Parent.DBCreator.DBSqlGenerator))
+                    sbSql.Append(Parent.GetSqlCreate(Parent.DBTimeLine.DBSqlGenerator))
                 Case eDBRevisionType.Modify
-                    sbSql.Append(Parent.GetSqlModify(Parent.DBCreator.DBSqlGenerator))
+                    sbSql.Append(Parent.GetSqlModify(Parent.DBTimeLine.DBSqlGenerator))
                 Case eDBRevisionType.Delete
-                    sbSql.Append(Parent.GetSqlDelete(Parent.DBCreator.DBSqlGenerator))
+                    sbSql.Append(Parent.GetSqlDelete(Parent.DBTimeLine.DBSqlGenerator))
                 Case eDBRevisionType.Task, eDBRevisionType.AlwaysExecuteTask
                     ' Do nothing, tasks do not change db structure
                 Case Else
@@ -51,7 +51,7 @@ Public Class DBRevision
             End Select
         End If
         If PostSqlTask IsNot Nothing Then
-            sbSql.Append(vbNewLine & PostSqlTask.Invoke(Me, Parent.DBCreator.DBType))
+            sbSql.Append(vbNewLine & PostSqlTask.Invoke(Me, Parent.DBTimeLine.DBType))
         End If
 
         Return sbSql.ToString

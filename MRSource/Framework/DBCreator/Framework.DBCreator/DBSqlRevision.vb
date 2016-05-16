@@ -74,7 +74,7 @@ Public Class DBSqlRevision
         End With
     End Sub
 
-    Public Sub New(dlo As IMRDLO, dBCreator As DBCreator)
+    Public Sub New(dlo As IMRDLO, dBTimeLine As DBTimeLine)
         Created = CDate(dlo.ColumnValues("Created"))
         Granulation = CInt(dlo.ColumnValues("Granulation"))
 
@@ -91,7 +91,7 @@ Public Class DBSqlRevision
         'Key = GetDBSqlRevisionKey()
         Key = CStr(dlo.ColumnValues("RevisionKey"))
 
-        Parent = FindParent(dBCreator)
+        Parent = FindParent(dBTimeLine)
     End Sub
 
     Public Function GetDBSqlRevisionKey() As String
@@ -126,11 +126,11 @@ Public Class DBSqlRevision
         Return ret
     End Function
 
-    Private Function FindParent(dBCreator As DBCreator) As IDBRevision
+    Private Function FindParent(dBTimeLine As DBTimeLine) As IDBRevision
         Dim ret As IDBRevision = Nothing
 
-        If dBCreator.SourceDBRevisions.ContainsKey(Key) Then
-            ret = dBCreator.SourceDBRevisions(Key)
+        If dBTimeLine.SourceDBRevisions.ContainsKey(Key) Then
+            ret = dBTimeLine.SourceDBRevisions(Key)
         End If
 
         Return ret
@@ -194,7 +194,7 @@ Public Class DBSqlRevision
 
         Public Overrides ReadOnly Property DataBaseTableName As String
             Get
-                Return "DBCreator.Revision"
+                Return "DBTimeLine.Revision"
             End Get
         End Property
         Public Overrides ReadOnly Property SQL As String
@@ -208,7 +208,7 @@ Public Class DBSqlRevision
 
         Public Overrides ReadOnly Property DataBaseTableName As String
             Get
-                Return "DBCreator.AlwaysExecutingTask"
+                Return "DBTimeLine.AlwaysExecutingTask"
             End Get
         End Property
         Public Overrides ReadOnly Property SQL As String

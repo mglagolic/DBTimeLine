@@ -13,14 +13,14 @@ Public MustInherit Class DBObject
 
     Public MustOverride ReadOnly Property ObjectType As eDBObjectType Implements IDBObject.ObjectType
 
-    Public ReadOnly Property DBCreator As DBCreator Implements IDBObject.DBCreator
+    Public ReadOnly Property DBTimeLine As DBTimeLine Implements IDBObject.DBTimeLine
         Get
-            Dim ret As DBCreator = Nothing
+            Dim ret As DBTimeLine = Nothing
 
             Dim p As IDBChained = Me
             While p IsNot Nothing
-                If TypeOf p Is DBCreator Then
-                    ret = CType(p, DBCreator)
+                If TypeOf p Is DBTimeLine Then
+                    ret = CType(p, DBTimeLine)
                     Exit While
                 Else
                     p = p.Parent
@@ -41,10 +41,10 @@ Public MustInherit Class DBObject
         End If
 
         Dim sqlRevision As New DBSqlRevision(revision)
-        DBCreator.SourceDBSqlRevisions.Add(sqlRevision)
+        DBTimeLine.SourceDBSqlRevisions.Add(sqlRevision)
 
         'If Not DBCreator.SourceDBRevisions.ContainsKey(sqlRevision.Key) Then
-        DBCreator.SourceDBRevisions.Add(sqlRevision.Key, revision)
+        DBTimeLine.SourceDBRevisions.Add(sqlRevision.Key, revision)
         'End If
 
         Return revision

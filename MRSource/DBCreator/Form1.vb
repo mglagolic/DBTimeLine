@@ -125,7 +125,7 @@ FROM
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
         Dim per As New myPersister
 
-        Dim creator As New Framework.DBCreator.DBCreator(eDBType.TransactSQL, New DBSqlGeneratorFactory)
+        Dim creator As New DBTimeLine(eDBType.TransactSQL, New DBSqlGeneratorFactory)
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
 

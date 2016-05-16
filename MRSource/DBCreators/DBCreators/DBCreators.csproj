@@ -45,9 +45,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\DBCreator\Framework.DBCreator.DBObjects\Framework.DBCreator.DBObjects.vbproj">
+    <ProjectReference Include="..\..\Framework\DBCreator\Framework.DBCreator.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
       <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
-      <Name>Framework.DBCreator.DBObjects</Name>
+      <Name>Framework.DBTimeLine.DBObjects</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\DBCreator\Framework.DBCreator\Framework.DBCreator.vbproj">
       <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
