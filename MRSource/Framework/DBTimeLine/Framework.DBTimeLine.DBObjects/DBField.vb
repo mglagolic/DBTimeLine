@@ -36,6 +36,10 @@
             Else
                 ret &= " NOT NULL"
             End If
+
+            If Not String.IsNullOrEmpty(.DefaultValue) Then
+                ret &= String.Format(" DEFAULT {0}", .DefaultValue)
+            End If
         End With
 
         Return ret

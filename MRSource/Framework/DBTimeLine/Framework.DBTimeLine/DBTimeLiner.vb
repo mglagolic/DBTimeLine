@@ -72,12 +72,12 @@ Public Class DBTimeLiner
                             AddModule(m)
 
                             message = String.Format(
-"Successfully created module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2})." _
+"Successfully instanced module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2})." _
 , className, assemblyName, defaultSchemaName)
 
                         Catch ex As Exception
                             errorMessage = String.Format(
-"Error creating module from database config (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}), 
+"Error instancing module from database config (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}), 
 ErrorMessage: 
 {3}
 ", className, assemblyName, defaultSchemaName, ex.Message)
@@ -181,9 +181,7 @@ ErrorMessage:
                     End If
                 End Try
             End Using
-
         Next
-
     End Sub
 
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)

@@ -73,9 +73,23 @@ FROM
                 new DBRevision(rev));
             t.AddField("GradID", new DBFieldDescriptor() { FieldType = eDBFieldType.Guid}, 
                 new DBRevision(rev));
+            t.AddField("Godina", new DBFieldDescriptor() { FieldType = eDBFieldType.Integer, DefaultValue = "20", Nullable = false },
+                new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Create));
+            t.AddField("ProsjekOcjena", new DBFieldDescriptor() { FieldType = eDBFieldType.Decimal, DefaultValue = "3.35", Nullable = false, Size = 18, Precision = 4 },
+                new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Create));
+            t.AddField("StrDefault", new DBFieldDescriptor() { FieldType = eDBFieldType.Nvarchar, DefaultValue = "'3.35a'", Nullable = false, Size = 18},
+                new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Create));
 
-            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "GradID" }, DefaultSchemaName + ".Grad", new List<string>() { "ID" }),
+            var fk = t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "GradID" }, DefaultSchemaName + ".Grad", new List<string>() { "ID" }),
                 new DBRevision(new DateTime(2016, 4, 25), 1, eDBRevisionType.Create));
+            fk.AddRevision(new DBRevision(new DateTime(2016, 5, 17), 0, eDBRevisionType.Delete));
+
+            t.AddField("DrzavaID", new DBFieldDescriptor() { FieldType = eDBFieldType.Guid , Nullable = true},
+                new DBRevision(rev));
+
+            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "GradID", "DrzavaID" }, DefaultSchemaName + ".Grad", new List<string>() { "ID", "DrzavaID" }),
+                new DBRevision(new DateTime(2016, 5, 18), 2, eDBRevisionType.Create));
+
             return t;
         }
 
@@ -86,8 +100,13 @@ FROM
 
             t = sch.AddTable("Grad", new DBTableDescriptor() { CreatorFieldName = "ID", CreatorFieldDescriptor = new DBFieldDescriptor() { FieldType = eDBFieldType.Guid, Nullable = false } },
                 new DBRevision(rev));
-            t.AddConstraint(new DBPrimaryKeyConstraintDescriptor("ID"), 
+            var pk = t.AddConstraint(new DBPrimaryKeyConstraintDescriptor("ID"), 
                 new DBRevision(rev));
+            pk.AddRevision(new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Delete));
+
+            t.AddConstraint(new DBPrimaryKeyConstraintDescriptor(null, "ID", "DrzavaID"),
+                new DBRevision(new DateTime(2016, 5, 18), 1, eDBRevisionType.Create));
+
             t.AddField("Naziv", new DBFieldDescriptor() { FieldType = eDBFieldType.Nvarchar, Size = 256 }, 
                 new DBRevision(rev));
 
@@ -96,6 +115,7 @@ FROM
 
             t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "DrzavaID" }, DefaultSchemaName + ".Drzava", new List<string>() { "ID" }),
                 new DBRevision(new DateTime(2016, 4, 26), 1, eDBRevisionType.Create));
+            
 
             fld.AddRevision(
                 new DBRevision(new DateTime(2016, 4, 26), 2, eDBRevisionType.Modify),
