@@ -151,7 +151,9 @@ FROM
 
         creator.CreateSystemObjects()
 
-        ' TODO - isprogramirati podrsku za store
+
+        ' TODO - maknuti enum dbObjectType, rijesiti sort revizija na drugi nacin ILI http://stackoverflow.com/questions/757684/enum-inheritance (zamijeniti eDB ObjectType klasom s dva propertya: Value, Label)
+        ' TODO - isprogramirati podrsku za store ali izvan frameworka
         ' TODO - isprogramirati podrsku za triggere
         ' TODO - odraditi code generation adventureWorks baze
         ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)

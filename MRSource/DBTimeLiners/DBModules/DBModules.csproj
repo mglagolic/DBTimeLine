@@ -40,6 +40,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBStoredProcedure.cs" />
+    <Compile Include="DBStoredProcedureDescriptor.cs" />
     <Compile Include="Nadzor.cs" />
     <Compile Include="DS.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

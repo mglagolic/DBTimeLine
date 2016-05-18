@@ -25,10 +25,17 @@ namespace DBModules
             Drzava(sch);
 
             OsobaGrad(sch);
+            sp_Test(sch);
 
             InitialFill(sch);
         }
+        private DBStoredProcedure sp_Test(IDBSchema sch)
+        {
+            DBStoredProcedure sp = (DBStoredProcedure) sch.AddDBObject("sp_Test", new DBStoredProcedureDescriptor() { Parameters = "", Body = "SELECT Naziv = 1" },
+                new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Create, null, null));
 
+            return sp;
+        }
         private IDBView OsobaGrad(IDBSchema sch)
         {
             IDBView v = null;
