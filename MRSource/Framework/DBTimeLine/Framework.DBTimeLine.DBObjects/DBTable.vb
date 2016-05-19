@@ -17,9 +17,15 @@ Public Class DBTable
         End If
     End Sub
 
-    Public Overrides ReadOnly Property ObjectType As eDBObjectType
+    Public Overrides ReadOnly Property ObjectTypeOrdinal As Integer
         Get
-            Return eDBObjectType.Table
+            Return 10
+        End Get
+    End Property
+
+    Public Overrides ReadOnly Property ObjectTypeName As String
+        Get
+            Return "Table"
         End Get
     End Property
 
@@ -45,7 +51,6 @@ Public Class DBTable
 ", SchemaName, Name, CType(Descriptor, IDBTableDescriptor).CreatorFieldName, (New DBField() With {.Descriptor = CType(Descriptor, IDBTableDescriptor).CreatorFieldDescriptor}).GetFieldTypeSql(dBType))
 
         Return ret
-
     End Function
 
     Public Overrides Function GetSqlModify(dBType As eDBType) As String

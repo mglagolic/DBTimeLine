@@ -6,9 +6,15 @@
 
     End Sub
 
-    Public Overrides ReadOnly Property ObjectType As eDBObjectType
+    Public Overrides ReadOnly Property ObjectTypeOrdinal As Integer
         Get
-            Return eDBObjectType.Constraint
+            Return 40
+        End Get
+    End Property
+
+    Public Overrides ReadOnly Property ObjectTypeName As String
+        Get
+            Return "PrimaryKey"
         End Get
     End Property
 

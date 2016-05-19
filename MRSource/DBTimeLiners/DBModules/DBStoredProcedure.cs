@@ -10,11 +10,19 @@ namespace DBModules
 
     public class DBStoredProcedure : Framework.DBTimeLine.DBObjects.DBObject
     {
-        public override eDBObjectType ObjectType
+        public override string ObjectTypeName
         {
             get
             {
-                return eDBObjectType.Table;
+                return "SP";
+            }
+        }
+
+        public override int ObjectTypeOrdinal
+        {
+            get
+            {
+                return 60;
             }
         }
 

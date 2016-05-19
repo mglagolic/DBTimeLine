@@ -1,14 +1,21 @@
 ﻿Public Class DBSchema
     Inherits DBObject
+
     Implements IDBSchema
 
     Public Sub New()
 
     End Sub
 
-    Public Overrides ReadOnly Property ObjectType As eDBObjectType
+    Public Overrides ReadOnly Property ObjectTypeOrdinal As Integer
         Get
-            Return eDBObjectType.Schema
+            Return 0
+        End Get
+    End Property
+
+    Public Overrides ReadOnly Property ObjectTypeName As String
+        Get
+            Return "Schema"
         End Get
     End Property
 

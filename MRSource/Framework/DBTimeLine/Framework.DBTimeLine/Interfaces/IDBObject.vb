@@ -11,7 +11,10 @@
     ReadOnly Property SchemaName As String
     ReadOnly Property SchemaObjectName() As String
 
-    ReadOnly Property ObjectType As eDBObjectType
+    ReadOnly Property ObjectTypeOrdinal As Integer
+    ReadOnly Property ObjectTypeName As String
+
+    'ReadOnly Property ObjectType As eDBObjectType
     Function AddRevision(revision As IDBRevision, Optional descriptor As IDBObjectDescriptor = Nothing) As IDBRevision
     ReadOnly Property Revisions As List(Of IDBRevision)
     Function GetFullName() As String

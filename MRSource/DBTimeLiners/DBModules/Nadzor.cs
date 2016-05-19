@@ -19,13 +19,21 @@ namespace DBModules
         {
             DBRevision rev = new DBRevision(new DateTime(2016, 4, 25), 0, eDBRevisionType.Create);
 
-            IDBSchema sch = AddSchema("NAD", new DBSchemaDescriptor(), new DBRevision(rev));
+            IDBSchema sch = AddSchema(DefaultSchemaName, new DBSchemaDescriptor(), new DBRevision(rev));
 
             Zona(sch);
             tblNadzor(sch);
+            sp_Test(sch);
 
 
             InitialFill(sch);
+        }
+        private DBStoredProcedure sp_Test(IDBSchema sch)
+        {
+            DBStoredProcedure sp = (DBStoredProcedure)sch.AddDBObject("sp_Test", new DBStoredProcedureDescriptor() { Parameters = "", Body = "SELECT Naziv = 1" },
+                new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Create, null, null));
+
+            return sp;
         }
 
         private IDBTable Zona(IDBSchema sch)

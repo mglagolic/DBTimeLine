@@ -12,9 +12,15 @@
         Me.Descriptor = descriptor
     End Sub
 
-    Public Overrides ReadOnly Property ObjectType As eDBObjectType
+    Public Overrides ReadOnly Property ObjectTypeOrdinal As Integer
         Get
-            Return eDBObjectType.View
+            Return 30
+        End Get
+    End Property
+
+    Public Overrides ReadOnly Property ObjectTypeName As String
+        Get
+            Return "View"
         End Get
     End Property
 

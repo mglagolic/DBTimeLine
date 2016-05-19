@@ -21,13 +21,8 @@ Public Class DBSqlRevision
 
     Public Property ObjectFullName As String
 
-    Public Property ObjectType As eDBObjectType
-    Public ReadOnly Property ObjectTypeName As String
-        Get
-            'Return CInt(ObjectType).ToString.PadLeft(3, "0"c) & "_" & [Enum].GetName(GetType(eDBObjectType), ObjectType)
-            Return [Enum].GetName(GetType(eDBObjectType), ObjectType)
-        End Get
-    End Property
+    Public Property ObjectTypeOrdinal As Integer
+    Public Property ObjectTypeName As String
 
     Public Property RevisionType As eDBRevisionType
     Public ReadOnly Property RevisionTypeName As String
@@ -56,7 +51,8 @@ Public Class DBSqlRevision
             Created = .Created
             Granulation = .Granulation
 
-            ObjectType = .Parent.ObjectType
+            ObjectTypeName = .Parent.ObjectTypeName
+            ObjectTypeOrdinal = .Parent.ObjectTypeOrdinal
             RevisionType = .DBRevisionType
 
             ModuleKey = .Parent.ModuleKey
@@ -78,7 +74,9 @@ Public Class DBSqlRevision
         Created = CDate(dlo.ColumnValues("Created"))
         Granulation = CInt(dlo.ColumnValues("Granulation"))
 
-        ObjectType = CType([Enum].Parse(GetType(eDBObjectType), CStr(dlo.ColumnValues("ObjectType"))), eDBObjectType)
+        ObjectTypeOrdinal = CInt(dlo.ColumnValues("ObjectTypeOrdinal"))
+        ObjectTypeName = CStr(dlo.ColumnValues("ObjectTypeName"))
+
         RevisionType = CType([Enum].Parse(GetType(eDBRevisionType), CStr(dlo.ColumnValues("RevisionType"))), eDBRevisionType)
 
         ModuleKey = CStr(dlo.ColumnValues("ModuleKey"))
@@ -88,7 +86,6 @@ Public Class DBSqlRevision
 
         ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
 
-        'Key = GetDBSqlRevisionKey()
         Key = CStr(dlo.ColumnValues("RevisionKey"))
 
         Parent = FindParent(dBTimeLiner)
@@ -102,24 +99,17 @@ Public Class DBSqlRevision
         sbFullName.Append(".")
         sbFullName.Append(Granulation.ToString.PadLeft(MaxGranulationPower, "0"c))
         sbFullName.Append(".")
-        sbFullName.Append(CType(ObjectType, Integer).ToString("d3"))
+        sbFullName.Append(ObjectTypeOrdinal.ToString("d3"))
         sbFullName.Append(".")
         sbFullName.Append(CType(RevisionType, Integer).ToString("d3"))
         sbFullName.Append(".")
         sbFullName.Append(ModuleKey)
         sbFullName.Append(".")
         sbFullName.Append(SchemaName)
-
-        Select Case ObjectType
-            Case eDBObjectType.Table, eDBObjectType.View
-                sbFullName.Append(".")
-                sbFullName.Append(SchemaObjectName)
-            Case eDBObjectType.Field, eDBObjectType.Constraint, eDBObjectType.Index
-                sbFullName.Append(".")
-                sbFullName.Append(SchemaObjectName)
-                sbFullName.Append(".")
-                sbFullName.Append(ObjectName)
-        End Select
+        sbFullName.Append(".")
+        sbFullName.Append(SchemaObjectName)
+        sbFullName.Append(".")
+        sbFullName.Append(ObjectName)
 
         ret = sbFullName.ToString
 
@@ -142,7 +132,9 @@ Public Class DBSqlRevision
             .Add("Created", Created)
             .Add("Granulation", Granulation)
 
-            .Add("ObjectType", ObjectTypeName)
+            .Add("ObjectTypeOrdinal", ObjectTypeOrdinal)
+            .Add("ObjectTypeName", ObjectTypeName)
+
             .Add("RevisionType", RevisionTypeName)
 
             .Add("ModuleKey", ModuleKey)
@@ -199,7 +191,7 @@ Public Class DBSqlRevision
         End Property
         Public Overrides ReadOnly Property SQL As String
             Get
-                Return "SELECT ID, RevisionKey, Created, Granulation, ObjectType, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName, ObjectFullName FROM " & DataBaseTableName
+                Return "SELECT ID, RevisionKey, Created, Granulation, ObjectTypeOrdinal, ObjectTypeName, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName, ObjectFullName FROM " & DataBaseTableName
             End Get
         End Property
     End Class

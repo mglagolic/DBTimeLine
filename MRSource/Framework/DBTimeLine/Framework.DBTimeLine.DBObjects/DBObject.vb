@@ -11,7 +11,10 @@ Public MustInherit Class DBObject
     Public Property Descriptor As IDBObjectDescriptor Implements IDBObject.Descriptor
     Public ReadOnly Property Revisions As New List(Of IDBRevision) Implements IDBObject.Revisions
 
-    Public MustOverride ReadOnly Property ObjectType As eDBObjectType Implements IDBObject.ObjectType
+    'Public MustOverride ReadOnly Property ObjectType As eDBObjectType Implements IDBObject.ObjectType
+
+    Public MustOverride ReadOnly Property ObjectTypeOrdinal As Integer Implements IDBObject.ObjectTypeOrdinal
+    Public MustOverride ReadOnly Property ObjectTypeName As String Implements IDBObject.ObjectTypeName
 
     Public ReadOnly Property DBTimeLiner As DBTimeLiner Implements IDBObject.DBTimeLiner
         Get
