@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-
 Imports Framework.Persisting
 Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBTimeLine
@@ -81,7 +80,7 @@ FROM
         If backWorker.IsBusy Then
             backWorker.CancelAsync()
         Else
-            backWorker.RunWorkerAsync(Nothing)
+            backWorker.RunWorkerAsync(New CreateTimeLineDBInputs() With {.Commit = chxCommit.Checked})
         End If
     End Sub
 
@@ -97,7 +96,6 @@ FROM
         rtb1.SelectionColor = Color.LawnGreen
         rtb1.AppendText(e.Sql & vbNewLine)
         rtb1.ScrollToCaret()
-
     End Sub
 
     Delegate Sub BatchExecutedCallback(sender As Object, e As BatchExecutedEventArgs)
@@ -114,8 +112,13 @@ FROM
 
         If e.ResultType = eBatchExecutionResultType.Failed Then
             rtb1.SelectionColor = Color.Red
-            rtb1.AppendText(e.ErrorMessage & vbNewLine)
+            If e.Exception IsNot Nothing Then
+                WriteException(e.Exception)
+            Else
+                rtb1.AppendText("/* " & e.ErrorMessage.ToString() & "*/" & vbNewLine)
+            End If
         End If
+
         rtb1.SelectionColor = Color.Yellow
         rtb1.AppendText("-- Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine)
         rtb1.ScrollToCaret()
@@ -139,9 +142,27 @@ FROM
         End If
     End Sub
 
-    Private Sub DbCreate(commit As Boolean)
-        MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
-        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+    Delegate Sub WriteExceptionCallback(e As Exception)
+    Private Sub WriteException(e As Exception)
+        If rtb1.InvokeRequired Then
+            Dim d As New WriteExceptionCallback(AddressOf WriteException)
+            rtb1.Invoke(d, e)
+            Exit Sub
+        End If
+
+        Dim ex As Exception = e
+        While ex IsNot Nothing
+            rtb1.SelectionColor = Color.Red
+            rtb1.AppendText("/* " & ex.Message.ToString() & "*/" & vbNewLine)
+            ex = ex.InnerException
+        End While
+    End Sub
+
+    Private Class CreateTimeLineDBInputs
+        Public Property Commit As Boolean
+    End Class
+
+    Private Sub CreateTimeLineDB(inputs As CreateTimeLineDBInputs)
         Dim per As New myPersister
 
         Dim creator As New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
@@ -151,13 +172,12 @@ FROM
 
         creator.CreateSystemObjects()
 
-
-        ' TODO - isprogramirati podrsku za store ali izvan frameworka
+        ' TODO - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
+        '      - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
         ' TODO - isprogramirati podrsku za triggere
         ' TODO - odraditi code generation adventureWorks baze
         ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
-        ' TODO - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
-        '      - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
+        ' TODO - u novom persisteru maknuti implementation u posebni dll
         ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
         ' TODO - isprogramirati podršku za Role
 
@@ -165,20 +185,9 @@ FROM
 
         creator.LoadModulesFromDB()
 
-        'creator.AddModule(New DBModules.DS())
-        'creator.AddModule(New DBModules.DS())
-        'creator.AddModule(New DBModules.Nadzor())
-
         For i As Integer = 0 To creator.DBModules.Count - 1
-            'If creator.ActiveModules.ContainsKey(creator.DBModules(i).ModuleKey) Then
-            '    creator.DBModules(i).LoadRevisions()
-            'End If
             creator.DBModules(i).LoadRevisions()
         Next
-
-        'For i As Integer = 0 To creator.DBModules.Count - 1
-        '    creator.DBModules(i).LoadRevisions()
-        'Next
 
         Using cnn As Common.DbConnection = MRC.GetConnection()
             cnn.Open()
@@ -195,7 +204,7 @@ FROM
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
 
-                If commit Then
+                If inputs.Commit Then
                     trn.Commit()
                 Else
                     trn.Rollback()
@@ -212,7 +221,11 @@ FROM
     ' TODO - ovo odraditi reactive programmingom
     Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
-        DbCreate(chxCommit.Checked)
+        Try
+            CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
+        Catch ex As Exception
+            WriteException(ex)
+        End Try
     End Sub
 
     Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged

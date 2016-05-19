@@ -140,6 +140,7 @@ ErrorMessage:
             Dim ts2 As TimeSpan
             Using cmd As IDbCommand = MRC.GetCommand(cnn)
                 Dim errorMessage As String = ""
+                Dim runtimeException As Exception = Nothing
                 Try
                     cmd.CommandText = batch
                     cmd.Transaction = trn
@@ -158,14 +159,14 @@ ErrorMessage:
                     If Debugger.IsAttached Then
                         Debugger.Break()
                     End If
-
+                    runtimeException = ex
                     errorMessage = ex.Message
                     Throw
                 Catch ex As Exception
                     If Debugger.IsAttached Then
                         Debugger.Break()
                     End If
-
+                    runtimeException = ex
                     errorMessage = ex.Message
                     Throw
                 Finally
@@ -176,7 +177,8 @@ ErrorMessage:
                                             .ResultType = CType(IIf(errorMessage = "", eBatchExecutionResultType.Success, eBatchExecutionResultType.Failed), eBatchExecutionResultType),
                                             .ExecutedRevisionsCount = 0,
                                             .TotalRevisionsCount = 0,
-                                            .ErrorMessage = errorMessage
+                                            .ErrorMessage = errorMessage,
+                                            .Exception = runtimeException
                                         })
                     End If
                 End Try

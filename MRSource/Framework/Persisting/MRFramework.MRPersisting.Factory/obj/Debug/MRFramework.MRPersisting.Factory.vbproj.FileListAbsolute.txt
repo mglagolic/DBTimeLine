@@ -39,3 +39,4 @@ D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Fac
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbprojResolveAssemblyReference.cache

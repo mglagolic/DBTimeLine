@@ -7,4 +7,5 @@
     Public Property ErrorMessage As String
     Public Property ExecutedRevisionsCount As Integer
     Public Property TotalRevisionsCount As Integer
+    Public Property Exception As Exception
 End Class

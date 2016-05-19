@@ -39,3 +39,4 @@ D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFra
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.xml
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.pdb
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.vbprojResolveAssemblyReference.cache
+D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.vbprojResolveAssemblyReference.cache

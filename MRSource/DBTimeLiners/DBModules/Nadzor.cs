@@ -28,10 +28,14 @@ namespace DBModules
 
             InitialFill(sch);
         }
+
         private DBStoredProcedure sp_Test(IDBSchema sch)
         {
             DBStoredProcedure sp = (DBStoredProcedure)sch.AddDBObject("sp_Test", new DBStoredProcedureDescriptor() { Parameters = "", Body = "SELECT Naziv = 1" },
                 new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Create, null, null));
+
+            sp.AddRevision(new DBRevision(new DateTime(2016, 5, 19), 0, eDBRevisionType.Modify),
+                new DBStoredProcedureDescriptor(sp.Descriptor) { Body = "SELECT Naziv = 1, Naziv2 = 2" });
 
             return sp;
         }

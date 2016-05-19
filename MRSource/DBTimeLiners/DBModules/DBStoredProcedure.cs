@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Framework.DBTimeLine;
+﻿using Framework.DBTimeLine;
 
 namespace DBModules
 {
-
     public class DBStoredProcedure : Framework.DBTimeLine.DBObjects.DBObject
     {
         public override string ObjectTypeName

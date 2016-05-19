@@ -9,7 +9,19 @@ namespace DBModules
             return new DBStoredProcedure() { Parent = parent, Descriptor = this};
         }
 
+        public DBStoredProcedureDescriptor() 
+        {
+
+        }
+
+        public DBStoredProcedureDescriptor(IDBObjectDescriptor descriptor) : this()
+        {
+            
+            Parameters = ((DBStoredProcedureDescriptor) descriptor).Parameters;
+            Body = ((DBStoredProcedureDescriptor) descriptor).Body;    
+        }
+
         public string Parameters { get; set; }
         public string Body { get; set; }
-}
+    }
 }
