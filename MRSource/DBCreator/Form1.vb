@@ -139,7 +139,7 @@ FROM
         End If
     End Sub
 
-    Private Sub DbCreate()
+    Private Sub DbCreate(commit As Boolean)
         MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
         Dim per As New myPersister
@@ -152,7 +152,6 @@ FROM
         creator.CreateSystemObjects()
 
 
-        ' TODO - maknuti enum dbObjectType, rijesiti sort revizija na drugi nacin ILI http://stackoverflow.com/questions/757684/enum-inheritance (zamijeniti eDB ObjectType klasom s dva propertya: Value, Label)
         ' TODO - isprogramirati podrsku za store ali izvan frameworka
         ' TODO - isprogramirati podrsku za triggere
         ' TODO - odraditi code generation adventureWorks baze
@@ -195,8 +194,12 @@ FROM
 
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
-                trn.Rollback()
-                'trn.Commit()
+
+                If commit Then
+                    trn.Commit()
+                Else
+                    trn.Rollback()
+                End If
             End Using
 
         End Using
@@ -209,7 +212,7 @@ FROM
     ' TODO - ovo odraditi reactive programmingom
     Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
-        DbCreate()
+        DbCreate(chxCommit.Checked)
     End Sub
 
     Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged

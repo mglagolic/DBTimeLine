@@ -80,10 +80,17 @@ Public Class DBSqlRevision
         RevisionType = CType([Enum].Parse(GetType(eDBRevisionType), CStr(dlo.ColumnValues("RevisionType"))), eDBRevisionType)
 
         ModuleKey = CStr(dlo.ColumnValues("ModuleKey"))
-        SchemaName = CStr(dlo.ColumnValues("SchemaName"))
-        SchemaObjectName = CStr(dlo.ColumnValues("SchemaObjectName"))
-        ObjectName = CStr(dlo.ColumnValues("ObjectName"))
+        SchemaName = ""
+        If dlo.ColumnValues("SchemaName") IsNot DBNull.Value Then
+            SchemaName = CStr(dlo.ColumnValues("SchemaName"))
+        End If
 
+        SchemaObjectName = ""
+        If dlo.ColumnValues("SchemaObjectName") IsNot DBNull.Value Then
+            SchemaObjectName = CStr(dlo.ColumnValues("SchemaObjectName"))
+        End If
+
+        ObjectName = CStr(dlo.ColumnValues("ObjectName"))
         ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
 
         Key = CStr(dlo.ColumnValues("RevisionKey"))
@@ -139,7 +146,10 @@ Public Class DBSqlRevision
 
             .Add("ModuleKey", ModuleKey)
             .Add("SchemaName", SchemaName)
-            .Add("SchemaObjectName", SchemaObjectName)
+            If Not String.IsNullOrWhiteSpace(SchemaObjectName) Then
+                .Add("SchemaObjectName", SchemaObjectName)
+            End If
+
             .Add("ObjectName", ObjectName)
 
             .Add("ObjectFullName", ObjectFullName)

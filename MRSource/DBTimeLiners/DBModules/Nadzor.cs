@@ -24,7 +24,7 @@ namespace DBModules
             Zona(sch);
             tblNadzor(sch);
             sp_Test(sch);
-
+            sp_Test2(sch);
 
             InitialFill(sch);
         }
@@ -32,6 +32,14 @@ namespace DBModules
         {
             DBStoredProcedure sp = (DBStoredProcedure)sch.AddDBObject("sp_Test", new DBStoredProcedureDescriptor() { Parameters = "", Body = "SELECT Naziv = 1" },
                 new DBRevision(new DateTime(2016, 5, 18), 0, eDBRevisionType.Create, null, null));
+
+            return sp;
+        }
+
+        private DBStoredProcedure sp_Test2(IDBSchema sch)
+        {
+            DBStoredProcedure sp = (DBStoredProcedure)sch.AddDBObject("sp_Test2", new DBStoredProcedureDescriptor() { Parameters = "@ping nvarchar(max)", Body = "SELECT PING = @ping" },
+                new DBRevision(new DateTime(2016, 5, 19), 0, eDBRevisionType.Create, null, null));
 
             return sp;
         }
@@ -66,7 +74,7 @@ namespace DBModules
             t.AddField("ZonaID", new DBFieldDescriptor() { FieldType = eDBFieldType.Guid },
                 new DBRevision(rev));
 
-            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "ZonaID" }, "Nad.Zona", new List<string>() { "ID" }),
+            t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "ZonaID" }, DefaultSchemaName + ".Zona", new List<string>() { "ID" }),
                 new DBRevision(new DateTime(2016, 4, 26), 1, eDBRevisionType.Create));
 
             return t;
@@ -75,28 +83,28 @@ namespace DBModules
         private string InitialFillZona(IDBRevision sender, eDBType dBType)
         {
             
-            return @"
+            return string.Format(@"
 
-INSERT INTO NAD.Zona (ID, Naziv) 
+INSERT INTO {0}.Zona (ID, Naziv) 
 SELECT '37D047AF-E2DA-4E08-B25C-5B79EFA94927', 'No man s land' UNION ALL
 SELECT '56FAFD8E-A7A3-40C1-B394-694B3162A384', 'Mans land'
-";
+", DefaultSchemaName);
         }
 
         private string InitialFillNadzor(IDBRevision sender, eDBType dBType)
         {
-            return @"
-IF NOT EXISTS (SELECT TOP 1 1 FROM Nad.Nadzor WHERE ID = '57568560-B3CB-42B9-A018-45DAD9632519')
+            return string.Format(@"
+IF NOT EXISTS (SELECT TOP 1 1 FROM {0}.Nadzor WHERE ID = '57568560-B3CB-42B9-A018-45DAD9632519')
 BEGIN
-    INSERT INTO NAD.Nadzor (ID, Datum, ZonaID) 
+    INSERT INTO {0}.Nadzor (ID, Datum, ZonaID) 
     SELECT '57568560-B3CB-42B9-A018-45DAD9632519', getdate(), '37D047AF-E2DA-4E08-B25C-5B79EFA94927'
 END
-IF NOT EXISTS (SELECT TOP 1 1 FROM Nad.Nadzor WHERE ID = '559B02AB-AB0D-484B-8E7B-224E708F9E38')
+IF NOT EXISTS (SELECT TOP 1 1 FROM {0}.Nadzor WHERE ID = '559B02AB-AB0D-484B-8E7B-224E708F9E38')
 BEGIN
-    INSERT INTO NAD.Nadzor (ID, Datum, ZonaID) 
+    INSERT INTO {0}.Nadzor (ID, Datum, ZonaID) 
     SELECT '559B02AB-AB0D-484B-8E7B-224E708F9E38', DATEADD(d, -1, getdate()), '37D047AF-E2DA-4E08-B25C-5B79EFA94927'
 END
-";
+", DefaultSchemaName);
         }
 
         
