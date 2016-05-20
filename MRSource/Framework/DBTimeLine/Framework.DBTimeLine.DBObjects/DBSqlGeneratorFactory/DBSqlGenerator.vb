@@ -1,4 +1,6 @@
-﻿Public Class DBSqlGenerator
+﻿Imports System.Text.RegularExpressions
+
+Public Class DBSqlGenerator
     Implements IDBSqlGenerator
 
     Public Sub New()
@@ -89,4 +91,12 @@ END
 
         Return ret
     End Function
+
+    Public Function SplitSqlStatements(sqlScript As String) As IEnumerable(Of String) Implements IDBSqlGenerator.SplitSqlStatements
+        Dim keyWord As String = "GO"
+        Dim statements = Regex.Split(sqlScript, String.Format("^\s*{0}\s* ($ | \-\- .*$)", keyWord), RegexOptions.Multiline Or RegexOptions.IgnorePatternWhitespace Or RegexOptions.IgnoreCase)
+
+        Return statements.Where(Function(x) Not String.IsNullOrWhiteSpace(x)).[Select](Function(x) x.Trim(" "c, ControlChars.Cr, ControlChars.Lf))
+    End Function
+
 End Class

@@ -8,37 +8,71 @@ Imports MRFramework.MRPersisting.Factory
 Public Class DBTimeLiner
     Implements IDBChained
 
+#Region "Public properties"
     Public Property DBSqlGenerator As IDBSqlGenerator
-    'Public Property ActiveModules As New Dictionary(Of String, String)
     Public ReadOnly Property DBModules As New List(Of IDBModule)
     Public ReadOnly Property SourceDBRevisions As New Dictionary(Of String, IDBRevision)
-
     Public ReadOnly Property SourceDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
+    Public ReadOnly Property ExecutedDBRevisions As New Dictionary(Of String, IDBRevision)
+
+    Public ReadOnly Property NewDBSqlRevisions As List(Of DBSqlRevision)
+        Get
+            Return SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+        End Get
+    End Property
+
+    Private _NewDBRevisions As New List(Of IDBRevision)
+    Public ReadOnly Property NewDBRevisions As List(Of IDBRevision)
+        Get
+            _NewDBRevisions.Clear()
+            For Each sqlRev In NewDBSqlRevisions
+                _NewDBRevisions.Add(sqlRev.Parent)
+            Next
+
+            Return _NewDBRevisions
+        End Get
+    End Property
+
     Public Property RevisionBatchSize As Integer = 10
     Public Property Parent As IDBChained Implements IDBChained.Parent
     Public Property DBType As eDBType = eDBType.TransactSQL
+#End Region
 
+#Region "Constructor"
     Public Sub New(dBType As eDBType, dbSqlFactory As IDBSqlGeneratorFactory)
         Me.DBType = dBType
         DBSqlGenerator = dbSqlFactory.GetDBSqlGenerator(dBType)
     End Sub
+#End Region
 
-    Public Function AddModule(dBModule As IDBModule) As IDBModule
-        DBModules.Add(dBModule)
-        dBModule.Parent = Me
-        'If ActiveModules.ContainsKey(dBModule.ModuleKey) Then
-        '    dBModule.DefaultSchemaName = ActiveModules(dBModule.ModuleKey)
-        'End If
-
-        Return dBModule
-    End Function
+#Region "Events and event raisers"
 
     Public Event ModuleLoaded(sender As Object, e As ModuleLoadedEventArgs)
     Public Sub OnModuleLoaded(sender As Object, e As ModuleLoadedEventArgs)
         RaiseEvent ModuleLoaded(sender, e)
     End Sub
 
+    Public Event BatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
+    Public Sub OnBatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
+        RaiseEvent BatchExecuting(sender, ce)
+    End Sub
+
+    Public Event BatchExecuted(sender As Object, e As BatchExecutedEventArgs)
+    Public Sub OnBatchExecuted(sender As Object, e As BatchExecutedEventArgs)
+        RaiseEvent BatchExecuted(sender, e)
+    End Sub
+
+#End Region
+
+#Region "Public methods"
+
+    Public Function AddModule(dBModule As IDBModule) As IDBModule
+        DBModules.Add(dBModule)
+        dBModule.Parent = Me
+
+        Return dBModule
+    End Function
 
     Public Function LoadModulesFromDB() As List(Of IDBModule)
         Dim ret As New List(Of IDBModule)
@@ -109,31 +143,39 @@ ErrorMessage:
             For Each kv As KeyValuePair(Of Object, IMRDLO) In dicExecutedRevisions
                 Dim sqlRevision As New DBSqlRevision(kv.Value, Me)
                 ExecutedDBSqlRevisions.Add(sqlRevision)
+                ExecutedDBRevisions.Add(sqlRevision.Key, sqlRevision.Parent)
             Next
         End Using
     End Sub
 
+    Public Sub ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction)
+        Try
+            'Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+            Dim alwaysExecutingTasks As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType = eDBRevisionType.AlwaysExecuteTask).ToList
 
-    Private Shared Function SplitSqlStatements(sqlScript As String) As IEnumerable(Of String)
-        ' Split by "GO" statements
-        Dim statements = Regex.Split(sqlScript, "^\s*GO\s* ($ | \-\- .*$)", RegexOptions.Multiline Or RegexOptions.IgnorePatternWhitespace Or RegexOptions.IgnoreCase)
-
-        ' Remove empties, trim, and return
-        Return statements.Where(Function(x) Not String.IsNullOrWhiteSpace(x)).[Select](Function(x) x.Trim(" "c, ControlChars.Cr, ControlChars.Lf))
-    End Function
-
-    Public Event BatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
-    Public Sub OnBatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
-        RaiseEvent BatchExecuting(sender, ce)
+            'ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn, False)
+            ExecuteDBSqlRevisionBatches(NewDBSqlRevisions, cnn, trn, False)
+            ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn, True)
+        Catch ex As Exception
+            ' CONSIDER - do some logging
+        End Try
     End Sub
 
-    Public Event BatchExecuted(sender As Object, e As BatchExecutedEventArgs)
-    Public Sub OnBatchExecuted(sender As Object, e As BatchExecutedEventArgs)
-        RaiseEvent BatchExecuted(sender, e)
+    Public Sub CreateSystemObjects()
+        CreateSchema()
+        CreateRevisionTable()
+        CreateAlwaysExecutingTaskTable()
+        CreateModuleTable()
     End Sub
+
+#End Region
+
+#Region "Private methods"
+
+
 
     Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean)
-        Dim batches As List(Of String) = SplitSqlStatements(script).ToList
+        Dim batches As List(Of String) = DBSqlGenerator.SplitSqlStatements(script).ToList
 
         For Each batch As String In batches
             Dim ts1 As TimeSpan
@@ -237,18 +279,6 @@ ErrorMessage:
         Next
     End Sub
 
-    Public Sub ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction)
-        Try
-            Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
-            Dim alwaysExecutingTasks As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType = eDBRevisionType.AlwaysExecuteTask).ToList
-
-            ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn, False)
-            ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn, True)
-        Catch ex As Exception
-            ' CONSIDER - do some logging
-        End Try
-    End Sub
-
 #Region "System objects"
 
     Private Sub CreateAlwaysExecutingTaskTable()
@@ -326,12 +356,7 @@ ErrorMessage:
         End Using
     End Sub
 
-    Public Sub CreateSystemObjects()
-        CreateSchema()
-        CreateRevisionTable()
-        CreateAlwaysExecutingTaskTable()
-        CreateModuleTable()
-    End Sub
+#End Region
 
 #End Region
 

@@ -9,6 +9,7 @@ Imports Framework.Persisting.Interfaces
 Imports Framework.DBTimeLine.DBObjects
 
 Public Class Form1
+
     Public Class myPersister
         Inherits Persister
 
@@ -65,13 +66,9 @@ FROM
     Dim ts2 As TimeSpan
 
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        'Button1.PerformClick()
-
         MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
         PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
-
-        'persistingTests()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -84,88 +81,67 @@ FROM
         End If
     End Sub
 
-    Delegate Sub BatchExecutingCallback(sender As Object, e As BatchExecutingEventArgs)
+#Region "Writing rtb"
     Private Sub BatchExecutingHandler(sender As Object, e As BatchExecutingEventArgs)
-        If rtb1.InvokeRequired Then
-            Dim d As New BatchExecutingCallback(AddressOf BatchExecutingHandler)
-            rtb1.Invoke(d, sender, e)
-            Exit Sub
-        End If
-        rtb1.SelectionColor = Color.Yellow
-        rtb1.AppendText("-- EXECUTING..." & vbNewLine)
-        rtb1.SelectionColor = Color.LawnGreen
-        rtb1.AppendText(e.Sql & vbNewLine)
-        rtb1.ScrollToCaret()
+        WriteTextToRtb(rtb1, "-- EXECUTING..." & vbNewLine, Color.Yellow)
+        WriteTextToRtb(rtb1, e.Sql & vbNewLine, Color.LawnGreen)
     End Sub
 
-    Delegate Sub BatchExecutedCallback(sender As Object, e As BatchExecutedEventArgs)
     Private Sub BatchExecutedHandler(sender As Object, e As BatchExecutedEventArgs)
-        If rtb1.InvokeRequired Then
-            Dim d As New BatchExecutedCallback(AddressOf BatchExecutedHandler)
-            rtb1.Invoke(d, sender, e)
-            Exit Sub
-        End If
-
         If e.TotalRevisionsCount <> 0 Then
             backWorker.ReportProgress(CInt(e.ExecutedRevisionsCount / e.TotalRevisionsCount * 100))
         End If
 
         If e.ResultType = eBatchExecutionResultType.Failed Then
-            rtb1.SelectionColor = Color.Red
             If e.Exception IsNot Nothing Then
                 WriteException(e.Exception)
             Else
-                rtb1.AppendText("/* " & e.ErrorMessage.ToString() & "*/" & vbNewLine)
+                WriteTextToRtb(rtb1, "/* " & e.ErrorMessage.ToString() & "*/" & vbNewLine, Color.Green)
             End If
         End If
+        WriteTextToRtb(rtb1, "-- Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine, Color.Yellow)
 
-        rtb1.SelectionColor = Color.Yellow
-        rtb1.AppendText("-- Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine)
-        rtb1.ScrollToCaret()
     End Sub
 
-    Delegate Sub ModuleLoadedCallback(sender As Object, e As ModuleLoadedEventArgs)
     Private Sub ModuleLoadedHandler(sender As Object, e As ModuleLoadedEventArgs)
-        If rtb1.InvokeRequired Then
-            Dim d As New ModuleLoadedCallback(AddressOf ModuleLoadedHandler)
-            rtb1.Invoke(d, sender, e)
-            Exit Sub
-        End If
         If e.Message <> "" Then
-            rtb1.SelectionColor = Color.Yellow
-            rtb1.AppendText("/* " & e.Message.ToString() & "*/" & vbNewLine)
-
+            WriteTextToRtb(rtb1, "/* " & e.Message.ToString() & "*/" & vbNewLine, Color.Yellow)
         End If
         If e.ErrorMessage <> "" Then
-            rtb1.SelectionColor = Color.Red
-            rtb1.AppendText("/* " & e.ErrorMessage.ToString() & "*/" & vbNewLine)
+            WriteTextToRtb(rtb1, "/* " & e.ErrorMessage.ToString() & "*/" & vbNewLine, Color.Red)
         End If
     End Sub
 
-    Delegate Sub WriteExceptionCallback(e As Exception)
     Private Sub WriteException(e As Exception)
-        If rtb1.InvokeRequired Then
-            Dim d As New WriteExceptionCallback(AddressOf WriteException)
-            rtb1.Invoke(d, e)
-            Exit Sub
-        End If
-
         Dim ex As Exception = e
         While ex IsNot Nothing
-            rtb1.SelectionColor = Color.Red
-            rtb1.AppendText("/* " & ex.Message.ToString() & "*/" & vbNewLine)
+            WriteTextToRtb(rtb1, "/* " & ex.Message.ToString() & "*/" & vbNewLine, Color.Red)
             ex = ex.InnerException
         End While
     End Sub
 
+    Delegate Sub WriteTextToRtbCallback(rtb As RichTextBox, text As String, color As Color)
+    Private Sub WriteTextToRtb(rtb As RichTextBox, text As String, color As Color)
+        If rtb.InvokeRequired Then
+            Dim d As New WriteTextToRtbCallback(AddressOf WriteTextToRtb)
+            rtb.Invoke(d, rtb, text, color)
+            Exit Sub
+        End If
+
+        rtb.SelectionColor = color
+        rtb.AppendText(text)
+        rtb.ScrollToCaret()
+    End Sub
+#End Region
+
     Private Class CreateTimeLineDBInputs
         Public Property Commit As Boolean
     End Class
-
+    Private creator As DBTimeLiner = Nothing
     Private Sub CreateTimeLineDB(inputs As CreateTimeLineDBInputs)
         Dim per As New myPersister
 
-        Dim creator As New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
+        creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         AddHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
@@ -218,6 +194,9 @@ FROM
         RemoveHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
     End Sub
 
+#Region "Thread backworker"
+
+
     ' TODO - ovo odraditi reactive programmingom
     Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
@@ -236,9 +215,27 @@ FROM
         ProgressBar1.Value = 100
         ts2 = New TimeSpan(Now.Ticks)
 
-        rtb1.SelectionColor = Color.LightBlue
-        rtb1.AppendText("-- Total time: " & (ts2 - ts1).ToString() & vbNewLine & vbNewLine)
-        rtb1.ScrollToCaret()
+        WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine & vbNewLine, Color.LightBlue)
+        FillTreeView()
+    End Sub
+
+#End Region
+
+#Region "Extras"
+    Private Sub FillTreeView()
+        treeRevisions.Nodes.Clear()
+        Dim root As TreeNode = treeRevisions.Nodes.Add("root", "DBTimeLiner")
+        Dim modules As TreeNode = root.Nodes.Add("Modules")
+
+        For Each dBModule As IDBModule In creator.DBModules
+            Dim nodModule = modules.Nodes.Add(dBModule.ModuleKey)
+            For Each dBObject As IDBObject In dBModule.DBObjects.Values
+                nodModule.Nodes.Add(dBObject.GetFullName)
+                If TypeOf dBObject Is IDBParent Then
+
+                End If
+            Next
+        Next
     End Sub
 
     Private Sub zoomRtb_Scroll(sender As Object, e As EventArgs) Handles zoomRtb.Scroll
@@ -254,4 +251,7 @@ FROM
 
         rtb1.ZoomFactor = zoomFactor
     End Sub
+
+#End Region
+
 End Class

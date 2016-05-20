@@ -5,7 +5,7 @@
     Public Property Size As Integer = 0 Implements IDBFieldDescriptor.Size
     Public Property Precision As Integer = 0 Implements IDBFieldDescriptor.Precision
     Public Property IsIdentity As Boolean = False Implements IDBFieldDescriptor.IsIdentity
-    Public Property Nullable As Boolean Implements IDBFieldDescriptor.Nullable
+    Public Property Nullable As Boolean = True Implements IDBFieldDescriptor.Nullable
     Public Property DefaultValue As String Implements IDBFieldDescriptor.DefaultValue
 
     Public Overridable Function GetDBObjectInstance(Optional parent As IDBChained = Nothing) As IDBObject Implements IDBObjectDescriptor.GetDBObjectInstance

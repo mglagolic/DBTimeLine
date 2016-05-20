@@ -60,7 +60,10 @@ namespace DBModules
 
             t.AddField("Naziv", new DBFieldDescriptor() { FieldType = eDBFieldType.Nvarchar, Size = 256 }, 
                 new DBRevision(rev));
-                                    
+
+            t.AddField("Naziv2", new DBFieldDescriptor() { FieldType = eDBFieldType.Nvarchar, Size = 256 },
+                new DBRevision(rev));
+
             return t;
         }
         
@@ -76,6 +79,9 @@ namespace DBModules
             t.AddField("Datum", new DBFieldDescriptor() { FieldType = eDBFieldType.Datetime},
                 new DBRevision(rev));
             t.AddField("ZonaID", new DBFieldDescriptor() { FieldType = eDBFieldType.Guid },
+                new DBRevision(rev));
+
+            t.AddField("Zona2ID", new DBFieldDescriptor() { FieldType = eDBFieldType.Guid },
                 new DBRevision(rev));
 
             t.AddConstraint(new DBForeignKeyConstraintDescriptor(new List<string>() { "ZonaID" }, DefaultSchemaName + ".Zona", new List<string>() { "ID" }),
