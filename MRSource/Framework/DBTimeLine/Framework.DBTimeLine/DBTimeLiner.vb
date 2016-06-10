@@ -109,8 +109,6 @@ Public Class DBTimeLiner
                             Dim m As IDBModule = CType(Activator.CreateInstance(assemblyName, assemblyName & "." & className).Unwrap, IDBModule)
                             m.DefaultSchemaName = defaultSchemaName
 
-                            AddModule(m)
-
                             message = String.Format(
 "Successfully instanced module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2})." _
 , className, assemblyName, defaultSchemaName)
@@ -121,7 +119,9 @@ Public Class DBTimeLiner
 ErrorMessage: 
 {3}
 ", className, assemblyName, defaultSchemaName, ex.Message)
-                            Throw New Exception(errorMessage, ex)
+
+                            ret.Clear()
+                            Exit For
                         Finally
                             OnModuleLoaded(Me, New ModuleLoadedEventArgs() With {.ErrorMessage = errorMessage, .Message = message})
                         End Try
@@ -130,9 +130,10 @@ ErrorMessage:
             Catch ex As Exception
                 Throw
             End Try
-
         End Using
-
+        For Each m As IDBModule In ret
+            AddModule(m)
+        Next
         Return ret
     End Function
 
