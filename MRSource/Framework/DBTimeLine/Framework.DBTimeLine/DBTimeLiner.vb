@@ -198,9 +198,9 @@ ErrorMessage:
                         ts2 = New TimeSpan(Now.Ticks)
                     End If
                 Catch ex As SqlClient.SqlException
-                    If Debugger.IsAttached Then
-                        Debugger.Break()
-                    End If
+                    'If Debugger.IsAttached Then
+                    '    Debugger.Break()
+                    'End If
                     runtimeException = ex
                     errorMessage = ex.Message
                     Throw

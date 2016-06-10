@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MRFramework.MRCore", "Framework\Core\MRFramework.MRCore\MRFramework.MRCore.vbproj", "{84315872-44B6-4DA5-AEE6-33A96215294D}"
 EndProject
@@ -25,8 +25,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DBTimeLiners", "DBTimeLiner
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DBTimeLine", "DBTimeLine", "{F0CC2EF7-E524-4EA0-BC5B-3456DD897981}"
 EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DBCreator", "DBCreator\DBCreator.vbproj", "{823E6196-5212-43F3-9A54-C791A2D667B8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Persisting", "Framework\Persisting\Framework.Persisting\Framework.Persisting.csproj", "{1EC4A870-BCDF-4BB7-805B-8BD5F88DA6FB}"
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Framework.DBTimeLine.DBObjects", "Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj", "{986EF2D7-7F89-459F-B9EE-A9077CDCD147}"
@@ -34,6 +32,10 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Framework.DBTimeLine", "Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj", "{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBModules", "DBTimeLiners\DBModules\DBModules.csproj", "{91F233D0-86F9-4597-947E-D1FDF4FA17F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{C2FB5356-9C71-4338-8FCB-585CDCAA4F23}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "DBTimeLiner", "DBTimeLiner\DBTimeLiner.vbproj", "{823E6196-5212-43F3-9A54-C791A2D667B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,10 +67,6 @@ Global
 		{C62EDEF2-EA24-4B34-AB78-0E7CF5692F2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C62EDEF2-EA24-4B34-AB78-0E7CF5692F2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C62EDEF2-EA24-4B34-AB78-0E7CF5692F2E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{823E6196-5212-43F3-9A54-C791A2D667B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{823E6196-5212-43F3-9A54-C791A2D667B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{823E6196-5212-43F3-9A54-C791A2D667B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{823E6196-5212-43F3-9A54-C791A2D667B8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1EC4A870-BCDF-4BB7-805B-8BD5F88DA6FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{1EC4A870-BCDF-4BB7-805B-8BD5F88DA6FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1EC4A870-BCDF-4BB7-805B-8BD5F88DA6FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -85,6 +83,10 @@ Global
 		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{823E6196-5212-43F3-9A54-C791A2D667B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{823E6196-5212-43F3-9A54-C791A2D667B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{823E6196-5212-43F3-9A54-C791A2D667B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{823E6196-5212-43F3-9A54-C791A2D667B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -103,5 +105,6 @@ Global
 		{986EF2D7-7F89-459F-B9EE-A9077CDCD147} = {F0CC2EF7-E524-4EA0-BC5B-3456DD897981}
 		{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5} = {F0CC2EF7-E524-4EA0-BC5B-3456DD897981}
 		{91F233D0-86F9-4597-947E-D1FDF4FA17F4} = {51C780B9-61D2-47DF-9B4D-1567330FC952}
+		{823E6196-5212-43F3-9A54-C791A2D667B8} = {C2FB5356-9C71-4338-8FCB-585CDCAA4F23}
 	EndGlobalSection
 EndGlobal
