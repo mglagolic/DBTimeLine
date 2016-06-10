@@ -113,6 +113,7 @@ Public Class DBTimeLiner
 "Successfully instanced module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2})." _
 , className, assemblyName, defaultSchemaName)
 
+                            ret.Add(m)
                         Catch ex As Exception
                             errorMessage = String.Format(
 "Error instancing module from database config (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}), 
