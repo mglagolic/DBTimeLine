@@ -8,7 +8,7 @@ Imports System.ComponentModel
 Imports Framework.Persisting.Interfaces
 Imports Framework.DBTimeLine.DBObjects
 
-Public Class Form1
+Public Class Form2
 
     Public Class myPersister
         Inherits Persister
@@ -69,7 +69,6 @@ FROM
         MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
         MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
         PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
-
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
@@ -138,9 +137,7 @@ FROM
     Private Class CreateTimeLineDBInputs
         Public Property Commit As Boolean
     End Class
-
     Private creator As DBTimeLiner = Nothing
-
     Private Sub CreateTimeLineDB(inputs As CreateTimeLineDBInputs)
         Dim per As New myPersister
 
@@ -151,6 +148,7 @@ FROM
 
         creator.CreateSystemObjects()
 
+        ' TODO - popraviti always execute tasks
         ' TODO - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
         '      - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
         ' TODO - isprogramirati podrsku za triggere
@@ -177,8 +175,8 @@ FROM
 
                 creator.ExecuteDBSqlRevisions(cnn, trn)
 
-                'Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
-                'newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+                Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+                newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
@@ -198,14 +196,15 @@ FROM
     End Sub
 
 #Region "Thread backworker"
-
-
     ' TODO - ovo odraditi reactive programmingom
     Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
         Try
             CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
         Catch ex As Exception
+            If Debugger.IsAttached Then
+                Debugger.Break()
+            End If
             WriteException(ex)
         End Try
     End Sub
@@ -254,8 +253,6 @@ FROM
 
         rtb1.ZoomFactor = zoomFactor
     End Sub
-
-
 
 #End Region
 

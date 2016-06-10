@@ -17,9 +17,11 @@ namespace DBModules
 
         public override void CreateTimeLine()
         {
-            var rev = new DBRevision(System.DateTime.Now.Date, 0, eDBRevisionType.Create);
+            var rev = new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.Create);
 
             IDBSchema sch = AddSchema(DefaultSchemaName, new DBSchemaDescriptor());
+            if (DefaultSchemaName != "dbo") sch.AddRevision(new DBRevision(rev));
+
             Drzava(sch);
             Grad(sch);
             Always(sch);
@@ -27,16 +29,14 @@ namespace DBModules
 
         private IDBTable Drzava(IDBSchema sch)
         {
-            var rev = new DBRevision(System.DateTime.Now.Date, 0, eDBRevisionType.Create);
+            var rev = new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.Create);
             var ret = DBMacros.AddTableIDNaziv("Drzava", sch, rev);
 
             return ret;
         }
         private IDBTable Grad(IDBSchema sch)
         {
-            var rev = new DBRevision(System.DateTime.Now.Date, 0, eDBRevisionType.Create);
-            var rev1 = new DBRevision(System.DateTime.Now.Date, 1, eDBRevisionType.Create);
-            var rev2 = new DBRevision(System.DateTime.Now.Date, 2, eDBRevisionType.Create);
+            var rev = new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.Create);
 
             var ret = DBMacros.AddDBTableID("Grad", sch, rev);
 
@@ -44,19 +44,19 @@ namespace DBModules
                 new DBRevision(rev));
 
             DBMacros.AddForeignKeyFieldID("DrzavaID", true, ret, sch.Name + ".Drzava",
-                new DBRevision(rev2));
+                new DBRevision(new DateTime(2016, 6, 10), 1, eDBRevisionType.Create));
 
             return ret;
         }
         
         private void Always(IDBSchema sch)
         {
-            sch.AddRevision(new DBRevision(System.DateTime.Now.Date, 0, eDBRevisionType.AlwaysExecuteTask, AlwaysExececuteTask1));
+            sch.AddRevision(new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.AlwaysExecuteTask, UpdateStatistics));
         }
 
-        private string AlwaysExececuteTask1(IDBRevision sender, eDBType dBType)
+        private string UpdateStatistics(IDBRevision sender, eDBType dBType)
         {
-            return "SELECT AlwaysExececuteTask = 1";
+            return "exec sp_updatestats";
         }
     }
 }
