@@ -1,6 +1,5 @@
 ﻿Imports System.Data.Common
 Imports System.Text
-Imports System.Text.RegularExpressions
 Imports MRFramework
 Imports MRFramework.MRPersisting.Core
 Imports MRFramework.MRPersisting.Factory
@@ -86,20 +85,27 @@ Public Class DBTimeLiner
                 Using per As New DBModulePersister
                     per.Where = "Active = 1"
                     per.CNN = cnn
+
                     Dim res As Dictionary(Of Object, IMRDLO) = per.GetData()
                     For Each key As Object In res.Keys
                         Dim errorMessage As String = ""
                         Dim message As String = ""
                         Dim className As String = ""
+                        Dim assemblyFullName As String = "DBModules.dll"
                         Dim assemblyName As String = "DBModules"
+
                         Dim defaultSchemaName As String = ""
                         Try
                             className = CType(res(key).ColumnValues("ClassName"), String)
                             If Not IsDBNull(res(key).ColumnValues("AssemblyName")) Then
-                                assemblyName = CType(res(key).ColumnValues("AssemblyName"), String)
+                                assemblyFullName = CType(res(key).ColumnValues("AssemblyName"), String)
                             End If
                             defaultSchemaName = CStr(res(key).ColumnValues("DefaultSchemaName"))
-
+                            Dim ass As Reflection.Assembly
+                            assemblyName = assemblyFullName.Split("."c)(0)
+                            If Not assemblyName = "DBModules" Then
+                                ass = Reflection.Assembly.LoadFrom(IO.Path.Combine(IO.Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location), assemblyFullName))
+                            End If
                             Dim m As IDBModule = CType(Activator.CreateInstance(assemblyName, assemblyName & "." & className).Unwrap, IDBModule)
                             m.DefaultSchemaName = defaultSchemaName
 
@@ -171,8 +177,6 @@ ErrorMessage:
 #End Region
 
 #Region "Private methods"
-
-
 
     Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean)
         Dim batches As List(Of String) = DBSqlGenerator.SplitSqlStatements(script).ToList

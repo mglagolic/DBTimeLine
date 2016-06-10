@@ -33,6 +33,8 @@
                     ret = "DATETIME"
                 Case eDBFieldType.Decimal
                     ret = "DECIMAL(" & .Size.ToString & ", " & .Precision.ToString & ")"
+                Case eDBFieldType.Boolean
+                    ret = "BIT"
                 Case Else
                     Throw New NotSupportedException("Unsupported eDBFieldType.")
             End Select

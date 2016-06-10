@@ -4,4 +4,5 @@
     [Decimal] = 2
     Datetime = 3
     [Integer] = 4
+    [Boolean] = 5
 End Enum

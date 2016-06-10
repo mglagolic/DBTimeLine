@@ -22,11 +22,11 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim TreeNode11 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Zona")
-        Dim TreeNode12 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Nadzor")
-        Dim TreeNode13 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ND (Nadzor)", New System.Windows.Forms.TreeNode() {TreeNode11, TreeNode12})
-        Dim TreeNode14 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ND", New System.Windows.Forms.TreeNode() {TreeNode13})
-        Dim TreeNode15 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLine", New System.Windows.Forms.TreeNode() {TreeNode14})
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Zona")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Nadzor")
+        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ND (Nadzor)", New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2})
+        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ND", New System.Windows.Forms.TreeNode() {TreeNode3})
+        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLine", New System.Windows.Forms.TreeNode() {TreeNode4})
         Me.rtb1 = New System.Windows.Forms.RichTextBox()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.backWorker = New System.ComponentModel.BackgroundWorker()
@@ -69,7 +69,7 @@ Partial Class Form1
         Me.rtb1.ReadOnly = True
         Me.rtb1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
         Me.rtb1.ShowSelectionMargin = True
-        Me.rtb1.Size = New System.Drawing.Size(838, 284)
+        Me.rtb1.Size = New System.Drawing.Size(818, 264)
         Me.rtb1.TabIndex = 0
         Me.rtb1.Text = "bok" & Global.Microsoft.VisualBasic.ChrW(10) & "kaj" & Global.Microsoft.VisualBasic.ChrW(10) & "ima"
         Me.rtb1.WordWrap = False
@@ -77,7 +77,7 @@ Partial Class Form1
         'Button1
         '
         Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(1099, 67)
+        Me.Button1.Location = New System.Drawing.Point(1079, 67)
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(75, 23)
         Me.Button1.TabIndex = 1
@@ -95,7 +95,7 @@ Partial Class Form1
         Me.ProgressBar1.Dock = System.Windows.Forms.DockStyle.Top
         Me.ProgressBar1.Location = New System.Drawing.Point(0, 0)
         Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(1174, 36)
+        Me.ProgressBar1.Size = New System.Drawing.Size(1154, 36)
         Me.ProgressBar1.TabIndex = 2
         '
         'zoomRtb
@@ -103,12 +103,12 @@ Partial Class Form1
         Me.zoomRtb.AutoSize = False
         Me.zoomRtb.Dock = System.Windows.Forms.DockStyle.Right
         Me.zoomRtb.LargeChange = 10
-        Me.zoomRtb.Location = New System.Drawing.Point(818, 0)
+        Me.zoomRtb.Location = New System.Drawing.Point(798, 0)
         Me.zoomRtb.Maximum = 50
         Me.zoomRtb.Minimum = 10
         Me.zoomRtb.Name = "zoomRtb"
         Me.zoomRtb.Orientation = System.Windows.Forms.Orientation.Vertical
-        Me.zoomRtb.Size = New System.Drawing.Size(20, 284)
+        Me.zoomRtb.Size = New System.Drawing.Size(20, 264)
         Me.zoomRtb.SmallChange = 5
         Me.zoomRtb.TabIndex = 4
         Me.zoomRtb.TickFrequency = 5
@@ -120,9 +120,9 @@ Partial Class Form1
         Me.pnlRtb.Controls.Add(Me.zoomRtb)
         Me.pnlRtb.Controls.Add(Me.rtb1)
         Me.pnlRtb.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlRtb.Location = New System.Drawing.Point(0, 249)
+        Me.pnlRtb.Location = New System.Drawing.Point(10, 259)
         Me.pnlRtb.Name = "pnlRtb"
-        Me.pnlRtb.Size = New System.Drawing.Size(838, 284)
+        Me.pnlRtb.Size = New System.Drawing.Size(818, 264)
         Me.pnlRtb.TabIndex = 5
         '
         'chxCommit
@@ -139,9 +139,9 @@ Partial Class Form1
         '
         Me.Panel2.Controls.Add(Me.GroupBox1)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Right
-        Me.Panel2.Location = New System.Drawing.Point(838, 96)
+        Me.Panel2.Location = New System.Drawing.Point(828, 106)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(336, 437)
+        Me.Panel2.Size = New System.Drawing.Size(336, 417)
         Me.Panel2.TabIndex = 7
         '
         'GroupBox1
@@ -150,7 +150,7 @@ Partial Class Form1
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(336, 437)
+        Me.GroupBox1.Size = New System.Drawing.Size(336, 417)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Revisions"
@@ -160,18 +160,18 @@ Partial Class Form1
         Me.treeRevisions.Dock = System.Windows.Forms.DockStyle.Fill
         Me.treeRevisions.Location = New System.Drawing.Point(3, 16)
         Me.treeRevisions.Name = "treeRevisions"
-        TreeNode11.Name = "nodZona"
-        TreeNode11.Text = "Zona"
-        TreeNode12.Name = "Node4"
-        TreeNode12.Text = "Nadzor"
-        TreeNode13.Name = "ndNadzor"
-        TreeNode13.Text = "ND (Nadzor)"
-        TreeNode14.Name = "ndND"
-        TreeNode14.Text = "ND"
-        TreeNode15.Name = "Node0"
-        TreeNode15.Text = "DBTimeLine"
-        Me.treeRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode15})
-        Me.treeRevisions.Size = New System.Drawing.Size(330, 418)
+        TreeNode1.Name = "nodZona"
+        TreeNode1.Text = "Zona"
+        TreeNode2.Name = "Node4"
+        TreeNode2.Text = "Nadzor"
+        TreeNode3.Name = "ndNadzor"
+        TreeNode3.Text = "ND (Nadzor)"
+        TreeNode4.Name = "ndND"
+        TreeNode4.Text = "ND"
+        TreeNode5.Name = "Node0"
+        TreeNode5.Text = "DBTimeLine"
+        Me.treeRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode5})
+        Me.treeRevisions.Size = New System.Drawing.Size(330, 398)
         Me.treeRevisions.TabIndex = 0
         '
         'Panel3
@@ -180,26 +180,26 @@ Partial Class Form1
         Me.Panel3.Controls.Add(Me.chxCommit)
         Me.Panel3.Controls.Add(Me.ProgressBar1)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel3.Location = New System.Drawing.Point(0, 0)
+        Me.Panel3.Location = New System.Drawing.Point(10, 10)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(1174, 96)
+        Me.Panel3.Size = New System.Drawing.Size(1154, 96)
         Me.Panel3.TabIndex = 8
         '
         'Panel5
         '
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel5.Location = New System.Drawing.Point(0, 533)
+        Me.Panel5.Location = New System.Drawing.Point(10, 523)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(1174, 36)
+        Me.Panel5.Size = New System.Drawing.Size(1154, 36)
         Me.Panel5.TabIndex = 10
         '
         'gbModules
         '
         Me.gbModules.Controls.Add(Me.dgvModules)
         Me.gbModules.Dock = System.Windows.Forms.DockStyle.Top
-        Me.gbModules.Location = New System.Drawing.Point(0, 96)
+        Me.gbModules.Location = New System.Drawing.Point(10, 106)
         Me.gbModules.Name = "gbModules"
-        Me.gbModules.Size = New System.Drawing.Size(838, 153)
+        Me.gbModules.Size = New System.Drawing.Size(818, 153)
         Me.gbModules.TabIndex = 1
         Me.gbModules.TabStop = False
         Me.gbModules.Text = "Modules"
@@ -214,7 +214,7 @@ Partial Class Form1
         Me.dgvModules.Location = New System.Drawing.Point(3, 16)
         Me.dgvModules.Name = "dgvModules"
         Me.dgvModules.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.dgvModules.Size = New System.Drawing.Size(832, 134)
+        Me.dgvModules.Size = New System.Drawing.Size(812, 134)
         Me.dgvModules.TabIndex = 0
         '
         'cName
@@ -267,6 +267,7 @@ Partial Class Form1
         Me.Controls.Add(Me.Panel3)
         Me.Controls.Add(Me.Panel5)
         Me.Name = "Form1"
+        Me.Padding = New System.Windows.Forms.Padding(10)
         Me.Text = "Form1"
         CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlRtb.ResumeLayout(False)

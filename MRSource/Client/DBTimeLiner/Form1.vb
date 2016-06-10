@@ -4,63 +4,9 @@ Imports Framework.Persisting
 Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBTimeLine
 Imports System.ComponentModel
-
-Imports Framework.Persisting.Interfaces
 Imports Framework.DBTimeLine.DBObjects
 
 Public Class Form1
-
-    Public Class myPersister
-        Inherits Persister
-
-        Protected Overrides ReadOnly Property DataBaseTableName As String
-            Get
-                Return "Place.Table1"
-            End Get
-        End Property
-
-        Protected Overrides ReadOnly Property Sql As String
-            Get
-                Return _
-"SELECT
-	t1.ID,
-    Table2Naziv = t2.Naziv,
-    Table2ID = t2.TableKey
-FROM
-	Place.Table1 t1
-	LEFT JOIN Place.Table2 t2 on t1.Table2Key = t2.TableKey"
-            End Get
-        End Property
-
-    End Class
-
-    Private Sub persistingTests()
-
-        Dim per As IPersister = New myPersister
-        per.CNN = MRC.GetConnection
-        per.Where = "t1.Broj = 1"
-        per.OrderItems.Add(New Implementation.OrderItem() With {.SqlName = "t1.Broj"})
-        per.OrderItems.Add(New Implementation.OrderItem() With {.SqlName = "t1.id"})
-        per.CNN.Open()
-        Dim ts1 = New TimeSpan(Now.Ticks)
-        Dim data = per.GetData(Nothing)
-        Dim ts2 = New TimeSpan(Now.Ticks)
-        Dim dataPage = per.GetData(Nothing, 20)
-        Dim ts3 = New TimeSpan(Now.Ticks)
-        per.PageSize = 30000
-        Dim totalPages As Integer = CInt(data.Count / per.PageSize)
-        For i As Integer = 1 To totalPages
-            per.GetData(Nothing, i)
-        Next
-        Dim ts4 = New TimeSpan(Now.Ticks)
-
-        Console.WriteLine((ts2 - ts1).ToString & ":" & data.Count.ToString())
-        Console.WriteLine((ts3 - ts2).ToString & ":" & dataPage.Count.ToString())
-        Console.WriteLine((ts4 - ts2).ToString & " ukupno stranica:" & totalPages.ToString())
-        per.CNN.Close()
-        Dim o = data.Single(Function(itm) CType(itm.ColumnValues("ID"), Guid) = New Guid("3aca7383-5ae4-4a17-b9b0-000a761a505c"))
-
-    End Sub
 
     Dim ts1 As TimeSpan
     Dim ts2 As TimeSpan
@@ -151,16 +97,17 @@ FROM
 
         creator.CreateSystemObjects()
 
-        ' TODO - module dodavati reflectionom citajuci dll-ove iz app foldera. dodati property dll name u module tablicu ili slicno
-        '      - smisao je da samo postojanje dll-a odradjuje posao, fleg active ga moze ukljuciti ili iskljuciti
+        ' TODO - omoguciti samo dohvat novih revizija, bez executea
+        ' TODO - prikazati module u gridu
+        ' TODO - omoguciti programiranje novih eFieldTypeova, maknuti enum eFieldType
         ' TODO - isprogramirati podrsku za triggere
-        ' TODO - odraditi code generation adventureWorks baze
         ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
         ' TODO - u novom persisteru maknuti implementation u posebni dll
         ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
         ' TODO - isprogramirati podršku za Role
 
         ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
+        ' CONSIDER - odraditi code generation adventureWorks baze
 
         creator.LoadModulesFromDB()
 
@@ -206,7 +153,11 @@ FROM
         Try
             CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
         Catch ex As Exception
-            WriteException(ex)
+            'WriteException(ex)
+            If Debugger.IsAttached Then
+                Debugger.Break()
+            End If
+            Throw
         End Try
     End Sub
 
@@ -228,16 +179,20 @@ FROM
     Private Sub FillTreeView()
         treeRevisions.Nodes.Clear()
         Dim root As TreeNode = treeRevisions.Nodes.Add("root", "DBTimeLiner")
-        Dim modules As TreeNode = root.Nodes.Add("Modules")
 
         For Each dBModule As IDBModule In creator.DBModules
-            Dim nodModule = modules.Nodes.Add(dBModule.ModuleKey)
-            For Each dBObject As IDBObject In dBModule.DBObjects.Values
-                nodModule.Nodes.Add(dBObject.GetFullName)
-                If TypeOf dBObject Is IDBParent Then
+            Dim nodModule = root.Nodes.Add(dBModule.ModuleKey & " (Module)")
 
-                End If
-            Next
+            FillTreeViewRecursive(nodModule, dBModule)
+        Next
+    End Sub
+
+    Private Sub FillTreeViewRecursive(currentNode As TreeNode, dbParent As IDBParent)
+        For Each dBObject As IDBObject In dbParent.DBObjects.Values
+            Dim treeNode = currentNode.Nodes.Add(dBObject.GetFullName & " (" & dBObject.ObjectTypeName & ")")
+            If TypeOf dBObject Is IDBParent Then
+                FillTreeViewRecursive(treeNode, dBObject)
+            End If
         Next
     End Sub
 
@@ -254,8 +209,6 @@ FROM
 
         rtb1.ZoomFactor = zoomFactor
     End Sub
-
-
 
 #End Region
 

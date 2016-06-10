@@ -33,6 +33,10 @@ Public Class DBMacros
 
 #Region "Fields"
 #Region "Descriptors"
+    Public Shared Function DBFieldActiveDescriptor() As DBFieldDescriptor
+        Return New DBFieldDescriptor() With {.FieldType = eDBFieldType.Boolean, .Nullable = True}
+    End Function
+
     Public Shared Function DBFieldIDDescriptor(nullable As Boolean) As DBFieldDescriptor
         Return New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid, .Nullable = nullable}
     End Function
@@ -43,17 +47,10 @@ Public Class DBMacros
 
 #End Region
 
-    Public Shared Function AddFieldID(fieldName As String, nullable As Boolean, table As IDBTable, rev As DBRevision)
-        Dim ret As IDBField
-
-        ret = table.AddField(fieldName, DBFieldIDDescriptor(nullable),
-                       New DBRevision(rev))
-        Return ret
-    End Function
-
     Public Shared Function AddForeignKeyFieldID(fieldName As String, nullable As Boolean, table As IDBTable, pkFullTableName As String, rev As DBRevision)
         Dim ret As IDBField
-        ret = AddFieldID(fieldName, nullable, table, rev)
+        ret = table.AddField(fieldName, DBFieldIDDescriptor(nullable),
+                       New DBRevision(rev))
 
         Dim ls As New List(Of String)(New String() {fieldName})
 
