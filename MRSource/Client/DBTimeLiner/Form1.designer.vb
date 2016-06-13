@@ -69,7 +69,7 @@ Partial Class Form1
         Me.rtb1.ReadOnly = True
         Me.rtb1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedBoth
         Me.rtb1.ShowSelectionMargin = True
-        Me.rtb1.Size = New System.Drawing.Size(818, 264)
+        Me.rtb1.Size = New System.Drawing.Size(818, 347)
         Me.rtb1.TabIndex = 0
         Me.rtb1.Text = "bok" & Global.Microsoft.VisualBasic.ChrW(10) & "kaj" & Global.Microsoft.VisualBasic.ChrW(10) & "ima"
         Me.rtb1.WordWrap = False
@@ -108,7 +108,7 @@ Partial Class Form1
         Me.zoomRtb.Minimum = 10
         Me.zoomRtb.Name = "zoomRtb"
         Me.zoomRtb.Orientation = System.Windows.Forms.Orientation.Vertical
-        Me.zoomRtb.Size = New System.Drawing.Size(20, 264)
+        Me.zoomRtb.Size = New System.Drawing.Size(20, 347)
         Me.zoomRtb.SmallChange = 5
         Me.zoomRtb.TabIndex = 4
         Me.zoomRtb.TickFrequency = 5
@@ -122,7 +122,7 @@ Partial Class Form1
         Me.pnlRtb.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlRtb.Location = New System.Drawing.Point(10, 259)
         Me.pnlRtb.Name = "pnlRtb"
-        Me.pnlRtb.Size = New System.Drawing.Size(818, 264)
+        Me.pnlRtb.Size = New System.Drawing.Size(818, 347)
         Me.pnlRtb.TabIndex = 5
         '
         'chxCommit
@@ -141,7 +141,7 @@ Partial Class Form1
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Right
         Me.Panel2.Location = New System.Drawing.Point(828, 106)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(336, 417)
+        Me.Panel2.Size = New System.Drawing.Size(336, 500)
         Me.Panel2.TabIndex = 7
         '
         'GroupBox1
@@ -150,7 +150,7 @@ Partial Class Form1
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(336, 417)
+        Me.GroupBox1.Size = New System.Drawing.Size(336, 500)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Revisions"
@@ -171,7 +171,7 @@ Partial Class Form1
         TreeNode5.Name = "Node0"
         TreeNode5.Text = "DBTimeLine"
         Me.treeRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode5})
-        Me.treeRevisions.Size = New System.Drawing.Size(330, 398)
+        Me.treeRevisions.Size = New System.Drawing.Size(330, 481)
         Me.treeRevisions.TabIndex = 0
         '
         'Panel3
@@ -188,7 +188,7 @@ Partial Class Form1
         'Panel5
         '
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel5.Location = New System.Drawing.Point(10, 523)
+        Me.Panel5.Location = New System.Drawing.Point(10, 606)
         Me.Panel5.Name = "Panel5"
         Me.Panel5.Size = New System.Drawing.Size(1154, 36)
         Me.Panel5.TabIndex = 10
@@ -260,7 +260,7 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.ClientSize = New System.Drawing.Size(1174, 569)
+        Me.ClientSize = New System.Drawing.Size(1174, 652)
         Me.Controls.Add(Me.pnlRtb)
         Me.Controls.Add(Me.gbModules)
         Me.Controls.Add(Me.Panel2)

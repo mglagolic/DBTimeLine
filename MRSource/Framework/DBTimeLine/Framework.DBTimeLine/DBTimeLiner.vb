@@ -17,7 +17,7 @@ Public Class DBTimeLiner
 
     Public ReadOnly Property NewDBSqlRevisions As List(Of DBSqlRevision)
         Get
-            Return SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+            Return SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
         End Get
     End Property
 
@@ -60,6 +60,11 @@ Public Class DBTimeLiner
     Public Event BatchExecuted(sender As Object, e As BatchExecutedEventArgs)
     Public Sub OnBatchExecuted(sender As Object, e As BatchExecutedEventArgs)
         RaiseEvent BatchExecuted(sender, e)
+    End Sub
+
+    Public Event ProgressReported(sender As Object, e As ProgressReportedEventArgs)
+    Public Sub OnProgressReported(sender As Object, e As ProgressReportedEventArgs)
+        RaiseEvent ProgressReported(sender, e)
     End Sub
 
 #End Region
@@ -223,8 +228,6 @@ ErrorMessage:
                                             .Sql = batch,
                                             .Duration = ts2 - ts1,
                                             .ResultType = CType(IIf(errorMessage = "", eBatchExecutionResultType.Success, eBatchExecutionResultType.Failed), eBatchExecutionResultType),
-                                            .ExecutedRevisionsCount = 0,
-                                            .TotalRevisionsCount = 0,
                                             .ErrorMessage = errorMessage,
                                             .Exception = runtimeException
                                         })
@@ -236,7 +239,6 @@ ErrorMessage:
 
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
         ExecuteScriptBatches(script, cnn, trn, False)
-
         Dim dlos As New List(Of IMRDLO)
         revisions.ForEach(
                             Sub(rev)
@@ -281,6 +283,11 @@ ErrorMessage:
                 ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn, alwaysExecutingTask)
                 sqlBatchScriptBuilder.Clear()
                 newExecutedRevisions.Clear()
+                Dim msg As String = "New revisions"
+                If alwaysExecutingTask Then
+                    msg = "Always executing tasks"
+                End If
+                OnProgressReported(Me, New ProgressReportedEventArgs() With {.CurrentStep = i + 1, .TotalSteps = notExecutedRevisions.Count, .Message = msg})
             End If
         Next
     End Sub

@@ -35,9 +35,9 @@ Public Class Form1
     End Sub
 
     Private Sub BatchExecutedHandler(sender As Object, e As BatchExecutedEventArgs)
-        If e.TotalRevisionsCount <> 0 Then
-            backWorker.ReportProgress(CInt(e.ExecutedRevisionsCount / e.TotalRevisionsCount * 100))
-        End If
+        'If e.TotalRevisionsCount <> 0 Then
+        '    backWorker.ReportProgress(CInt(e.ExecutedRevisionsCount / e.TotalRevisionsCount * 100))
+        'End If
 
         If e.ResultType = eBatchExecutionResultType.Failed Then
             If e.Exception IsNot Nothing Then
@@ -48,6 +48,12 @@ Public Class Form1
         End If
         WriteTextToRtb(rtb1, "-- Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine, Color.Yellow)
 
+    End Sub
+
+    Private Sub ProgressReportedHandler(sender As Object, e As ProgressReportedEventArgs)
+        If e.TotalSteps <> 0 Then
+            backWorker.ReportProgress(CInt(e.CurrentStep / e.TotalSteps * 100))
+        End If
     End Sub
 
     Private Sub ModuleLoadedHandler(sender As Object, e As ModuleLoadedEventArgs)
@@ -94,6 +100,7 @@ Public Class Form1
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         AddHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
+        AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
 
         creator.CreateSystemObjects()
 
@@ -142,6 +149,7 @@ Public Class Form1
         RemoveHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         RemoveHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
+        RemoveHandler creator.ProgressReported, AddressOf ProgressReportedHandler
     End Sub
 
 #Region "Thread backworker"
