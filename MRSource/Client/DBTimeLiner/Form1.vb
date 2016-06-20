@@ -5,6 +5,7 @@ Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBTimeLine
 Imports System.ComponentModel
 Imports Framework.DBTimeLine.DBObjects
+Imports Customizations.Core.EventArgs
 
 Public Class Form1
 
@@ -18,21 +19,6 @@ Public Class Form1
 
     End Sub
 
-<<<<<<< HEAD
-=======
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ts1 = New TimeSpan(Now.Ticks)
-        rtb1.Text = ""
-        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
-
-        If backWorker.IsBusy Then
-            backWorker.CancelAsync()
-        Else
-            backWorker.RunWorkerAsync(New CreateTimeLineDBInputs() With {.Commit = chxCommit.Checked})
-        End If
-    End Sub
-
->>>>>>> 436cc56d573645d037260128181d0217886def4b
 #Region "Writing rtb"
     Private Sub BatchExecutingHandler(sender As Object, e As BatchExecutingEventArgs)
         WriteTextToRtb(rtb1, "-- EXECUTING..." & vbNewLine, Color.Yellow)
@@ -40,10 +26,6 @@ Public Class Form1
     End Sub
 
     Private Sub BatchExecutedHandler(sender As Object, e As BatchExecutedEventArgs)
-        'If e.TotalRevisionsCount <> 0 Then
-        '    backWorker.ReportProgress(CInt(e.ExecutedRevisionsCount / e.TotalRevisionsCount * 100))
-        'End If
-
         If e.ResultType = eBatchExecutionResultType.Failed Then
             If e.Exception IsNot Nothing Then
                 WriteException(e.Exception)
@@ -62,6 +44,15 @@ Public Class Form1
     End Sub
 
     Private Sub ModuleLoadedHandler(sender As Object, e As ModuleLoadedEventArgs)
+        If e.Message <> "" Then
+            WriteTextToRtb(rtb1, "/* " & e.Message.ToString() & "*/" & vbNewLine, Color.Yellow)
+        End If
+        If e.ErrorMessage <> "" Then
+            WriteTextToRtb(rtb1, "/* " & e.ErrorMessage.ToString() & "*/" & vbNewLine, Color.Red)
+        End If
+    End Sub
+
+    Private Sub CustomizationLoadedHandler(sender As Object, e As CustomizationLoadedEventArgs)
         If e.Message <> "" Then
             WriteTextToRtb(rtb1, "/* " & e.Message.ToString() & "*/" & vbNewLine, Color.Yellow)
         End If
@@ -109,15 +100,17 @@ Public Class Form1
     End Class
 
     Private creator As DBTimeLiner = Nothing
+    Private customization As Customizations.Core.Loader = Nothing
 
     Private Sub CreateTimeLineDB(inputs As CreateTimeLineDBInputs)
-        'Dim per As New myPersister
-
         creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
+        customization = New Customizations.Core.Loader()
+
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         AddHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
         AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
+        AddHandler customization.CustomizationLoaded, AddressOf CustomizationLoadedHandler
 
         creator.CreateSystemObjects()
 
@@ -134,11 +127,12 @@ Public Class Form1
         ' CONSIDER - odraditi code generation adventureWorks baze
 
         creator.LoadModulesFromDB()
-        Dim customization As New Customizations.Core.Loader()
         customization.Load()
+
         For i As Integer = 0 To creator.DBModules.Count - 1
             creator.DBModules(i).LoadRevisions()
         Next
+        ' TODO - ovdje pozivati customizere i njihove metode "CreateTimeLine"
 
         Using cnn As Common.DbConnection = MRC.GetConnection()
             cnn.Open()
@@ -173,25 +167,9 @@ Public Class Form1
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         RemoveHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
         RemoveHandler creator.ProgressReported, AddressOf ProgressReportedHandler
+        RemoveHandler customization.CustomizationLoaded, AddressOf CustomizationLoadedHandler
     End Sub
 
-#Region "Thread backworker"
-<<<<<<< HEAD
-=======
-    ' TODO - ovo odraditi reactive programmingom
-    Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
-        backWorker.ReportProgress(0)
-        Try
-            CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
-        Catch ex As Exception
-            If Debugger.IsAttached Then
-                Debugger.Break()
-            End If
-            WriteErrorToMessageBox(ex.Message)
-        End Try
-    End Sub
-
->>>>>>> 436cc56d573645d037260128181d0217886def4b
     Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged
         ProgressBar1.Value = e.ProgressPercentage
     End Sub
@@ -200,12 +178,10 @@ Public Class Form1
         ProgressBar1.Value = 100
         ts2 = New TimeSpan(Now.Ticks)
 
-        WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine & vbNewLine, Color.LightBlue)
+        WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
         WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
         FillTreeView()
     End Sub
-
-#End Region
 
 #Region "Extras"
     Private Sub FillTreeView()
@@ -254,13 +230,14 @@ Public Class Form1
             If Debugger.IsAttached Then
                 Debugger.Break()
             End If
-            Throw
+            WriteErrorToMessageBox(ex.Message)
         End Try
     End Sub
 
     Private Sub StartWorker(analyze As Boolean)
         ts1 = New TimeSpan(Now.Ticks)
         rtb1.Text = ""
+        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
         If backWorker.IsBusy Then
             backWorker.CancelAsync()
         Else

@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Attributes\CustomizationAttribute.cs" />
     <Compile Include="Customizer.cs" />
+    <Compile Include="EventArgs\CustomizationLoadedEventArgs.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="Persisters\DBCustomizationPersister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

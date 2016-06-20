@@ -239,12 +239,8 @@ ErrorMessage:
     End Sub
 
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
-<<<<<<< HEAD
-        ExecuteScriptBatches(script, cnn, trn, False, executedRevisionsCount, totalRevisionsCount)
-
-=======
         ExecuteScriptBatches(script, cnn, trn, False)
->>>>>>> 436cc56d573645d037260128181d0217886def4b
+
         Dim dlos As New List(Of IMRDLO)
         revisions.ForEach(
                             Sub(rev)

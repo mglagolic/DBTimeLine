@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AktivniSifrarnici</RootNamespace>
-    <AssemblyName>AktivniSifrarnici</AssemblyName>
+    <AssemblyName>Customizations.AktivniSifrarnici</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

@@ -30,7 +30,6 @@ C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.dll
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.xml
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.pdb
-<<<<<<< HEAD
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.vbprojResolveAssemblyReference.cache
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\bin\Debug\MRFramework.MRCore.dll
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\bin\Debug\MRFramework.MRCore.pdb
@@ -40,5 +39,3 @@ D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFra
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.dll
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.xml
 D:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.pdb
-=======
->>>>>>> 436cc56d573645d037260128181d0217886def4b
