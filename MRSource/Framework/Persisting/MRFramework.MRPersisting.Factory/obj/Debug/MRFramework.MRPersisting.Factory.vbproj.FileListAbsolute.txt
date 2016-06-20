@@ -30,3 +30,4 @@ C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersistin
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb
+C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbprojResolveAssemblyReference.cache

@@ -1,16 +1,16 @@
 ﻿Imports MRFramework
 
-Public Class DBModulePersister
+Public Class DBCustomizationPersister
     Inherits MRPersisting.MRPersister
 
     Public Overrides ReadOnly Property DataBaseTableName As String
         Get
-            Return "DBTimeLine.Module"
+            Return "Config.Customization"
         End Get
     End Property
     Public Overrides ReadOnly Property SQL As String
         Get
-            Return "SELECT ID, ClassName, DefaultSchemaName, Active FROM " & DataBaseTableName
+            Return "SELECT ID, CustomizationKey, Created, Active, Description FROM " & DataBaseTableName
         End Get
     End Property
 End Class

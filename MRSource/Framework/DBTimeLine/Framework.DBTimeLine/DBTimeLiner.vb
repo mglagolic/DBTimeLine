@@ -102,15 +102,15 @@ Public Class DBTimeLiner
                         Dim defaultSchemaName As String = ""
                         Try
                             className = CType(res(key).ColumnValues("ClassName"), String)
-                            If Not IsDBNull(res(key).ColumnValues("AssemblyName")) Then
-                                assemblyFullName = CType(res(key).ColumnValues("AssemblyName"), String)
-                            End If
+                            'If Not IsDBNull(res(key).ColumnValues("AssemblyName")) Then
+                            '    assemblyFullName = CType(res(key).ColumnValues("AssemblyName"), String)
+                            'End If
                             defaultSchemaName = CStr(res(key).ColumnValues("DefaultSchemaName"))
-                            Dim ass As Reflection.Assembly
+                            'Dim ass As Reflection.Assembly
                             assemblyName = assemblyFullName.Split("."c)(0)
-                            If Not assemblyName = "DBModules" Then
-                                ass = Reflection.Assembly.LoadFrom(IO.Path.Combine(IO.Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location), assemblyFullName))
-                            End If
+                            'If Not assemblyName = "DBModules" Then
+                            '    ass = Reflection.Assembly.LoadFrom(IO.Path.Combine(IO.Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location), assemblyFullName))
+                            'End If
                             Dim m As IDBModule = CType(Activator.CreateInstance(assemblyName, assemblyName & "." & className).Unwrap, IDBModule)
                             m.DefaultSchemaName = defaultSchemaName
 
@@ -179,6 +179,7 @@ ErrorMessage:
         CreateRevisionTable()
         CreateAlwaysExecutingTaskTable()
         CreateModuleTable()
+        CreateCustomizationTable()
     End Sub
 
 #End Region
@@ -339,9 +340,9 @@ ErrorMessage:
                     End If
 
                     cmd.CommandText = DBSqlGenerator.GetSqlCheckIfSchemaExists()
+
                     If cmd.ExecuteScalar() Is Nothing Then
-                        cmd.CommandText = DBSqlGenerator.GetSqlCreateSystemSchema()
-                        cmd.ExecuteNonQuery()
+                        ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemSchema(), CType(cnn, DbConnection), Nothing, True)
                     End If
                 Catch ex As Exception
                     If Debugger.IsAttached Then
@@ -360,6 +361,22 @@ ErrorMessage:
                     cnn.Open()
                 End If
                 ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing, True)
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
+        End Using
+    End Sub
+
+    Private Sub CreateCustomizationTable()
+        Using cnn As IDbConnection = MRC.GetConnection
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemCustomizationTable(), CType(cnn, DbConnection), Nothing, True)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()

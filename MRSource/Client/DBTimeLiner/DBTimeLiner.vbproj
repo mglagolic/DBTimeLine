@@ -121,6 +121,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Customizations\Customizations.Core\Customizations.Core.csproj">
+      <Project>{a224372a-ea51-4c7f-a280-6e9937875451}</Project>
+      <Name>Customizations.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DBTimeLiners\DBModules\DBModules.csproj">
       <Project>{91f233d0-86f9-4597-947e-d1fdf4fa17f4}</Project>
       <Name>DBModules</Name>

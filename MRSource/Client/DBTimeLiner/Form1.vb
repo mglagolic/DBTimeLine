@@ -21,6 +21,8 @@ Public Class Form1
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         ts1 = New TimeSpan(Now.Ticks)
         rtb1.Text = ""
+        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
+
         If backWorker.IsBusy Then
             backWorker.CancelAsync()
         Else
@@ -85,6 +87,17 @@ Public Class Form1
         rtb.AppendText(text)
         rtb.ScrollToCaret()
     End Sub
+
+    Delegate Sub WriteErrorToMessageBoxCallback(text As String)
+    Private Sub WriteErrorToMessageBox(text As String)
+        If InvokeRequired Then
+            Dim d As New WriteErrorToMessageBoxCallback(AddressOf WriteErrorToMessageBox)
+            Invoke(d, text)
+            Exit Sub
+        End If
+        MessageBox.Show(text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    End Sub
+
 #End Region
 
     Private Class CreateTimeLineDBInputs
@@ -117,7 +130,8 @@ Public Class Form1
         ' CONSIDER - odraditi code generation adventureWorks baze
 
         creator.LoadModulesFromDB()
-
+        Dim customization As New Customizations.Core.Loader()
+        customization.Load()
         For i As Integer = 0 To creator.DBModules.Count - 1
             creator.DBModules(i).LoadRevisions()
         Next
@@ -153,19 +167,16 @@ Public Class Form1
     End Sub
 
 #Region "Thread backworker"
-
-
     ' TODO - ovo odraditi reactive programmingom
     Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
         Try
             CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
         Catch ex As Exception
-            'WriteException(ex)
             If Debugger.IsAttached Then
                 Debugger.Break()
             End If
-            Throw
+            WriteErrorToMessageBox(ex.Message)
         End Try
     End Sub
 
@@ -178,6 +189,7 @@ Public Class Form1
         ts2 = New TimeSpan(Now.Ticks)
 
         WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine & vbNewLine, Color.LightBlue)
+        WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
         FillTreeView()
     End Sub
 
