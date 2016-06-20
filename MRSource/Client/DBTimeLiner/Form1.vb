@@ -18,16 +18,6 @@ Public Class Form1
 
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ts1 = New TimeSpan(Now.Ticks)
-        rtb1.Text = ""
-        If backWorker.IsBusy Then
-            backWorker.CancelAsync()
-        Else
-            backWorker.RunWorkerAsync(New CreateTimeLineDBInputs() With {.Commit = chxCommit.Checked})
-        End If
-    End Sub
-
 #Region "Writing rtb"
     Private Sub BatchExecutingHandler(sender As Object, e As BatchExecutingEventArgs)
         WriteTextToRtb(rtb1, "-- EXECUTING..." & vbNewLine, Color.Yellow)
@@ -83,12 +73,13 @@ Public Class Form1
 
     Private Class CreateTimeLineDBInputs
         Public Property Commit As Boolean
+        Public Property Analyze As Boolean
     End Class
 
     Private creator As DBTimeLiner = Nothing
 
     Private Sub CreateTimeLineDB(inputs As CreateTimeLineDBInputs)
-        Dim per As New myPersister
+        'Dim per As New myPersister
 
         creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
@@ -122,7 +113,17 @@ Public Class Form1
 
                 creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
 
-                creator.ExecuteDBSqlRevisions(cnn, trn)
+                If Not inputs.Analyze Then
+                    creator.ExecuteDBSqlRevisions(cnn, trn)
+
+
+                    If inputs.Commit Then
+                        trn.Commit()
+                    Else
+                        trn.Rollback()
+                    End If
+
+                End If
 
                 'Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
                 'newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
@@ -130,11 +131,6 @@ Public Class Form1
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
 
-                If inputs.Commit Then
-                    trn.Commit()
-                Else
-                    trn.Rollback()
-                End If
             End Using
 
         End Using
@@ -145,22 +141,6 @@ Public Class Form1
     End Sub
 
 #Region "Thread backworker"
-
-
-    ' TODO - ovo odraditi reactive programmingom
-    Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
-        backWorker.ReportProgress(0)
-        Try
-            CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
-        Catch ex As Exception
-            'WriteException(ex)
-            If Debugger.IsAttached Then
-                Debugger.Break()
-            End If
-            Throw
-        End Try
-    End Sub
-
     Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged
         ProgressBar1.Value = e.ProgressPercentage
     End Sub
@@ -211,5 +191,40 @@ Public Class Form1
     End Sub
 
 #End Region
+
+#Region "DoWork"
+    Private Sub CreateTimeLineDB(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
+        backWorker.ReportProgress(0)
+        Try
+            CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
+        Catch ex As Exception
+            'WriteException(ex)
+            If Debugger.IsAttached Then
+                Debugger.Break()
+            End If
+            Throw
+        End Try
+    End Sub
+
+    Private Sub StartWorker(analyze As Boolean)
+        ts1 = New TimeSpan(Now.Ticks)
+        rtb1.Text = ""
+        If backWorker.IsBusy Then
+            backWorker.CancelAsync()
+        Else
+            backWorker.RunWorkerAsync(New CreateTimeLineDBInputs() With {.Commit = chxCommit.Checked, .Analyze = analyze})
+        End If
+    End Sub
+
+    Private Sub btnAnalyze_Click(sender As Object, e As EventArgs) Handles btnAnalyze.Click
+        StartWorker(True)
+    End Sub
+
+    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
+        StartWorker(False)
+    End Sub
+
+#End Region
+
 
 End Class

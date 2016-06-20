@@ -28,7 +28,7 @@ Partial Class Form1
         Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ND", New System.Windows.Forms.TreeNode() {TreeNode3})
         Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLine", New System.Windows.Forms.TreeNode() {TreeNode4})
         Me.rtb1 = New System.Windows.Forms.RichTextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.btnApply = New System.Windows.Forms.Button()
         Me.backWorker = New System.ComponentModel.BackgroundWorker()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.zoomRtb = New System.Windows.Forms.TrackBar()
@@ -38,6 +38,7 @@ Partial Class Form1
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.treeRevisions = New System.Windows.Forms.TreeView()
         Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.btnAnalyze = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.gbModules = New System.Windows.Forms.GroupBox()
         Me.dgvModules = New System.Windows.Forms.DataGridView()
@@ -74,15 +75,17 @@ Partial Class Form1
         Me.rtb1.Text = "bok" & Global.Microsoft.VisualBasic.ChrW(10) & "kaj" & Global.Microsoft.VisualBasic.ChrW(10) & "ima"
         Me.rtb1.WordWrap = False
         '
-        'Button1
+        'btnApply
         '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.Location = New System.Drawing.Point(1079, 67)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 1
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.btnApply.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnApply.BackColor = System.Drawing.Color.Maroon
+        Me.btnApply.ForeColor = System.Drawing.Color.White
+        Me.btnApply.Location = New System.Drawing.Point(1069, 42)
+        Me.btnApply.Name = "btnApply"
+        Me.btnApply.Size = New System.Drawing.Size(85, 48)
+        Me.btnApply.TabIndex = 1
+        Me.btnApply.Text = "Apply"
+        Me.btnApply.UseVisualStyleBackColor = False
         '
         'backWorker
         '
@@ -93,6 +96,7 @@ Partial Class Form1
         '
         Me.ProgressBar1.BackColor = System.Drawing.Color.WhiteSmoke
         Me.ProgressBar1.Dock = System.Windows.Forms.DockStyle.Top
+        Me.ProgressBar1.ForeColor = System.Drawing.Color.SteelBlue
         Me.ProgressBar1.Location = New System.Drawing.Point(0, 0)
         Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(1154, 36)
@@ -146,6 +150,7 @@ Partial Class Form1
         '
         'GroupBox1
         '
+        Me.GroupBox1.BackColor = System.Drawing.Color.White
         Me.GroupBox1.Controls.Add(Me.treeRevisions)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
@@ -176,7 +181,9 @@ Partial Class Form1
         '
         'Panel3
         '
-        Me.Panel3.Controls.Add(Me.Button1)
+        Me.Panel3.BackColor = System.Drawing.Color.CornflowerBlue
+        Me.Panel3.Controls.Add(Me.btnAnalyze)
+        Me.Panel3.Controls.Add(Me.btnApply)
         Me.Panel3.Controls.Add(Me.chxCommit)
         Me.Panel3.Controls.Add(Me.ProgressBar1)
         Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
@@ -185,8 +192,21 @@ Partial Class Form1
         Me.Panel3.Size = New System.Drawing.Size(1154, 96)
         Me.Panel3.TabIndex = 8
         '
+        'btnAnalyze
+        '
+        Me.btnAnalyze.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnAnalyze.BackColor = System.Drawing.Color.Blue
+        Me.btnAnalyze.ForeColor = System.Drawing.Color.White
+        Me.btnAnalyze.Location = New System.Drawing.Point(539, 42)
+        Me.btnAnalyze.Name = "btnAnalyze"
+        Me.btnAnalyze.Size = New System.Drawing.Size(85, 48)
+        Me.btnAnalyze.TabIndex = 7
+        Me.btnAnalyze.Text = "Analyze"
+        Me.btnAnalyze.UseVisualStyleBackColor = False
+        '
         'Panel5
         '
+        Me.Panel5.BackColor = System.Drawing.Color.CornflowerBlue
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel5.Location = New System.Drawing.Point(10, 523)
         Me.Panel5.Name = "Panel5"
@@ -195,6 +215,7 @@ Partial Class Form1
         '
         'gbModules
         '
+        Me.gbModules.BackColor = System.Drawing.Color.White
         Me.gbModules.Controls.Add(Me.dgvModules)
         Me.gbModules.Dock = System.Windows.Forms.DockStyle.Top
         Me.gbModules.Location = New System.Drawing.Point(10, 106)
@@ -208,9 +229,11 @@ Partial Class Form1
         '
         Me.dgvModules.AllowUserToAddRows = False
         Me.dgvModules.AllowUserToDeleteRows = False
+        Me.dgvModules.BackgroundColor = System.Drawing.Color.DarkSeaGreen
         Me.dgvModules.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvModules.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cName, Me.colSchemaName, Me.cClassName, Me.cAssemblyName, Me.cCreated, Me.cDescription})
         Me.dgvModules.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.dgvModules.GridColor = System.Drawing.Color.SeaGreen
         Me.dgvModules.Location = New System.Drawing.Point(3, 16)
         Me.dgvModules.Name = "dgvModules"
         Me.dgvModules.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
@@ -259,7 +282,7 @@ Partial Class Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.BackColor = System.Drawing.Color.DarkSeaGreen
         Me.ClientSize = New System.Drawing.Size(1174, 569)
         Me.Controls.Add(Me.pnlRtb)
         Me.Controls.Add(Me.gbModules)
@@ -282,7 +305,7 @@ Partial Class Form1
     End Sub
 
     Friend WithEvents rtb1 As RichTextBox
-    Friend WithEvents Button1 As Button
+    Friend WithEvents btnApply As Button
     Friend WithEvents backWorker As System.ComponentModel.BackgroundWorker
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents zoomRtb As TrackBar
@@ -301,4 +324,5 @@ Partial Class Form1
     Friend WithEvents cAssemblyName As DataGridViewTextBoxColumn
     Friend WithEvents cCreated As DataGridViewTextBoxColumn
     Friend WithEvents cDescription As DataGridViewTextBoxColumn
+    Friend WithEvents btnAnalyze As Button
 End Class

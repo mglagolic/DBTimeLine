@@ -22,3 +22,15 @@ C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersistin
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.dll
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.xml
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.pdb
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbprojResolveAssemblyReference.cache
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.Resources.resources
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbproj.GenerateResource.Cache
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.dll
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.xml
+D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.pdb

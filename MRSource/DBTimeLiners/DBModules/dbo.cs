@@ -56,7 +56,8 @@ namespace DBModules
 
         private string UpdateStatistics(IDBRevision sender, eDBType dBType)
         {
-            return "exec sp_updatestats";
+            return @"WAITFOR DELAY '00:00:05'
+                exec sp_updatestats";
         }
     }
 }
