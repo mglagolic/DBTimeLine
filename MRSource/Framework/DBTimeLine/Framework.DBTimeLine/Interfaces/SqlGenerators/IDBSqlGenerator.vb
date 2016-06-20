@@ -6,5 +6,6 @@
     Function GetSqlCreateSystemAlwaysExecutingTaskTable() As String
     Function GetSqlCheckIfSchemaExists() As String
     Function SplitSqlStatements(sqlScript As String) As IEnumerable(Of String)
+    Function GetSqlCreateSystemCustomizationTable() As String
 
 End Interface

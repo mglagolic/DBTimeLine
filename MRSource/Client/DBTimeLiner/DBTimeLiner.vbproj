@@ -79,13 +79,6 @@
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form2.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Form2.Designer.vb">
-      <DependentUpon>Form2.vb</DependentUpon>
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -106,9 +99,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form2.resx">
-      <DependentUpon>Form2.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
@@ -131,6 +121,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Customizations\Customizations.Core\Customizations.Core.csproj">
+      <Project>{a224372a-ea51-4c7f-a280-6e9937875451}</Project>
+      <Name>Customizations.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\DBTimeLiners\DBModules\DBModules.csproj">
       <Project>{91f233d0-86f9-4597-947e-d1fdf4fa17f4}</Project>
       <Name>DBModules</Name>

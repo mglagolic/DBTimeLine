@@ -19,7 +19,7 @@ BEGIN
         [Name] [nvarchar](250) NOT NULL,
         [Created] [datetime] NOT NULL,
         [Active] bit NOT NULL,
-        [AssemblyName] [varchar](250) NULL,
+        --[AssemblyName] [varchar](250) NULL,
         [Description] [nvarchar](MAX) NULL
 	)
 END
@@ -28,7 +28,12 @@ END
     End Function
 
     Public Overridable Function GetSqlCreateSystemSchema() As String Implements IDBSqlGenerator.GetSqlCreateSystemSchema
-        Dim ret As String = "CREATE SCHEMA DBTimeLine"
+        Dim ret As String =
+"
+CREATE SCHEMA DBTimeLine
+GO
+CREATE SCHEMA Config
+"
 
         Return ret
     End Function
@@ -99,4 +104,20 @@ END
         Return statements.Where(Function(x) Not String.IsNullOrWhiteSpace(x)).[Select](Function(x) x.Trim(" "c, ControlChars.Cr, ControlChars.Lf))
     End Function
 
+    Public Function GetSqlCreateSystemCustomizationTable() As String Implements IDBSqlGenerator.GetSqlCreateSystemCustomizationTable
+        Dim ret As String = "
+IF OBJECT_ID('Config.Customization') IS NULL
+BEGIN
+	CREATE TABLE Config.Customization
+	(
+        ID INT PRIMARY KEY,
+        CustomizationKey [varchar](250) NOT NULL,
+        Created [datetime] NOT NULL,
+        Active bit NOT NULL,
+        Description [nvarchar](MAX) NULL
+	)
+END
+"
+        Return ret
+    End Function
 End Class

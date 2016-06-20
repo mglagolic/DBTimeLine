@@ -3,7 +3,7 @@ using Framework.DBTimeLine;
 
 namespace AktivniSifrarnici
 {
-    public class DBTimeLinerCustomization : DBModule
+    public class AktivniSifrarniciDBModule : DBModule
     {
         public override string ModuleKey
         {

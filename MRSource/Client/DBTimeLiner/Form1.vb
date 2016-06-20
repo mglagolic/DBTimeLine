@@ -18,6 +18,21 @@ Public Class Form1
 
     End Sub
 
+<<<<<<< HEAD
+=======
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        ts1 = New TimeSpan(Now.Ticks)
+        rtb1.Text = ""
+        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
+
+        If backWorker.IsBusy Then
+            backWorker.CancelAsync()
+        Else
+            backWorker.RunWorkerAsync(New CreateTimeLineDBInputs() With {.Commit = chxCommit.Checked})
+        End If
+    End Sub
+
+>>>>>>> 436cc56d573645d037260128181d0217886def4b
 #Region "Writing rtb"
     Private Sub BatchExecutingHandler(sender As Object, e As BatchExecutingEventArgs)
         WriteTextToRtb(rtb1, "-- EXECUTING..." & vbNewLine, Color.Yellow)
@@ -25,9 +40,9 @@ Public Class Form1
     End Sub
 
     Private Sub BatchExecutedHandler(sender As Object, e As BatchExecutedEventArgs)
-        If e.TotalRevisionsCount <> 0 Then
-            backWorker.ReportProgress(CInt(e.ExecutedRevisionsCount / e.TotalRevisionsCount * 100))
-        End If
+        'If e.TotalRevisionsCount <> 0 Then
+        '    backWorker.ReportProgress(CInt(e.ExecutedRevisionsCount / e.TotalRevisionsCount * 100))
+        'End If
 
         If e.ResultType = eBatchExecutionResultType.Failed Then
             If e.Exception IsNot Nothing Then
@@ -38,6 +53,12 @@ Public Class Form1
         End If
         WriteTextToRtb(rtb1, "-- Duration: " & e.Duration.ToString() & vbNewLine & vbNewLine, Color.Yellow)
 
+    End Sub
+
+    Private Sub ProgressReportedHandler(sender As Object, e As ProgressReportedEventArgs)
+        If e.TotalSteps <> 0 Then
+            backWorker.ReportProgress(CInt(e.CurrentStep / e.TotalSteps * 100))
+        End If
     End Sub
 
     Private Sub ModuleLoadedHandler(sender As Object, e As ModuleLoadedEventArgs)
@@ -69,6 +90,17 @@ Public Class Form1
         rtb.AppendText(text)
         rtb.ScrollToCaret()
     End Sub
+
+    Delegate Sub WriteErrorToMessageBoxCallback(text As String)
+    Private Sub WriteErrorToMessageBox(text As String)
+        If InvokeRequired Then
+            Dim d As New WriteErrorToMessageBoxCallback(AddressOf WriteErrorToMessageBox)
+            Invoke(d, text)
+            Exit Sub
+        End If
+        MessageBox.Show(text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+    End Sub
+
 #End Region
 
     Private Class CreateTimeLineDBInputs
@@ -85,6 +117,7 @@ Public Class Form1
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         AddHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
+        AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
 
         creator.CreateSystemObjects()
 
@@ -101,7 +134,8 @@ Public Class Form1
         ' CONSIDER - odraditi code generation adventureWorks baze
 
         creator.LoadModulesFromDB()
-
+        Dim customization As New Customizations.Core.Loader()
+        customization.Load()
         For i As Integer = 0 To creator.DBModules.Count - 1
             creator.DBModules(i).LoadRevisions()
         Next
@@ -138,9 +172,26 @@ Public Class Form1
         RemoveHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         RemoveHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
+        RemoveHandler creator.ProgressReported, AddressOf ProgressReportedHandler
     End Sub
 
 #Region "Thread backworker"
+<<<<<<< HEAD
+=======
+    ' TODO - ovo odraditi reactive programmingom
+    Private Sub DoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
+        backWorker.ReportProgress(0)
+        Try
+            CreateTimeLineDB(DirectCast(e.Argument, CreateTimeLineDBInputs))
+        Catch ex As Exception
+            If Debugger.IsAttached Then
+                Debugger.Break()
+            End If
+            WriteErrorToMessageBox(ex.Message)
+        End Try
+    End Sub
+
+>>>>>>> 436cc56d573645d037260128181d0217886def4b
     Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged
         ProgressBar1.Value = e.ProgressPercentage
     End Sub
@@ -150,6 +201,7 @@ Public Class Form1
         ts2 = New TimeSpan(Now.Ticks)
 
         WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine & vbNewLine, Color.LightBlue)
+        WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
         FillTreeView()
     End Sub
 

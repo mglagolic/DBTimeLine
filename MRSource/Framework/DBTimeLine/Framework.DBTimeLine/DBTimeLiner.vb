@@ -17,7 +17,7 @@ Public Class DBTimeLiner
 
     Public ReadOnly Property NewDBSqlRevisions As List(Of DBSqlRevision)
         Get
-            Return SourceDBSqlRevisions.Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+            Return SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
         End Get
     End Property
 
@@ -62,6 +62,11 @@ Public Class DBTimeLiner
         RaiseEvent BatchExecuted(sender, e)
     End Sub
 
+    Public Event ProgressReported(sender As Object, e As ProgressReportedEventArgs)
+    Public Sub OnProgressReported(sender As Object, e As ProgressReportedEventArgs)
+        RaiseEvent ProgressReported(sender, e)
+    End Sub
+
 #End Region
 
 #Region "Public methods"
@@ -97,15 +102,15 @@ Public Class DBTimeLiner
                         Dim defaultSchemaName As String = ""
                         Try
                             className = CType(res(key).ColumnValues("ClassName"), String)
-                            If Not IsDBNull(res(key).ColumnValues("AssemblyName")) Then
-                                assemblyFullName = CType(res(key).ColumnValues("AssemblyName"), String)
-                            End If
+                            'If Not IsDBNull(res(key).ColumnValues("AssemblyName")) Then
+                            '    assemblyFullName = CType(res(key).ColumnValues("AssemblyName"), String)
+                            'End If
                             defaultSchemaName = CStr(res(key).ColumnValues("DefaultSchemaName"))
-                            Dim ass As Reflection.Assembly
+                            'Dim ass As Reflection.Assembly
                             assemblyName = assemblyFullName.Split("."c)(0)
-                            If Not assemblyName = "DBModules" Then
-                                ass = Reflection.Assembly.LoadFrom(IO.Path.Combine(IO.Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location), assemblyFullName))
-                            End If
+                            'If Not assemblyName = "DBModules" Then
+                            '    ass = Reflection.Assembly.LoadFrom(IO.Path.Combine(IO.Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location), assemblyFullName))
+                            'End If
                             Dim m As IDBModule = CType(Activator.CreateInstance(assemblyName, assemblyName & "." & className).Unwrap, IDBModule)
                             m.DefaultSchemaName = defaultSchemaName
 
@@ -174,6 +179,7 @@ ErrorMessage:
         CreateRevisionTable()
         CreateAlwaysExecutingTaskTable()
         CreateModuleTable()
+        CreateCustomizationTable()
     End Sub
 
 #End Region
@@ -223,8 +229,6 @@ ErrorMessage:
                                             .Sql = batch,
                                             .Duration = ts2 - ts1,
                                             .ResultType = CType(IIf(errorMessage = "", eBatchExecutionResultType.Success, eBatchExecutionResultType.Failed), eBatchExecutionResultType),
-                                            .ExecutedRevisionsCount = 0,
-                                            .TotalRevisionsCount = 0,
                                             .ErrorMessage = errorMessage,
                                             .Exception = runtimeException
                                         })
@@ -235,8 +239,12 @@ ErrorMessage:
     End Sub
 
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
+<<<<<<< HEAD
         ExecuteScriptBatches(script, cnn, trn, False, executedRevisionsCount, totalRevisionsCount)
 
+=======
+        ExecuteScriptBatches(script, cnn, trn, False)
+>>>>>>> 436cc56d573645d037260128181d0217886def4b
         Dim dlos As New List(Of IMRDLO)
         revisions.ForEach(
                             Sub(rev)
@@ -281,6 +289,11 @@ ErrorMessage:
                 ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn, alwaysExecutingTask)
                 sqlBatchScriptBuilder.Clear()
                 newExecutedRevisions.Clear()
+                Dim msg As String = "New revisions"
+                If alwaysExecutingTask Then
+                    msg = "Always executing tasks"
+                End If
+                OnProgressReported(Me, New ProgressReportedEventArgs() With {.CurrentStep = i + 1, .TotalSteps = notExecutedRevisions.Count, .Message = msg})
             End If
         Next
     End Sub
@@ -332,9 +345,9 @@ ErrorMessage:
                     End If
 
                     cmd.CommandText = DBSqlGenerator.GetSqlCheckIfSchemaExists()
+
                     If cmd.ExecuteScalar() Is Nothing Then
-                        cmd.CommandText = DBSqlGenerator.GetSqlCreateSystemSchema()
-                        cmd.ExecuteNonQuery()
+                        ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemSchema(), CType(cnn, DbConnection), Nothing, True)
                     End If
                 Catch ex As Exception
                     If Debugger.IsAttached Then
@@ -353,6 +366,22 @@ ErrorMessage:
                     cnn.Open()
                 End If
                 ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing, True)
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
+        End Using
+    End Sub
+
+    Private Sub CreateCustomizationTable()
+        Using cnn As IDbConnection = MRC.GetConnection
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemCustomizationTable(), CType(cnn, DbConnection), Nothing, True)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()
