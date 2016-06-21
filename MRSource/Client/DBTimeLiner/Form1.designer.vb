@@ -22,11 +22,13 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Zona")
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Nadzor")
-        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ND (Nadzor)", New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode2})
-        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("ND", New System.Windows.Forms.TreeNode() {TreeNode3})
-        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLine", New System.Windows.Forms.TreeNode() {TreeNode4})
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Node0")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Node2")
+        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Node3")
+        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Node4")
+        Dim TreeNode5 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Node5")
+        Dim TreeNode6 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Node1", New System.Windows.Forms.TreeNode() {TreeNode2, TreeNode3, TreeNode4, TreeNode5})
+        Dim TreeNode7 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLiner", New System.Windows.Forms.TreeNode() {TreeNode1, TreeNode6})
         Me.rtb1 = New System.Windows.Forms.RichTextBox()
         Me.btnApply = New System.Windows.Forms.Button()
         Me.backWorker = New System.ComponentModel.BackgroundWorker()
@@ -37,7 +39,7 @@ Partial Class Form1
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.treeRevisions = New System.Windows.Forms.TreeView()
-        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.pnlControl = New System.Windows.Forms.Panel()
         Me.btnAnalyze = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.gbModules = New System.Windows.Forms.GroupBox()
@@ -52,7 +54,7 @@ Partial Class Form1
         Me.pnlRtb.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
-        Me.Panel3.SuspendLayout()
+        Me.pnlControl.SuspendLayout()
         Me.gbModules.SuspendLayout()
         CType(Me.dgvModules, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -165,32 +167,41 @@ Partial Class Form1
         Me.treeRevisions.Dock = System.Windows.Forms.DockStyle.Fill
         Me.treeRevisions.Location = New System.Drawing.Point(3, 16)
         Me.treeRevisions.Name = "treeRevisions"
-        TreeNode1.Name = "nodZona"
-        TreeNode1.Text = "Zona"
-        TreeNode2.Name = "Node4"
-        TreeNode2.Text = "Nadzor"
-        TreeNode3.Name = "ndNadzor"
-        TreeNode3.Text = "ND (Nadzor)"
-        TreeNode4.Name = "ndND"
-        TreeNode4.Text = "ND"
-        TreeNode5.Name = "Node0"
-        TreeNode5.Text = "DBTimeLine"
-        Me.treeRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode5})
+        TreeNode1.BackColor = System.Drawing.Color.CornflowerBlue
+        TreeNode1.Name = "Node0"
+        TreeNode1.Text = "Node0"
+        TreeNode2.BackColor = System.Drawing.Color.LightGoldenrodYellow
+        TreeNode2.Name = "Node2"
+        TreeNode2.Text = "Node2"
+        TreeNode3.Name = "Node3"
+        TreeNode3.Text = "Node3"
+        TreeNode4.Name = "Node4"
+        TreeNode4.Text = "Node4"
+        TreeNode5.Name = "Node5"
+        TreeNode5.Text = "Node5"
+        TreeNode6.BackColor = System.Drawing.Color.CornflowerBlue
+        TreeNode6.Name = "Node1"
+        TreeNode6.Text = "Node1"
+        TreeNode7.BackColor = System.Drawing.Color.DarkSeaGreen
+        TreeNode7.Checked = True
+        TreeNode7.Name = "Node0"
+        TreeNode7.Text = "DBTimeLiner"
+        Me.treeRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode7})
         Me.treeRevisions.Size = New System.Drawing.Size(330, 481)
         Me.treeRevisions.TabIndex = 0
         '
-        'Panel3
+        'pnlControl
         '
-        Me.Panel3.BackColor = System.Drawing.Color.CornflowerBlue
-        Me.Panel3.Controls.Add(Me.btnAnalyze)
-        Me.Panel3.Controls.Add(Me.btnApply)
-        Me.Panel3.Controls.Add(Me.chxCommit)
-        Me.Panel3.Controls.Add(Me.ProgressBar1)
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Top
-        Me.Panel3.Location = New System.Drawing.Point(10, 10)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(1154, 96)
-        Me.Panel3.TabIndex = 8
+        Me.pnlControl.BackColor = System.Drawing.Color.CornflowerBlue
+        Me.pnlControl.Controls.Add(Me.btnAnalyze)
+        Me.pnlControl.Controls.Add(Me.btnApply)
+        Me.pnlControl.Controls.Add(Me.chxCommit)
+        Me.pnlControl.Controls.Add(Me.ProgressBar1)
+        Me.pnlControl.Dock = System.Windows.Forms.DockStyle.Top
+        Me.pnlControl.Location = New System.Drawing.Point(10, 10)
+        Me.pnlControl.Name = "pnlControl"
+        Me.pnlControl.Size = New System.Drawing.Size(1154, 96)
+        Me.pnlControl.TabIndex = 8
         '
         'btnAnalyze
         '
@@ -287,7 +298,7 @@ Partial Class Form1
         Me.Controls.Add(Me.pnlRtb)
         Me.Controls.Add(Me.gbModules)
         Me.Controls.Add(Me.Panel2)
-        Me.Controls.Add(Me.Panel3)
+        Me.Controls.Add(Me.pnlControl)
         Me.Controls.Add(Me.Panel5)
         Me.Name = "Form1"
         Me.Padding = New System.Windows.Forms.Padding(10)
@@ -296,8 +307,8 @@ Partial Class Form1
         Me.pnlRtb.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout()
+        Me.pnlControl.ResumeLayout(False)
+        Me.pnlControl.PerformLayout()
         Me.gbModules.ResumeLayout(False)
         CType(Me.dgvModules, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -312,7 +323,7 @@ Partial Class Form1
     Friend WithEvents pnlRtb As Panel
     Friend WithEvents chxCommit As CheckBox
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents Panel3 As Panel
+    Friend WithEvents pnlControl As Panel
     Friend WithEvents Panel5 As Panel
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents treeRevisions As TreeView

@@ -5,7 +5,6 @@ using Framework.Persisting.Interfaces;
 using MRFramework.MRPersisting.Factory;
 using System.Data.Common;
 using Customizations.Core.EventArgs;
-using System.Linq;
 
 namespace Customizations.Core
 {
@@ -13,9 +12,8 @@ namespace Customizations.Core
     {
         public List<Customizer> Customizers { get; set; } = new List<Customizer>();
 
-        //# Region "Events and event raisers"
-
         #region Events and event raisers
+
         public delegate void CustomizationLoadedEventHandler(object sender, CustomizationLoadedEventArgs e);
         public event CustomizationLoadedEventHandler CustomizationLoaded;
         public void OnCustomizationLoaded(object sender, CustomizationLoadedEventArgs e)
@@ -25,14 +23,15 @@ namespace Customizations.Core
         
         #endregion
 
-        public void Load()
+        public void LoadCustomizers()
         {
             Customizers.Clear();
 
-            HashSet<IDlo> customizations = null;
+            List<IDlo> customizations = null;
             using (DbConnection cnn = MRC.GetConnection())
             {
                 var p = new Persisters.DBCustomizationPersister();
+                p.Where = "Active = 1";
                 p.CNN = MRC.GetConnection();
                 p.CNN.Open();
 
@@ -47,14 +46,39 @@ namespace Customizations.Core
                 foreach (System.Type typ in types)
                 {
                     var customizationAttrib = typ.GetCustomAttribute<Attributes.CustomizationAttribute>();
-                    if (customizationAttrib != null)
+                    if (customizationAttrib != null && (customizations.Find(dlo => (string)dlo.ColumnValues["CustomizationKey"] == customizationAttrib.CustomizationKey)) != null)
                     {
-                        //TODO - registrirati ga u neki Customization property i napisati  customization invoker za određeni key i taj invoker ugraditi u DBModule
-                        //Customizer customizer = (Customizer)System.Activator.CreateInstance(typ);
-                        //Customizers.Add(customizer);
-                        //var o = customizations.Contains(customizationAttrib.CustomizationKey);
+                        Customizer customizer = (Customizer)System.Activator.CreateInstance(typ);
+                        customizer.CustomizationKey = customizationAttrib.CustomizationKey;
+                        Customizers.Add(customizer);
+                                            
+                        OnCustomizationLoaded(this, new CustomizationLoadedEventArgs() { Message = "Customizer loaded (CustomizationKey: " + customizationAttrib.CustomizationKey + ").", Customizer = customizer});
+                    }
+                }
+            }
+        }
 
-                        OnCustomizationLoaded(this, new CustomizationLoadedEventArgs() { Message = "Customizer loaded (CustomizationKey: " + customizationAttrib.CustomizationKey + ")."});
+        public void CallMethods(string methodActivationKey, Dictionary<string, object> inputs)
+        {
+            //var customizers = Customizers.FindAll(c => c.CustomizationKey == customizationKey);
+            foreach (Customizer c in Customizers)
+            {
+                // CONSIDER - cacheirati
+                var publicMethods = c.GetType().GetMethods(BindingFlags.Public | BindingFlags.Instance);
+                foreach (MethodInfo mi in publicMethods)
+                {
+                    var methodActivationAttrib = mi.GetCustomAttribute<Attributes.MethodActivationCustomizationAttribute>();
+                    if (methodActivationAttrib != null && methodActivationAttrib.ActivationKey != null && methodActivationAttrib.ActivationKey == methodActivationKey)
+                    {
+                        if (inputs != null)
+                        {
+                            mi.Invoke(c, new object[] { inputs });
+                        }
+                        else
+                        {
+                            mi.Invoke(c, new object[] { });
+                        }
+                        
                     }
                 }
             }

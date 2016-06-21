@@ -52,9 +52,9 @@ namespace Framework.Persisting
 
         public int PageSize { get; set; } = PersistingSettings.Instance.DefaultPageSize;
         
-        public HashSet<IDlo> GetData(DbTransaction transaction, int pageNumber = -1)
+        public List<IDlo> GetData(DbTransaction transaction, int pageNumber = -1)
         {
-            var ret = new HashSet<IDlo>();
+            var ret = new List<IDlo>();
 
             SetSchemaTableIfNull();
             SetPrimaryKeyIfNull();         

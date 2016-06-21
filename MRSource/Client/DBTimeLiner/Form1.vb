@@ -100,17 +100,17 @@ Public Class Form1
     End Class
 
     Private creator As DBTimeLiner = Nothing
-    Private customization As Customizations.Core.Loader = Nothing
+    Private customizationLoader As Customizations.Core.Loader = Nothing
 
     Private Sub CreateTimeLineDB(inputs As CreateTimeLineDBInputs)
         creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
-        customization = New Customizations.Core.Loader()
+        customizationLoader = New Customizations.Core.Loader()
 
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         AddHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
         AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
-        AddHandler customization.CustomizationLoaded, AddressOf CustomizationLoadedHandler
+        AddHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
 
         creator.CreateSystemObjects()
 
@@ -127,12 +127,15 @@ Public Class Form1
         ' CONSIDER - odraditi code generation adventureWorks baze
 
         creator.LoadModulesFromDB()
-        customization.Load()
+        customizationLoader.LoadCustomizers()
 
         For i As Integer = 0 To creator.DBModules.Count - 1
             creator.DBModules(i).LoadRevisions()
         Next
         ' TODO - ovdje pozivati customizere i njihove metode "CreateTimeLine"
+        Dim callMethodsInputs As New Dictionary(Of String, Object)
+        callMethodsInputs.Add("DBTimeLiner", creator)
+        customizationLoader.CallMethods("CreateTimeLine", callMethodsInputs)
 
         Using cnn As Common.DbConnection = MRC.GetConnection()
             cnn.Open()
@@ -167,7 +170,7 @@ Public Class Form1
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         RemoveHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
         RemoveHandler creator.ProgressReported, AddressOf ProgressReportedHandler
-        RemoveHandler customization.CustomizationLoaded, AddressOf CustomizationLoadedHandler
+        RemoveHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
     End Sub
 
     Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged
@@ -180,6 +183,7 @@ Public Class Form1
 
         WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
         WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
+        pnlControl.Enabled = True
         FillTreeView()
     End Sub
 
@@ -187,19 +191,33 @@ Public Class Form1
     Private Sub FillTreeView()
         treeRevisions.Nodes.Clear()
         Dim root As TreeNode = treeRevisions.Nodes.Add("root", "DBTimeLiner")
+        root.BackColor = Color.DarkSeaGreen
 
         For Each dBModule As IDBModule In creator.DBModules
             Dim nodModule = root.Nodes.Add(dBModule.ModuleKey & " (Module)")
+            nodModule.BackColor = Color.CornflowerBlue
 
-            FillTreeViewRecursive(nodModule, dBModule)
+            FillTreeViewRecursive(nodModule, dBModule, 0)
         Next
     End Sub
 
-    Private Sub FillTreeViewRecursive(currentNode As TreeNode, dbParent As IDBParent)
+    Private Function GetNodeColor(level As Integer) As Color
+        Dim lsColor As New List(Of Color)
+        lsColor.Add(Color.LightGoldenrodYellow)
+
+        Dim index As Integer = level Mod lsColor.Count
+
+        Return lsColor(index)
+    End Function
+
+    Private Sub FillTreeViewRecursive(currentNode As TreeNode, dbParent As IDBParent, level As Integer)
         For Each dBObject As IDBObject In dbParent.DBObjects.Values
             Dim treeNode = currentNode.Nodes.Add(dBObject.GetFullName & " (" & dBObject.ObjectTypeName & ")")
+
+            treeNode.BackColor = GetNodeColor(level)
+
             If TypeOf dBObject Is IDBParent Then
-                FillTreeViewRecursive(treeNode, dBObject)
+                FillTreeViewRecursive(treeNode, dBObject, level + 1)
             End If
         Next
     End Sub
@@ -236,6 +254,8 @@ Public Class Form1
 
     Private Sub StartWorker(analyze As Boolean)
         ts1 = New TimeSpan(Now.Ticks)
+        pnlControl.Enabled = False
+
         rtb1.Text = ""
         WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
         If backWorker.IsBusy Then

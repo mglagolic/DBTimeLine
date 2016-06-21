@@ -13,7 +13,8 @@ namespace Framework.Persisting.Interfaces
         List<IOrderItem> OrderItems { get; }
         int PageSize { get; set; }
         
-        HashSet<IDlo> GetData(DbTransaction transaction, int pageNumber = -1);
+        //HashSet<IDlo> GetDataHashSet(DbTransaction transaction, int pageNumber = -1);
+        List<IDlo> GetData(DbTransaction transaction, int pageNumber = -1);
     }
 
 

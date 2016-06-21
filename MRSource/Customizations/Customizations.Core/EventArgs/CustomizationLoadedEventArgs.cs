@@ -4,5 +4,6 @@
     {
         public string Message { get; set; }
         public string ErrorMessage { get; set; }
+        public Customizer Customizer { get; set; }
     }
 }
