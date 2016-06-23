@@ -1,6 +1,6 @@
 ﻿using Framework.DBTimeLine;
 
-namespace DBModules
+namespace DBTimeLiners.DBModules.DBObjects
 {
     public class DBStoredProcedureDescriptor : IDBObjectDescriptor
     {

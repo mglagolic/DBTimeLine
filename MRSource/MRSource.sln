@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "MRFramework.MRCore", "Framework\Core\MRFramework.MRCore\MRFramework.MRCore.vbproj", "{84315872-44B6-4DA5-AEE6-33A96215294D}"
 EndProject
@@ -31,8 +31,6 @@ Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Framework.DBTimeLine.DBObje
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "Framework.DBTimeLine", "Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj", "{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBModules", "DBTimeLiners\DBModules\DBModules.csproj", "{91F233D0-86F9-4597-947E-D1FDF4FA17F4}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{C2FB5356-9C71-4338-8FCB-585CDCAA4F23}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Customizations", "Customizations", "{7EBCBA90-29BA-4BE8-A246-C92EA3CCAB17}"
@@ -42,6 +40,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customizations.Core", "Customizations\Customizations.Core\Customizations.Core.csproj", "{A224372A-EA51-4C7F-A280-6E9937875451}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customizations.AktivniSifrarnici", "Customizations\Customizations.AktivniSifrarnici\Customizations.AktivniSifrarnici.csproj", "{7A8E07B8-0B5F-49F7-A7BD-EB43AFD52E9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DBTimeLiners.DBModules", "DBTimeLiners\DBTimeLiners.DBModules\DBTimeLiners.DBModules.csproj", "{91F233D0-86F9-4597-947E-D1FDF4FA17F4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,10 +85,6 @@ Global
 		{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{823E6196-5212-43F3-9A54-C791A2D667B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{823E6196-5212-43F3-9A54-C791A2D667B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{823E6196-5212-43F3-9A54-C791A2D667B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -101,6 +97,10 @@ Global
 		{7A8E07B8-0B5F-49F7-A7BD-EB43AFD52E9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7A8E07B8-0B5F-49F7-A7BD-EB43AFD52E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7A8E07B8-0B5F-49F7-A7BD-EB43AFD52E9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91F233D0-86F9-4597-947E-D1FDF4FA17F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -118,9 +118,9 @@ Global
 		{1EC4A870-BCDF-4BB7-805B-8BD5F88DA6FB} = {62B6B3B3-4776-4CEF-BEE6-D28E04B12D42}
 		{986EF2D7-7F89-459F-B9EE-A9077CDCD147} = {F0CC2EF7-E524-4EA0-BC5B-3456DD897981}
 		{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5} = {F0CC2EF7-E524-4EA0-BC5B-3456DD897981}
-		{91F233D0-86F9-4597-947E-D1FDF4FA17F4} = {51C780B9-61D2-47DF-9B4D-1567330FC952}
 		{823E6196-5212-43F3-9A54-C791A2D667B8} = {C2FB5356-9C71-4338-8FCB-585CDCAA4F23}
 		{A224372A-EA51-4C7F-A280-6E9937875451} = {7EBCBA90-29BA-4BE8-A246-C92EA3CCAB17}
 		{7A8E07B8-0B5F-49F7-A7BD-EB43AFD52E9E} = {7EBCBA90-29BA-4BE8-A246-C92EA3CCAB17}
+		{91F233D0-86F9-4597-947E-D1FDF4FA17F4} = {51C780B9-61D2-47DF-9B4D-1567330FC952}
 	EndGlobalSection
 EndGlobal

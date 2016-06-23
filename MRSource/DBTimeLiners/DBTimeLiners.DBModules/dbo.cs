@@ -2,7 +2,7 @@
 using Framework.DBTimeLine;
 using Framework.DBTimeLine.DBObjects;
 
-namespace DBModules
+namespace DBTimeLiners.DBModules
 {
     public class dbo : DBModule
     {

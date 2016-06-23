@@ -6,6 +6,7 @@ Imports Framework.DBTimeLine
 Imports System.ComponentModel
 Imports Framework.DBTimeLine.DBObjects
 Imports Customizations.Core.EventArgs
+Imports DBTimeLiners.DBModules.EventArgs
 
 Public Class Form1
 
@@ -101,22 +102,24 @@ Public Class Form1
 
     Private creator As DBTimeLiner = Nothing
     Private customizationLoader As Customizations.Core.Loader = Nothing
+    Private moduleLoader As DBTimeLiners.DBModules.Loader = Nothing
 
     Private Sub CreateTimeLineDB(inputs As CreateTimeLineDBInputs)
         creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
         customizationLoader = New Customizations.Core.Loader()
+        moduleLoader = New DBTimeLiners.DBModules.Loader()
 
         AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
         AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
-        AddHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
+        AddHandler moduleLoader.ModuleLoaded, AddressOf ModuleLoadedHandler
         AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
         AddHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
 
         creator.CreateSystemObjects()
 
+        ' TODO - popraviti progress bar 
         ' TODO - omoguciti samo dohvat novih revizija, bez executea
         ' TODO - prikazati module u gridu
-        ' TODO - omoguciti programiranje novih eFieldTypeova, maknuti enum eFieldType
         ' TODO - isprogramirati podrsku za triggere
         ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
         ' TODO - u novom persisteru maknuti implementation u posebni dll
@@ -126,12 +129,19 @@ Public Class Form1
         ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
         ' CONSIDER - odraditi code generation adventureWorks baze
 
-        creator.LoadModulesFromDB()
+        'Dim dbo As New DBTimeLiners.DBModules.dbo
+
+        moduleLoader.LoadModulesFromDB(creator)
         customizationLoader.LoadCustomizers()
 
-        For i As Integer = 0 To creator.DBModules.Count - 1
-            creator.DBModules(i).LoadRevisions()
+        'For i As Integer = 0 To creator.DBModules.Count - 1
+        '    creator.DBModules(i).LoadRevisions()
+        'Next
+
+        For i As Integer = 0 To moduleLoader.DBModules.Count - 1
+            moduleLoader.DBModules(i).LoadRevisions()
         Next
+
         ' TODO - ovdje pozivati customizere i njihove metode "CreateTimeLine"
         Dim callMethodsInputs As New Dictionary(Of String, Object)
         callMethodsInputs.Add("DBTimeLiner", creator)
@@ -168,7 +178,7 @@ Public Class Form1
 
         RemoveHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
-        RemoveHandler creator.ModuleLoaded, AddressOf ModuleLoadedHandler
+        RemoveHandler moduleLoader.ModuleLoaded, AddressOf ModuleLoadedHandler
         RemoveHandler creator.ProgressReported, AddressOf ProgressReportedHandler
         RemoveHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
     End Sub

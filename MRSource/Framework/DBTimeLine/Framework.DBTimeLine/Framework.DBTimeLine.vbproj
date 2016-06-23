@@ -74,7 +74,6 @@
     <Compile Include="Enums\eBatchExecutionResultType.vb" />
     <Compile Include="Enums\eDBType.vb" />
     <Compile Include="EventArgs\ProgressReportingEventArgs.vb" />
-    <Compile Include="EventArgs\ModuleLoadedEventArgs.vb" />
     <Compile Include="EventArgs\BatchExecutingEventArgs.vb" />
     <Compile Include="EventArgs\BatchExecutedEventArgs.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBIndexDescriptor.vb" />

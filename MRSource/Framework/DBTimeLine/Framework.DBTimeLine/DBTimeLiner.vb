@@ -33,7 +33,7 @@ Public Class DBTimeLiner
         End Get
     End Property
 
-    Public Property RevisionBatchSize As Integer = 10
+    Public Property RevisionBatchSize As Integer = 1
     Public Property Parent As IDBChained Implements IDBChained.Parent
     Public Property DBType As eDBType = eDBType.TransactSQL
 #End Region
@@ -46,11 +46,6 @@ Public Class DBTimeLiner
 #End Region
 
 #Region "Events and event raisers"
-
-    Public Event ModuleLoaded(sender As Object, e As ModuleLoadedEventArgs)
-    Public Sub OnModuleLoaded(sender As Object, e As ModuleLoadedEventArgs)
-        RaiseEvent ModuleLoaded(sender, e)
-    End Sub
 
     Public Event BatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
     Public Sub OnBatchExecuting(sender As Object, ce As BatchExecutingEventArgs)
@@ -70,78 +65,6 @@ Public Class DBTimeLiner
 #End Region
 
 #Region "Public methods"
-
-    Public Function AddModule(dBModule As IDBModule) As IDBModule
-        DBModules.Add(dBModule)
-        dBModule.Parent = Me
-
-        Return dBModule
-    End Function
-
-    Public Function LoadModulesFromDB() As List(Of IDBModule)
-        Dim ret As New List(Of IDBModule)
-
-        Using cnn As DbConnection = MRC.GetConnection
-            Try
-                If cnn.State <> ConnectionState.Open Then
-                    cnn.Open()
-                End If
-
-                Using per As New DBModulePersister
-                    per.Where = "Active = 1"
-                    per.CNN = cnn
-
-                    Dim res As Dictionary(Of Object, IMRDLO) = per.GetData()
-                    For Each key As Object In res.Keys
-                        Dim errorMessage As String = ""
-                        Dim message As String = ""
-                        Dim className As String = ""
-                        Dim assemblyFullName As String = "DBModules.dll"
-                        Dim assemblyName As String = "DBModules"
-
-                        Dim defaultSchemaName As String = ""
-                        Try
-                            className = CType(res(key).ColumnValues("ClassName"), String)
-                            'If Not IsDBNull(res(key).ColumnValues("AssemblyName")) Then
-                            '    assemblyFullName = CType(res(key).ColumnValues("AssemblyName"), String)
-                            'End If
-                            defaultSchemaName = CStr(res(key).ColumnValues("DefaultSchemaName"))
-                            'Dim ass As Reflection.Assembly
-                            assemblyName = assemblyFullName.Split("."c)(0)
-                            'If Not assemblyName = "DBModules" Then
-                            '    ass = Reflection.Assembly.LoadFrom(IO.Path.Combine(IO.Path.GetDirectoryName(Reflection.Assembly.GetExecutingAssembly().Location), assemblyFullName))
-                            'End If
-                            Dim m As IDBModule = CType(Activator.CreateInstance(assemblyName, assemblyName & "." & className).Unwrap, IDBModule)
-                            m.DefaultSchemaName = defaultSchemaName
-
-                            message = String.Format(
-"Successfully instanced module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2})." _
-, className, assemblyName, defaultSchemaName)
-
-                            ret.Add(m)
-                        Catch ex As Exception
-                            errorMessage = String.Format(
-"Error instancing module from database config (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}), 
-ErrorMessage: 
-{3}
-", className, assemblyName, defaultSchemaName, ex.Message)
-
-                            ret.Clear()
-                            Exit For
-                        Finally
-                            OnModuleLoaded(Me, New ModuleLoadedEventArgs() With {.ErrorMessage = errorMessage, .Message = message})
-                        End Try
-                    Next
-                End Using
-            Catch ex As Exception
-                Throw
-            End Try
-        End Using
-        For Each m As IDBModule In ret
-            AddModule(m)
-        Next
-        Return ret
-    End Function
 
     Public Sub LoadExecutedDBSqlRevisionsFromDB(cnn As Common.DbConnection, Optional trn As Common.DbTransaction = Nothing)
         ExecutedDBSqlRevisions.Clear()

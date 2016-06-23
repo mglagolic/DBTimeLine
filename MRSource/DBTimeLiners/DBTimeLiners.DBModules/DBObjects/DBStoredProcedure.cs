@@ -1,6 +1,6 @@
 ﻿using Framework.DBTimeLine;
 
-namespace DBModules
+namespace DBTimeLiners.DBModules.DBObjects
 {
     public class DBStoredProcedure : Framework.DBTimeLine.DBObjects.DBObject
     {

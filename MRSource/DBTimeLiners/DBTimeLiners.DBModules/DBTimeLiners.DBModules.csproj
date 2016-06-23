@@ -7,8 +7,8 @@
     <ProjectGuid>{91F233D0-86F9-4597-947E-D1FDF4FA17F4}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DBModules</RootNamespace>
-    <AssemblyName>DBModules</AssemblyName>
+    <RootNamespace>DBTimeLiners.DBModules</RootNamespace>
+    <AssemblyName>DBTimeLiners.DBModules</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -43,6 +43,9 @@
     <Compile Include="dbo.cs" />
     <Compile Include="DBObjects\DBStoredProcedure.cs" />
     <Compile Include="DBObjects\DBStoredProcedureDescriptor.cs" />
+    <Compile Include="EventArgs\ModuleLoadedEventArgs.cs" />
+    <Compile Include="Loader.cs" />
+    <Compile Include="Persisters\DBModulePersister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -53,6 +56,14 @@
     <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj">
       <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
       <Name>Framework.DBTimeLine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Persisting\Framework.Persisting\Framework.Persisting.csproj">
+      <Project>{1ec4a870-bcdf-4bb7-805b-8bd5f88da6fb}</Project>
+      <Name>Framework.Persisting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
+      <Project>{e177c8d6-b8df-4de4-81af-3f2d17e23a05}</Project>
+      <Name>MRFramework.MRPersisting.Factory</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
