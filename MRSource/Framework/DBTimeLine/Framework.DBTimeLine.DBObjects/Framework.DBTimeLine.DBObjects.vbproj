@@ -65,6 +65,13 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DBFieldTypes\DBFieldType.vb" />
+    <Compile Include="DBFieldTypes\DBFieldTypeDatetime.vb" />
+    <Compile Include="DBFieldTypes\DBFieldTypeDecimal.vb" />
+    <Compile Include="DBFieldTypes\DBFieldTypeInteger.vb" />
+    <Compile Include="DBFieldTypes\DBFieldTypeNvarchar.vb" />
+    <Compile Include="DBFieldTypes\DBFieldTypeBoolean.vb" />
+    <Compile Include="DBFieldTypes\DBFieldTypeGuid.vb" />
     <Compile Include="DBIndex.vb" />
     <Compile Include="DBIndexDescriptor.vb" />
     <Compile Include="DBForeignKeyConstraint.vb" />

@@ -22,22 +22,16 @@
         Dim ret As String = ""
 
         With CType(Descriptor, IDBFieldDescriptor)
-            Select Case .FieldType
-                Case eDBFieldType.Guid
-                    ret = "UNIQUEIDENTIFIER"
-                Case eDBFieldType.Integer
-                    ret = "INTEGER"
-                Case eDBFieldType.Nvarchar
-                    ret = "NVARCHAR(" & CStr(IIf(.Size = -1, "MAX", .Size.ToString)) & ")"
-                Case eDBFieldType.Datetime
-                    ret = "DATETIME"
-                Case eDBFieldType.Decimal
-                    ret = "DECIMAL(" & .Size.ToString & ", " & .Precision.ToString & ")"
-                Case eDBFieldType.Boolean
-                    ret = "BIT"
-                Case Else
-                    Throw New NotSupportedException("Unsupported eDBFieldType.")
-            End Select
+            ret = .FieldType.GetFieldTypeSql(Descriptor, dBType)
+
+            'Select Case .FieldType
+
+            '    Case eDBFieldType.Decimal
+            '        ret = "DECIMAL(" & .Size.ToString & ", " & .Precision.ToString & ")"
+
+            '    Case Else
+            '        Throw New NotSupportedException("Unsupported eDBFieldType.")
+            'End Select
 
             If .Nullable Then
                 ret &= " NULL"

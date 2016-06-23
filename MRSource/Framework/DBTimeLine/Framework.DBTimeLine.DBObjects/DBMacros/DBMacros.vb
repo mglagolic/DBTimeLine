@@ -34,15 +34,15 @@ Public Class DBMacros
 #Region "Fields"
 #Region "Descriptors"
     Public Shared Function DBFieldActiveDescriptor() As DBFieldDescriptor
-        Return New DBFieldDescriptor() With {.FieldType = eDBFieldType.Boolean, .Nullable = True}
+        Return New DBFieldDescriptor() With {.FieldType = New DBFieldTypeBoolean, .Nullable = True}
     End Function
 
     Public Shared Function DBFieldIDDescriptor(nullable As Boolean) As DBFieldDescriptor
-        Return New DBFieldDescriptor() With {.FieldType = eDBFieldType.Guid, .Nullable = nullable}
+        Return New DBFieldDescriptor() With {.FieldType = New DBFieldTypeGuid, .Nullable = nullable}
     End Function
 
     Public Shared Function DBFieldNazivDescriptor(nullable As Boolean) As DBFieldDescriptor
-        Return New DBFieldDescriptor() With {.FieldType = eDBFieldType.Nvarchar, .Nullable = nullable, .Size = 512}
+        Return New DBFieldDescriptor() With {.FieldType = New DBFieldTypeNvarchar, .Nullable = nullable, .Size = 512}
     End Function
 
 #End Region

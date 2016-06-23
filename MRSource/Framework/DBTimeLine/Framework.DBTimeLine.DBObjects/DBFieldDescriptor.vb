@@ -1,7 +1,7 @@
 ﻿Public Class DBFieldDescriptor
     Implements IDBFieldDescriptor
 
-    Public Property FieldType As eDBFieldType Implements IDBFieldDescriptor.FieldType
+    Public Property FieldType As IDBFieldType Implements IDBFieldDescriptor.FieldType
     Public Property Size As Integer = 0 Implements IDBFieldDescriptor.Size
     Public Property Precision As Integer = 0 Implements IDBFieldDescriptor.Precision
     Public Property IsIdentity As Boolean = False Implements IDBFieldDescriptor.IsIdentity

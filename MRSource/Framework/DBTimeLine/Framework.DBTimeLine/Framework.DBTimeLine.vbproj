@@ -83,6 +83,7 @@
     <Compile Include="Interfaces\DBObjectDescriptors\IDBPrimaryKeyConstraintDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBSchemaDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBTableDescriptor.vb" />
+    <Compile Include="Interfaces\IDBFieldType.vb" />
     <Compile Include="Interfaces\IDBIndex.vb" />
     <Compile Include="Interfaces\IDBForeignKeyConstraint.vb" />
     <Compile Include="Interfaces\IDBConstraint.vb" />
@@ -93,7 +94,6 @@
     <Compile Include="Interfaces\SqlGenerators\IDBSqlGeneratorFactory.vb" />
     <Compile Include="Interfaces\SqlGenerators\IDBSqlGenerator.vb" />
     <Compile Include="DBSqlRevision.vb" />
-    <Compile Include="Enums\eDBFieldType.vb" />
     <Compile Include="Enums\eDBRevisionType.vb" />
     <Compile Include="Interfaces\IDBModule.vb" />
     <Compile Include="Interfaces\IDBChained.vb" />

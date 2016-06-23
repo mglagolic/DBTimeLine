@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Framework.DBTimeLine;
 using Framework.DBTimeLine.DBObjects;
 
@@ -40,7 +39,7 @@ namespace DBModules
 
             var ret = DBMacros.AddDBTableID("Grad", sch, rev);
 
-            ret.AddField("Naziv", new DBFieldDescriptor() { Nullable = false, FieldType = eDBFieldType.Nvarchar, Size = 512 }, 
+            ret.AddField("Naziv", new DBFieldDescriptor() { Nullable = false, FieldType = new DBFieldTypeNvarchar(), Size = 512 }, 
                 new DBRevision(rev));
 
             DBMacros.AddForeignKeyFieldID("DrzavaID", true, ret, sch.Name + ".Drzava",
@@ -56,8 +55,9 @@ namespace DBModules
 
         private string UpdateStatistics(IDBRevision sender, eDBType dBType)
         {
-            return @"WAITFOR DELAY '00:00:05'
-                exec sp_updatestats";
+            return 
+@"WAITFOR DELAY '00:00:05'
+exec sp_updatestats";
         }
     }
 }
