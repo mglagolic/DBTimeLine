@@ -42,7 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\EventArgs\StartWorkEventArgs.cs" />
+    <Compile Include="Controls\GUIEventArgs\StartWorkEventArgs.cs" />
+    <Compile Include="Controls\StepGroupInfo.cs" />
+    <Compile Include="Controls\StepInfo.cs" />
     <Compile Include="Controls\StepProgressBar.cs">
       <SubType>UserControl</SubType>
     </Compile>

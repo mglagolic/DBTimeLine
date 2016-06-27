@@ -85,6 +85,7 @@ ErrorMessage:
                 foreach (IDBModule m in ret)
                 {
                     DBModules.Add(m);
+                    dBTimeLiner.DBModules.Add(m);
                 }
             }
 

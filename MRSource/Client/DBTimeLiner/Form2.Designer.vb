@@ -27,10 +27,12 @@ Partial Class Form2
         '
         'StepProgressBar1
         '
+        Me.StepProgressBar1.Args = Nothing
         Me.StepProgressBar1.Location = New System.Drawing.Point(30, 12)
         Me.StepProgressBar1.Name = "StepProgressBar1"
         Me.StepProgressBar1.Size = New System.Drawing.Size(385, 411)
         Me.StepProgressBar1.TabIndex = 0
+        Me.StepProgressBar1.Worker = Nothing
         '
         'Form2
         '
@@ -44,5 +46,5 @@ Partial Class Form2
 
     End Sub
 
-    Friend WithEvents StepProgressBar1 As Framework.GUI.Controls.StepProgressBar
+    Public WithEvents StepProgressBar1 As Framework.GUI.Controls.StepProgressBar
 End Class

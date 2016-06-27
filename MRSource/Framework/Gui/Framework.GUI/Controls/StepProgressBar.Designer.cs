@@ -53,6 +53,9 @@
             // 
             this.backWorker.WorkerReportsProgress = true;
             this.backWorker.WorkerSupportsCancellation = true;
+            this.backWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backWorker_DoWork);
+            this.backWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.backWorker_ProgressChanged);
+            this.backWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.backWorker_RunWorkerCompleted);
             // 
             // pnlBottom
             // 
@@ -154,13 +157,12 @@
         }
 
         #endregion
-
-        internal System.ComponentModel.BackgroundWorker backWorker;
         internal System.Windows.Forms.Panel pnlBottom;
         internal System.Windows.Forms.Button btnCancel;
         internal System.Windows.Forms.ColumnHeader colStep;
         internal System.Windows.Forms.ColumnHeader colDuration;
         internal System.Windows.Forms.ProgressBar ProgressBar1;
-        private System.Windows.Forms.ListView ListView1;
+        internal System.ComponentModel.BackgroundWorker backWorker;
+        public System.Windows.Forms.ListView ListView1;
     }
 }

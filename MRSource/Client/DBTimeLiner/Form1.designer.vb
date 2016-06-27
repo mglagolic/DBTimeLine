@@ -39,7 +39,10 @@ Partial Class Form1
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.treeRevisions = New System.Windows.Forms.TreeView()
+        Me.pnlProgress = New System.Windows.Forms.Panel()
+        Me.StepProgressBar1 = New Framework.GUI.Controls.StepProgressBar()
         Me.pnlControl = New System.Windows.Forms.Panel()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.btnAnalyze = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.gbModules = New System.Windows.Forms.GroupBox()
@@ -50,11 +53,11 @@ Partial Class Form1
         Me.cAssemblyName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cCreated = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cDescription = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlRtb.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
+        Me.pnlProgress.SuspendLayout()
         Me.pnlControl.SuspendLayout()
         Me.gbModules.SuspendLayout()
         CType(Me.dgvModules, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -146,6 +149,7 @@ Partial Class Form1
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.GroupBox1)
+        Me.Panel2.Controls.Add(Me.pnlProgress)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Right
         Me.Panel2.Location = New System.Drawing.Point(828, 106)
         Me.Panel2.Name = "Panel2"
@@ -156,10 +160,9 @@ Partial Class Form1
         '
         Me.GroupBox1.BackColor = System.Drawing.Color.White
         Me.GroupBox1.Controls.Add(Me.treeRevisions)
-        Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox1.Location = New System.Drawing.Point(0, 0)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(336, 500)
+        Me.GroupBox1.Size = New System.Drawing.Size(336, 204)
         Me.GroupBox1.TabIndex = 1
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Revisions"
@@ -189,8 +192,26 @@ Partial Class Form1
         TreeNode7.Name = "Node0"
         TreeNode7.Text = "DBTimeLiner"
         Me.treeRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode7})
-        Me.treeRevisions.Size = New System.Drawing.Size(330, 481)
+        Me.treeRevisions.Size = New System.Drawing.Size(330, 185)
         Me.treeRevisions.TabIndex = 0
+        '
+        'pnlProgress
+        '
+        Me.pnlProgress.Controls.Add(Me.StepProgressBar1)
+        Me.pnlProgress.Location = New System.Drawing.Point(26, 220)
+        Me.pnlProgress.Name = "pnlProgress"
+        Me.pnlProgress.Size = New System.Drawing.Size(307, 274)
+        Me.pnlProgress.TabIndex = 3
+        '
+        'StepProgressBar1
+        '
+        Me.StepProgressBar1.Args = Nothing
+        Me.StepProgressBar1.CurrentStepIndex = -1
+        Me.StepProgressBar1.Location = New System.Drawing.Point(34, 43)
+        Me.StepProgressBar1.Name = "StepProgressBar1"
+        Me.StepProgressBar1.Size = New System.Drawing.Size(249, 191)
+        Me.StepProgressBar1.TabIndex = 2
+        Me.StepProgressBar1.Worker = Nothing
         '
         'pnlControl
         '
@@ -205,6 +226,18 @@ Partial Class Form1
         Me.pnlControl.Name = "pnlControl"
         Me.pnlControl.Size = New System.Drawing.Size(1154, 96)
         Me.pnlControl.TabIndex = 8
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.BackColor = System.Drawing.Color.Blue
+        Me.Button1.ForeColor = System.Drawing.Color.White
+        Me.Button1.Location = New System.Drawing.Point(397, 42)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(85, 48)
+        Me.Button1.TabIndex = 8
+        Me.Button1.Text = "Analyze frmProgress"
+        Me.Button1.UseVisualStyleBackColor = False
         '
         'btnAnalyze
         '
@@ -292,18 +325,6 @@ Partial Class Form1
         Me.cDescription.Name = "cDescription"
         Me.cDescription.Width = 200
         '
-        'Button1
-        '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.BackColor = System.Drawing.Color.Blue
-        Me.Button1.ForeColor = System.Drawing.Color.White
-        Me.Button1.Location = New System.Drawing.Point(397, 42)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(85, 48)
-        Me.Button1.TabIndex = 8
-        Me.Button1.Text = "Analyze frmProgress"
-        Me.Button1.UseVisualStyleBackColor = False
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -322,6 +343,7 @@ Partial Class Form1
         Me.pnlRtb.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.GroupBox1.ResumeLayout(False)
+        Me.pnlProgress.ResumeLayout(False)
         Me.pnlControl.ResumeLayout(False)
         Me.pnlControl.PerformLayout()
         Me.gbModules.ResumeLayout(False)
@@ -352,4 +374,6 @@ Partial Class Form1
     Friend WithEvents cDescription As DataGridViewTextBoxColumn
     Friend WithEvents btnAnalyze As Button
     Friend WithEvents Button1 As Button
+    Friend WithEvents pnlProgress As Panel
+    Friend WithEvents StepProgressBar1 As Framework.GUI.Controls.StepProgressBar
 End Class
