@@ -283,6 +283,15 @@ Public Class Form1
         StartWorker(False)
     End Sub
 
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        'Dim steps As New List(Of frmProgress.StepInfo)
+        'steps.Add(New frmProgress.StepInfo() With {.Title = "", .MaxValue = 100, .ProgressIncrement = 1, .Worker = AddressOf CreateTimeLineDB})
+        Using frm As New Form2()
+            frm.ShowDialog()
+        End Using
+
+    End Sub
+
 #End Region
 
 
