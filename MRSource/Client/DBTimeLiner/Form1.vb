@@ -1,5 +1,5 @@
 ﻿Option Strict On
-
+Imports Framework.GUI.Helpers
 Imports Framework.Persisting
 Imports MRFramework.MRPersisting.Factory
 Imports Framework.DBTimeLine
@@ -7,8 +7,6 @@ Imports System.ComponentModel
 Imports Framework.DBTimeLine.DBObjects
 Imports Customizations.Core.EventArgs
 Imports DBTimeLiners.DBModules.EventArgs
-Imports Framework.GUI.Controls.GUIEventArgs
-Imports Framework.GUI.Controls
 
 Public Class Form1
 
@@ -42,7 +40,8 @@ Public Class Form1
 
     Private Sub ProgressReportedHandler(sender As Object, e As ProgressReportedEventArgs)
         If e.TotalSteps <> 0 Then
-            backWorker.ReportProgress(CInt(e.CurrentStep / e.TotalSteps * 100))
+            backWorker.ReportProgress(CInt(e.CurrentStep / (e.TotalSteps + 1) * 100))
+            StepProgressBar1.ReportProgress(CInt(e.CurrentStep / (e.TotalSteps + 1) * 100))
         End If
     End Sub
 
@@ -74,25 +73,27 @@ Public Class Form1
 
     Delegate Sub WriteTextToRtbCallback(rtb As RichTextBox, text As String, color As Color)
     Private Sub WriteTextToRtb(rtb As RichTextBox, text As String, color As Color)
-        If rtb.InvokeRequired Then
-            Dim d As New WriteTextToRtbCallback(AddressOf WriteTextToRtb)
-            rtb.Invoke(d, rtb, text, color)
-            Exit Sub
-        End If
+        Dim pars As New ArrayList
+        pars.Add(text)
+        pars.Add(color)
 
-        rtb.SelectionColor = color
-        rtb.AppendText(text)
-        rtb.ScrollToCaret()
+        CrossThreadingHelpers.InvokeControl(rtb, pars, Sub(x)
+                                                           Dim input As ArrayList = CType(x, ArrayList)
+                                                           rtb.SelectionColor = CType(input(1), Color)
+                                                           rtb.AppendText(CType(input(0), String))
+                                                           rtb.ScrollToCaret()
+                                                       End Sub)
+
     End Sub
 
     Delegate Sub WriteErrorToMessageBoxCallback(text As String)
     Private Sub WriteErrorToMessageBox(text As String)
-        If InvokeRequired Then
-            Dim d As New WriteErrorToMessageBoxCallback(AddressOf WriteErrorToMessageBox)
-            Invoke(d, text)
-            Exit Sub
-        End If
-        MessageBox.Show(text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        Dim pars As New ArrayList
+        pars.Add(text)
+        CrossThreadingHelpers.InvokeControl(Me, pars, Sub(x)
+                                                          Dim str As String = CStr(DirectCast(x, ArrayList)(0))
+                                                          MessageBox.Show(str, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
+                                                      End Sub)
     End Sub
 
 #End Region
@@ -101,8 +102,18 @@ Public Class Form1
     Private customizationLoader As Customizations.Core.Loader = Nothing
     Private moduleLoader As DBTimeLiners.DBModules.Loader = Nothing
 
-    Private Sub CreateTimeLineDB(sender As Object, args As WorkEventArgs)
+    Private Class CreateTimeLineDBInputs
+        Public Property ActionType As eActionType = 0
+    End Class
 
+    Public Enum eActionType
+        None = -1
+        Analyze = 0
+        Rollback = 1
+        Commit = 0
+    End Enum
+
+    Private Sub CreateTimeLineDB(sender As Object, inputs As CreateTimeLineDBInputs)
         creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
         customizationLoader = New Customizations.Core.Loader()
         moduleLoader = New DBTimeLiners.DBModules.Loader()
@@ -113,11 +124,9 @@ Public Class Form1
         AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
         AddHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
 
-        If args.Parent IsNot Nothing Then
-            args.Parent.NextStep(500)
-        End If
 
         creator.CreateSystemObjects()
+        StepProgressBar1.NextStep(True, 250)
 
         ' TODO - popraviti progress bar 
         ' TODO - omoguciti samo dohvat novih revizija, bez executea
@@ -133,43 +142,38 @@ Public Class Form1
 
         'Dim dbo As New DBTimeLiners.DBModules.dbo
 
-        If args.Parent IsNot Nothing Then
-            args.Parent.NextStep(500)
-        End If
-
         moduleLoader.LoadModulesFromDB(creator)
 
         customizationLoader.LoadCustomizers()
+        StepProgressBar1.NextStep(True, 250)
 
         For i As Integer = 0 To moduleLoader.DBModules.Count - 1
             moduleLoader.DBModules(i).LoadRevisions()
         Next
 
-        If args.Parent IsNot Nothing Then
-            args.Parent.NextStep(500)
-        End If
 
         Dim callMethodsInputs As New Dictionary(Of String, Object)
         callMethodsInputs.Add("DBTimeLiner", creator)
         customizationLoader.CallMethods("CreateTimeLine", callMethodsInputs)
 
-        If args.Parent IsNot Nothing Then
-            args.Parent.NextStep(500)
-        End If
-
         Using cnn As Common.DbConnection = MRC.GetConnection()
             cnn.Open()
-
             Using trn As Common.DbTransaction = cnn.BeginTransaction
-
+                StepProgressBar1.NextStep(True, 250)
                 creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
 
-                If Not CBool(args.Inputs("ANALYZE")) Then
+                If Not inputs.ActionType = eActionType.Commit OrElse inputs.ActionType = eActionType.Rollback Then
+                    StepProgressBar1.NextStep(False)
                     creator.ExecuteDBSqlRevisions(cnn, trn)
 
-                    If CBool(args.Inputs("COMMIT")) Then
+                    StepProgressBar1.NextStep(False)
+                    creator.ExecuteDBSqlRevisionsAlwaysExecutingTasks(cnn, trn)
+
+                    StepProgressBar1.NextStep(True, 250)
+                    If inputs.ActionType = eActionType.Commit Then
                         trn.Commit()
                     Else
+                        ' TODO - provjeriti timeout
                         trn.Rollback()
                     End If
                 End If
@@ -182,10 +186,6 @@ Public Class Form1
 
             End Using
         End Using
-
-        If args.Parent IsNot Nothing Then
-            args.Parent.NextStep(500)
-        End If
 
         RemoveHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
         RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
@@ -201,13 +201,14 @@ Public Class Form1
         treeRevisions.Nodes.Clear()
         Dim root As TreeNode = treeRevisions.Nodes.Add("root", "DBTimeLiner")
         root.BackColor = Color.DarkSeaGreen
+        If creator IsNot Nothing Then
+            For Each dBModule As IDBModule In creator.DBModules
+                Dim nodModule = root.Nodes.Add(dBModule.ModuleKey & " (Module)")
+                nodModule.BackColor = Color.CornflowerBlue
 
-        For Each dBModule As IDBModule In creator.DBModules
-            Dim nodModule = root.Nodes.Add(dBModule.ModuleKey & " (Module)")
-            nodModule.BackColor = Color.CornflowerBlue
-
-            FillTreeViewRecursive(nodModule, dBModule, 0)
-        Next
+                FillTreeViewRecursive(nodModule, dBModule, 0)
+            Next
+        End If
     End Sub
 
     Private Function GetNodeColor(level As Integer) As Color
@@ -251,7 +252,7 @@ Public Class Form1
     Private Sub CreateTimeLineDBDoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
         Try
-            CreateTimeLineDB(sender, DirectCast(e.Argument, WorkEventArgs))
+            CreateTimeLineDB(sender, DirectCast(e.Argument, CreateTimeLineDBInputs))
         Catch ex As Exception
             'WriteException(ex)
             If Debugger.IsAttached Then
@@ -261,7 +262,7 @@ Public Class Form1
         End Try
     End Sub
 
-    Private Sub StartWorker(analyze As Boolean)
+    Private Sub StartWorker(actionType As eActionType)
         ts1 = New TimeSpan(Now.Ticks)
         pnlControl.Enabled = False
 
@@ -270,87 +271,33 @@ Public Class Form1
         If backWorker.IsBusy Then
             backWorker.CancelAsync()
         Else
-            Dim args As New WorkEventArgs()
-            With args
-                .Inputs = New Dictionary(Of String, Object)
-                .Inputs.Add("COMMIT", chxCommit.Checked)
-                .Inputs.Add("ANALYZE", analyze)
-            End With
-            backWorker.RunWorkerAsync(args)
+            Dim inputs As New CreateTimeLineDBInputs With {.ActionType = actionType}
+            backWorker.RunWorkerAsync(inputs)
         End If
     End Sub
 
-    Private Sub btnAnalyze_Click(sender As Object, e As EventArgs) Handles btnAnalyze.Click
-        StartWorker(True)
+    Private Sub actionButton_Click(sender As Object, e As EventArgs) Handles btnAnalyze.Click, btnCommit.Click, btnRollback.Click
+        Dim actionType As eActionType = eActionType.None
+        If sender Is btnAnalyze Then
+            actionType = eActionType.Analyze
+        ElseIf sender Is btnRollback Then
+            actionType = eActionType.Rollback
+        ElseIf sender Is btnCommit Then
+            actionType = eActionType.Commit
+        End If
+        If actionType <> eActionType.None Then
+            StartWorker(actionType)
+        End If
     End Sub
-
-    Private Sub btnApply_Click(sender As Object, e As EventArgs) Handles btnApply.Click
-        StartWorker(False)
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ts1 = New TimeSpan(Now.Ticks)
-        pnlControl.Enabled = False
-
-        rtb1.Text = ""
-        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
-
-        Dim args As New WorkEventArgs()
-        With args
-            .Inputs = New Dictionary(Of String, Object)
-            .Inputs.Add("COMMIT", chxCommit.Checked)
-            .Inputs.Add("ANALYZE", True)
-        End With
-
-        Dim stepGroups As List(Of Framework.GUI.Controls.StepGroupInfo) = GetStepGroups()
-        Dim steps As List(Of Framework.GUI.Controls.StepInfo) = GetSteps(stepGroups)
-
-        Using frm As New Form2("...working", AddressOf CreateTimeLineDB, args, steps, stepGroups)
-            AddHandler frm.StepProgressBar1.RunWorkerCompleted, AddressOf backWorker_RunWorkerCompleted
-            AddHandler frm.StepProgressBar1.ProgressChanged, AddressOf backWorker_ProgressChanged
-            args.Parent = frm.StepProgressBar1
-            frm.StartPosition = FormStartPosition.CenterParent
-            frm.ShowDialog()
-            RemoveHandler frm.StepProgressBar1.RunWorkerCompleted, AddressOf backWorker_RunWorkerCompleted
-            RemoveHandler frm.StepProgressBar1.ProgressChanged, AddressOf backWorker_ProgressChanged
-        End Using
-
-    End Sub
-
-    Private Function GetStepGroups() As List(Of StepGroupInfo)
-        Dim stepGroups As New List(Of StepGroupInfo)
-        stepGroups.Add(New StepGroupInfo() With {.Key = "INIT", .Title = "Initializing"})
-        stepGroups.Add(New StepGroupInfo() With {.Key = "CREATE", .Title = "Creating timeline"})
-        stepGroups.Add(New StepGroupInfo() With {.Key = "APPLY", .Title = "Applying timeline"})
-        stepGroups.Add(New StepGroupInfo() With {.Key = "FINISH", .Title = "Finishing taska"})
-
-        Return stepGroups
-    End Function
-
-    Private Function GetSteps(stepGroups As List(Of StepGroupInfo)) As List(Of StepInfo)
-        Dim steps As New List(Of Framework.GUI.Controls.StepInfo)
-
-        steps.Add(New StepInfo() With {.Title = "Checking system objects", .Group = stepGroups.Find(Function(x) (x.Key = "INIT"))})
-
-        steps.Add(New StepInfo() With {.Title = "Loading modules", .Group = stepGroups.Find(Function(x) (x.Key = "CREATE"))})
-        steps.Add(New StepInfo() With {.Title = "Loading customizations", .Group = stepGroups.Find(Function(x) (x.Key = "CREATE"))})
-
-        steps.Add(New StepInfo() With {.Title = "Applying changes", .Group = stepGroups.Find(Function(x) (x.Key = "APPLY"))})
-        steps.Add(New StepInfo() With {.Title = "Running always execute tasks", .Group = stepGroups.Find(Function(x) (x.Key = "APPLY"))})
-
-        steps.Add(New StepInfo() With {.Title = "Finishing tasks", .Group = stepGroups.Find(Function(x) (x.Key = "FINISH"))})
-
-        Return steps
-    End Function
 
     Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged
-        ProgressBar1.Value = e.ProgressPercentage
+        'CrossThreadingHelpers.InvokeControl(ProgressBar1, e.ProgressPercentage, Sub(x) ProgressBar1.Value = CInt(x))
     End Sub
 
 
     Private Sub backWorker_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles backWorker.RunWorkerCompleted
         'Private Sub backWorker_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles backWorker.RunWorkerCompleted
-        ProgressBar1.Value = 100
+        'ProgressBar1.Value = 100
         ts2 = New TimeSpan(Now.Ticks)
 
         WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
@@ -361,5 +308,73 @@ Public Class Form1
 
 #End Region
 
+#Region "Progress"
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        ts1 = New TimeSpan(Now.Ticks)
+        pnlControl.Enabled = False
+
+        rtb1.Text = ""
+        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
+
+        InitSteps()
+        Dim inputs As New CreateTimeLineDBInputs With {.ActionType = eActionType.Rollback}
+        StepProgressBar1.StartWork(inputs)
+    End Sub
+
+    Private Sub InitSteps()
+        StepProgressBar1.CurrentStepIndex = -1
+        With StepProgressBar1.ListView1
+            .Groups.Clear()
+            .Items.Clear()
+
+            Dim grpInit As New ListViewGroup() With {.Header = "Initializing", .Name = "1"}
+            Dim grpCreate As New ListViewGroup() With {.Header = "Creating timeline", .Name = "2"}
+            Dim grpApply As New ListViewGroup() With {.Header = "Applying timeline", .Name = "3"}
+            Dim grpFinish As New ListViewGroup() With {.Header = "finishing tasks", .Name = "4"}
+
+            .Groups.Add(grpInit)
+            .Groups.Add(grpCreate)
+            .Groups.Add(grpApply)
+            .Groups.Add(grpFinish)
+
+            .Items.Add(New ListViewItem() With {.Group = grpInit, .Tag = "1", .Text = "Checking system objects"})
+            .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "2", .Text = "Loading modules"})
+            .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "3", .Text = "Loading customizations"})
+            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "4", .Text = "Applying changes"})
+            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "5", .Text = "Running always execute tasks"})
+            .Items.Add(New ListViewItem() With {.Group = grpFinish, .Tag = "6", .Text = "Finishing work"})
+        End With
+    End Sub
+
+    Private Sub StepProgressBar1_DoWork(sender As Object, e As DoWorkEventArgs) Handles StepProgressBar1.DoWork
+        StepProgressBar1.ReportProgress(0)
+        Try
+            CreateTimeLineDB(sender, DirectCast(e.Argument, CreateTimeLineDBInputs))
+        Catch ex As Exception
+            'WriteException(ex)
+            If Debugger.IsAttached Then
+                Debugger.Break()
+            End If
+            WriteErrorToMessageBox(ex.Message & vbNewLine & "StackTrace:" & vbNewLine & ex.StackTrace)
+        End Try
+    End Sub
+
+    Private Sub StepProgressBar1_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles StepProgressBar1.RunWorkerCompleted
+        'StepProgressBar1.Progress.Value = 100
+        ts2 = New TimeSpan(Now.Ticks)
+
+        WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
+        WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
+        pnlControl.Enabled = True
+        FillTreeView()
+    End Sub
+
+    Private Sub StepProgressBar1_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles StepProgressBar1.ProgressChanged
+
+    End Sub
+
+
+#End Region
 
 End Class

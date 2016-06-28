@@ -86,16 +86,24 @@ Public Class DBTimeLiner
 
     Public Sub ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction)
         Try
-            'Dim notExecutedRevisions As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+            ExecuteDBSqlRevisionBatches(NewDBSqlRevisions, cnn, trn, False)
+        Catch ex As Exception
+            ' CONSIDER - do some logging
+            Throw
+        End Try
+    End Sub
+
+    Public Sub ExecuteDBSqlRevisionsAlwaysExecutingTasks(cnn As DbConnection, trn As DbTransaction)
+        Try
             Dim alwaysExecutingTasks As List(Of DBSqlRevision) = SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType = eDBRevisionType.AlwaysExecuteTask).ToList
 
-            'ExecuteDBSqlRevisionBatches(notExecutedRevisions, cnn, trn, False)
-            ExecuteDBSqlRevisionBatches(NewDBSqlRevisions, cnn, trn, False)
             ExecuteDBSqlRevisionBatches(alwaysExecutingTasks, cnn, trn, True)
         Catch ex As Exception
             ' CONSIDER - do some logging
+            Throw
         End Try
     End Sub
+
 
     Public Sub CreateSystemObjects()
         CreateSchema()

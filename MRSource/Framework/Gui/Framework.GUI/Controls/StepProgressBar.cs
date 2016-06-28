@@ -1,13 +1,9 @@
-﻿using System;
+﻿using Framework.GUI.Helpers;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Framework.GUI.Controls.GUIEventArgs;
 
 namespace Framework.GUI.Controls
 {
@@ -17,50 +13,41 @@ namespace Framework.GUI.Controls
         {
             InitializeComponent();
         }
-
-        public StepProgressBar(WorkEventHandler worker, WorkEventArgs args): this()
+     
+        public void StartWork(object inputs)
         {
-            Worker = worker;
-            Args = args;
-        }
-
-        public delegate void WorkEventHandler(object sender, WorkEventArgs e);
-        public WorkEventHandler Worker { get; set; }
-        public WorkEventArgs Args { get; set; }
-
-        System.Threading.ManualResetEvent _busy = null;
-
-        public void StartWork()
-        {
+            ProgressBar1.Enabled = true;
             if (backWorker.IsBusy)
             {
                 backWorker.CancelAsync();
             }
             else
             {
-                backWorker.RunWorkerAsync(Args);
+                backWorker.RunWorkerAsync(inputs);
             }
-            
         }
+        
+        #region Events and Event raisers
 
-        private void btnCancel_Click(object sender, System.EventArgs e)
+        public delegate void ButtonClickEventHandler(object sender, EventArgs e);
+        public event ButtonClickEventHandler Aborted;
+        public void OnAborted(object sender, EventArgs e)
         {
-            backWorker.CancelAsync();
-            ((Form)Parent).DialogResult = DialogResult.Abort;
-        }
-
-        private void backWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
-            _busy = new System.Threading.ManualResetEvent(false);
-            if (Worker != null)
+            if (backWorker.IsBusy)
             {
-                Worker.Invoke(this, Args);
+                backWorker.CancelAsync();
+            }
+
+            if (Aborted != null)
+            {
+                Aborted(sender, e);
             }
         }
 
         public event RunWorkerCompletedEventHandler RunWorkerCompleted;
         public void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            ProgressBar1.Style = ProgressBarStyle.Blocks;
             ProgressBar1.Value = 100;
             if (RunWorkerCompleted != null)
             {
@@ -68,9 +55,13 @@ namespace Framework.GUI.Controls
             }
         }
 
-        private void backWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        public event DoWorkEventHandler DoWork;
+        public void OnDoWork(object sender, DoWorkEventArgs e)
         {
-            OnRunWorkerCompleted(sender, e);
+            if (DoWork != null)
+            {
+                DoWork(sender, e);
+            }
         }
 
         public event ProgressChangedEventHandler ProgressChanged;
@@ -82,33 +73,35 @@ namespace Framework.GUI.Controls
                 ProgressChanged(sender, e);
             }
         }
+
+        #endregion
+
+        #region Event pipes
+        private void btnAbort_Click(object sender, EventArgs e)
+        {
+            OnAborted(sender, e);
+        }
+
+        private void backWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            OnRunWorkerCompleted(sender, e);
+        }
+
+
         private void backWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
             OnProgressChanged(sender, e);
         }
 
-        public void InitializeSteps(List<StepInfo> steps, List<StepGroupInfo> groups)
+        private void backWorker_DoWork(object sender, DoWorkEventArgs e)
         {
-            ListView1.Items.Clear();
-            ListView1.Groups.Clear();
-            
-            foreach (var group in groups)
-            {
-                ListView1.Groups.Add(new ListViewGroup(group.Key, group.Title));
-            }
-
-            foreach (var step in steps)
-            {
-                var item = new ListViewItem()
-                {
-                    Group = ListView1.Groups[step.Group.Key],
-                    Text = step.Title
-                };
-                ListView1.Items.Add(item);
-            }
+            OnDoWork(sender, e);
         }
 
+        #endregion
+
         private int _CurrentStepIndex = -1;
+        //[System.ComponentModel.DesignerSerializationVisibility (DesignerSerializationVisibility.Hidden)]
         public int CurrentStepIndex
         {
             get
@@ -153,18 +146,52 @@ namespace Framework.GUI.Controls
         }
 
 
-        public void NextStep()
+        public void NextStep(bool marquee)
         {
-            CurrentStepIndex++;
+            if (ListView1.Items.Count > CurrentStepIndex + 1)
+            {
+                CurrentStepIndex++;
+                if (marquee)
+                {
+                    CrossThreadingHelpers.InvokeControl(ProgressBar1, null, (x) => 
+                        {
+                            ProgressBar1.Style = ProgressBarStyle.Marquee;
+                        });
+                }
+                else
+                {
+                    ReportProgress(0);
+                    CrossThreadingHelpers.InvokeControl(ProgressBar1, null, (x) => { ProgressBar1.Style = ProgressBarStyle.Blocks; });
+                }
+            }
+
         }
-        public void NextStep(int waitMiliseconds)
+        public void NextStep(bool continuous, int waitMiliseconds)
         {
-            NextStep();
-            //_busy.Reset();
-            //var ts1 = new TimeSpan();
+            NextStep(continuous);
             System.Threading.Thread.Sleep(waitMiliseconds);
-            //var ts2 = new TimeSpan();
         }
+        public void ReportProgress(int percentProgress)
+        {
+            backWorker.ReportProgress(percentProgress);
+        }
+
+        public ListView Grid
+        {
+            get
+            {
+                return ListView1;
+            }
+        }
+        public ProgressBar Progress
+        {
+            get
+            {
+                return ProgressBar1;
+            }
+        }
+
+        
     }
 }
 

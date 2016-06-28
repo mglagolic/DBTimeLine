@@ -42,15 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\GUIEventArgs\StartWorkEventArgs.cs" />
-    <Compile Include="Controls\StepGroupInfo.cs" />
-    <Compile Include="Controls\StepInfo.cs" />
     <Compile Include="Controls\StepProgressBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\StepProgressBar.Designer.cs">
       <DependentUpon>StepProgressBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\CrossThreadingHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
