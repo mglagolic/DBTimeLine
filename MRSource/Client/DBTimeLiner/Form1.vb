@@ -128,9 +128,9 @@ Public Class Form1
         creator.CreateSystemObjects()
         StepProgressBar1.NextStep(True, 250)
 
-        ' TODO - popraviti progress bar 
-        ' TODO - omoguciti samo dohvat novih revizija, bez executea
-        ' TODO - prikazati module u gridu
+        ' TODO - maknuti zbrajanje commandTimeouta - razmisliti o MAX value umjesto
+        ' TODO - dodati novi eRevisionType = AlwaysExecuteCreate (koristiti za viewove i procedure. omoguciti ucitavanje body-a iz fajla .sql)
+        ' TODO - omoguciti prikaz novih revizija, bez executea
         ' TODO - isprogramirati podrsku za triggere
         ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
         ' TODO - u novom persisteru maknuti implementation u posebni dll
@@ -173,8 +173,29 @@ Public Class Form1
                     If inputs.ActionType = eActionType.Commit Then
                         trn.Commit()
                     Else
-                        ' TODO - provjeriti timeout
-                        trn.Rollback()
+                        Dim ts1 As TimeSpan
+                        Dim ts2 As TimeSpan
+                        Try
+                            ' TODO - provjeriti timeout
+                            ts1 = Now.TimeOfDay
+                            trn.Rollback()
+                            ts2 = Now.TimeOfDay
+                        Catch sqlEx As SqlClient.SqlException
+                            ts2 = Now.TimeOfDay
+                            If sqlEx.Number = -2 Then
+                                ' timeout expired
+                                ' progutati
+                                If Debugger.IsAttached Then
+                                    Debugger.Break()
+                                End If
+                            Else
+                                Throw
+                            End If
+                        Catch ex As Exception
+                            ts2 = Now.TimeOfDay
+                            Throw
+                        End Try
+
                     End If
                 End If
 

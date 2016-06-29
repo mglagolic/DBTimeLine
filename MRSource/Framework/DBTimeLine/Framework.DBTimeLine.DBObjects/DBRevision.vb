@@ -10,23 +10,24 @@ Public Class DBRevision
     Public Property Granulation As Integer Implements IDBRevision.Granulation
     Public Property PreSqlTask As RevisionTaskDelegate Implements IDBRevision.PreSqlTask
     Public Property PostSqlTask As RevisionTaskDelegate Implements IDBRevision.PostSqlTask
-
+    Public Property CommandTimeout As Integer Implements IDBRevision.CommandTimeout
 
     Private Sub New()
 
     End Sub
 
-    Public Sub New(created As Date, granulation As Integer, ByVal dBRevisionType As eDBRevisionType, Optional preSqlTask As RevisionTaskDelegate = Nothing, Optional postSqlTask As RevisionTaskDelegate = Nothing)
+    Public Sub New(created As Date, granulation As Integer, ByVal dBRevisionType As eDBRevisionType, Optional preSqlTask As RevisionTaskDelegate = Nothing, Optional postSqlTask As RevisionTaskDelegate = Nothing, Optional commandTimeout As Integer = 30)
         MyClass.New()
         Me.DBRevisionType = dBRevisionType
         Me.Created = created
         Me.Granulation = granulation
         Me.PreSqlTask = preSqlTask
         Me.PostSqlTask = postSqlTask
+        Me.CommandTimeout = commandTimeout
     End Sub
 
     Public Sub New(revision As DBRevision)
-        MyClass.New(revision.Created, revision.Granulation, revision.DBRevisionType, preSqlTask:=revision.PreSqlTask, postSqlTask:=revision.PostSqlTask)
+        MyClass.New(revision.Created, revision.Granulation, revision.DBRevisionType, preSqlTask:=revision.PreSqlTask, postSqlTask:=revision.PostSqlTask, commandTimeout:=revision.CommandTimeout)
     End Sub
 
     Public Function GetSql() As String Implements IDBRevision.GetSql

@@ -8,4 +8,5 @@ Public Interface IDBRevision
     Property PreSqlTask As RevisionTaskDelegate
     Property PostSqlTask As RevisionTaskDelegate
     Function GetSql() As String
+    Property CommandTimeout As Integer
 End Interface

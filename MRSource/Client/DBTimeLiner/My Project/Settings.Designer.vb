@@ -83,7 +83,8 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=localhost;Initial Catalog=Test5;Integrated Security=True")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=localhost;Initial Catalog=Test5;Integrated Security=True;Connection T"& _ 
+            "imeout=30")>  _
         Public Property OmegaLocalConnectionString() As String
             Get
                 Return CType(Me("OmegaLocalConnectionString"),String)

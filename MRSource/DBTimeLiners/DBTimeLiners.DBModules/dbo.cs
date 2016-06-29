@@ -24,6 +24,7 @@ namespace DBTimeLiners.DBModules
             Drzava(sch);
             Grad(sch);
             Always(sch);
+
         }
 
         private string FillDrzava(IDBRevision sender, eDBType dBType)
@@ -47,7 +48,10 @@ SELECT
     Naziv = CAST(Number as nvarchar(512)) 
 FROM Tally 
 WHERE 
-    Number <= 1000000", sender.Parent.SchemaName + "." + sender.Parent.SchemaObjectName);
+    Number <= 1000000
+
+WAITFOR DELAY '00:00:03'
+", sender.Parent.SchemaName + "." + sender.Parent.SchemaObjectName);
 
             return ret;
         }
@@ -57,7 +61,7 @@ WHERE
             var rev = new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.Create);
             var ret = DBMacros.AddTableIDNaziv("Drzava", sch, rev);
 
-            ret.AddRevision(new DBRevision(new DateTime(2016, 6, 28), 0, eDBRevisionType.Task, FillDrzava, null));
+            ret.AddRevision(new DBRevision(new DateTime(2016, 6, 28), 0, eDBRevisionType.Task, FillDrzava, null, 150));
 
             return ret;
         }
@@ -79,6 +83,9 @@ WHERE
         private void Always(IDBSchema sch)
         {
             sch.AddRevision(new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.AlwaysExecuteTask, UpdateStatistics));
+            
+            sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 1", WithSchemaBinding = false },
+                new DBRevision(new DateTime(2016, 6, 29), 0, eDBRevisionType.AlwaysExecuteTask));
         }
 
         private string UpdateStatistics(IDBRevision sender, eDBType dBType)

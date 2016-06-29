@@ -117,7 +117,7 @@ Public Class DBTimeLiner
 
 #Region "Private methods"
 
-    Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean)
+    Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean, Optional commandTimeout As Integer = 30)
         Dim batches As List(Of String) = DBSqlGenerator.SplitSqlStatements(script).ToList
 
         For Each batch As String In batches
@@ -127,6 +127,7 @@ Public Class DBTimeLiner
                 Dim errorMessage As String = ""
                 Dim runtimeException As Exception = Nothing
                 Try
+                    cmd.CommandTimeout = commandTimeout
                     cmd.CommandText = batch
                     cmd.Transaction = trn
 
@@ -141,9 +142,9 @@ Public Class DBTimeLiner
                         ts2 = New TimeSpan(Now.Ticks)
                     End If
                 Catch ex As SqlClient.SqlException
-                    'If Debugger.IsAttached Then
-                    '    Debugger.Break()
-                    'End If
+                    If Debugger.IsAttached Then
+                        Debugger.Break()
+                    End If
                     runtimeException = ex
                     errorMessage = ex.Message
                     Throw
@@ -170,8 +171,7 @@ Public Class DBTimeLiner
     End Sub
 
     Private Sub ExecuteRevisionBatch(script As String, revisions As List(Of DBSqlRevision), executedRevisionsCount As Integer, totalRevisionsCount As Integer, cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
-        ExecuteScriptBatches(script, cnn, trn, False)
-
+        Dim commandTimeout As Integer
         Dim dlos As New List(Of IMRDLO)
         revisions.ForEach(
                             Sub(rev)
@@ -180,7 +180,11 @@ Public Class DBTimeLiner
                                 dlo.ColumnValues.Add("ID", Guid.NewGuid)
                                 dlo.ColumnValues.Add("Executed", Now())
                                 dlos.Add(dlo)
+                                commandTimeout += rev.Parent.CommandTimeout
                             End Sub)
+
+        ExecuteScriptBatches(script, cnn, trn, False, commandTimeout)
+
         Dim per As IMRPersister = Nothing
         Try
             If alwaysExecutingTask Then
@@ -188,7 +192,6 @@ Public Class DBTimeLiner
             Else
                 per = New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
             End If
-
             per.InsertBulk(dlos, trn)
         Catch
             Throw
