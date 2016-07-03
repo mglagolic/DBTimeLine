@@ -32,7 +32,8 @@ namespace DBTimeLiners.DBModules
 
             var ret = string.Format(
 
-@"WITH
+@"GO
+WITH
   Pass0 as (select 1 as C union all select 1), --2 rows
   Pass1 as (select 1 as C from Pass0 as A, Pass0 as B),--4 rows
   Pass2 as (select 1 as C from Pass1 as A, Pass1 as B),--16 rows

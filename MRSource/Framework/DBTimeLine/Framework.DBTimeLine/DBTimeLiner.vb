@@ -14,6 +14,7 @@ Public Class DBTimeLiner
     Public ReadOnly Property SourceDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public ReadOnly Property ExecutedDBSqlRevisions As New HashSet(Of DBSqlRevision)(New DBSqlRevision.DBSqlRevisionEqualityComparer)
     Public ReadOnly Property ExecutedDBRevisions As New Dictionary(Of String, IDBRevision)
+    Public Property Worker As ComponentModel.BackgroundWorker
 
     Public ReadOnly Property NewDBSqlRevisions As List(Of DBSqlRevision)
         Get
@@ -33,15 +34,16 @@ Public Class DBTimeLiner
         End Get
     End Property
 
-    Public Property RevisionBatchSize As Integer = 1
+    Public Property RevisionBatchSize As Integer = 2
     Public Property Parent As IDBChained Implements IDBChained.Parent
     Public Property DBType As eDBType = eDBType.TransactSQL
 #End Region
 
 #Region "Constructor"
-    Public Sub New(dBType As eDBType, dbSqlFactory As IDBSqlGeneratorFactory)
+    Public Sub New(dBType As eDBType, dbSqlFactory As IDBSqlGeneratorFactory, worker As ComponentModel.BackgroundWorker)
         Me.DBType = dBType
         DBSqlGenerator = dbSqlFactory.GetDBSqlGenerator(dBType)
+        Me.Worker = worker
     End Sub
 #End Region
 
@@ -117,7 +119,7 @@ Public Class DBTimeLiner
 
 #Region "Private methods"
 
-    Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean, Optional commandTimeout As Integer = 30)
+    Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean, dbSqlRevisionsInBatch As List(Of DBSqlRevision), Optional commandTimeout As Integer = 30)
         Dim batches As List(Of String) = DBSqlGenerator.SplitSqlStatements(script).ToList
 
         For Each batch As String In batches
@@ -132,7 +134,7 @@ Public Class DBTimeLiner
                     cmd.Transaction = trn
 
                     If Not cancelEvents Then
-                        OnBatchExecuting(Me, New BatchExecutingEventArgs With {.Cancel = False, .Sql = batch})
+                        OnBatchExecuting(Me, New BatchExecutingEventArgs With {.Cancel = False, .Sql = batch, .DbSqlRevisions = dbSqlRevisionsInBatch})
                         ts1 = New TimeSpan(Now.Ticks)
                     End If
 
@@ -180,10 +182,12 @@ Public Class DBTimeLiner
                                 dlo.ColumnValues.Add("ID", Guid.NewGuid)
                                 dlo.ColumnValues.Add("Executed", Now())
                                 dlos.Add(dlo)
-                                commandTimeout += rev.Parent.CommandTimeout
+                                If commandTimeout < rev.Parent.CommandTimeout Then
+                                    commandTimeout = rev.Parent.CommandTimeout
+                                End If
                             End Sub)
 
-        ExecuteScriptBatches(script, cnn, trn, False, commandTimeout)
+        ExecuteScriptBatches(script, cnn, trn, False, revisions, commandTimeout)
 
         Dim per As IMRPersister = Nothing
         Try
@@ -209,6 +213,10 @@ Public Class DBTimeLiner
         Dim sqlBatchScriptBuilder As New StringBuilder()
 
         For i As Integer = 0 To notExecutedRevisions.Count - 1
+            If Worker.CancellationPending Then
+                Exit Sub
+            End If
+
             Dim rev As DBSqlRevision = notExecutedRevisions(i)
             Dim sql As String = rev.Sql
             sqlScriptBuilder.Append(sql)
@@ -237,7 +245,7 @@ Public Class DBTimeLiner
                     cnn.Open()
                 End If
 
-                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemAlwaysExecutingTaskTable(), CType(cnn, DbConnection), Nothing, True)
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemAlwaysExecutingTaskTable(), CType(cnn, DbConnection), Nothing, True, Nothing)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()
@@ -255,7 +263,7 @@ Public Class DBTimeLiner
                     cnn.Open()
                 End If
 
-                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemRevisionTable(), CType(cnn, DbConnection), Nothing, True)
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemRevisionTable(), CType(cnn, DbConnection), Nothing, True, Nothing)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()
@@ -277,7 +285,7 @@ Public Class DBTimeLiner
                     cmd.CommandText = DBSqlGenerator.GetSqlCheckIfSchemaExists()
 
                     If cmd.ExecuteScalar() Is Nothing Then
-                        ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemSchema(), CType(cnn, DbConnection), Nothing, True)
+                        ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemSchema(), CType(cnn, DbConnection), Nothing, True, Nothing)
                     End If
                 Catch ex As Exception
                     If Debugger.IsAttached Then
@@ -295,7 +303,7 @@ Public Class DBTimeLiner
                 If cnn.State <> ConnectionState.Open Then
                     cnn.Open()
                 End If
-                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing, True)
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing, True, Nothing)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()
@@ -311,7 +319,7 @@ Public Class DBTimeLiner
                 If cnn.State <> ConnectionState.Open Then
                     cnn.Open()
                 End If
-                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemCustomizationTable(), CType(cnn, DbConnection), Nothing, True)
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemCustomizationTable(), CType(cnn, DbConnection), Nothing, True, Nothing)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()

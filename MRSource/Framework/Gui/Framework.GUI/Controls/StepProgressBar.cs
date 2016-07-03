@@ -1,6 +1,5 @@
 ﻿using Framework.GUI.Helpers;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -16,13 +15,13 @@ namespace Framework.GUI.Controls
      
         public void StartWork(object inputs)
         {
-            ProgressBar1.Enabled = true;
             if (backWorker.IsBusy)
             {
                 backWorker.CancelAsync();
             }
             else
             {
+                ProgressBar1.Enabled = true;
                 backWorker.RunWorkerAsync(inputs);
             }
         }
@@ -33,14 +32,11 @@ namespace Framework.GUI.Controls
         public event ButtonClickEventHandler Aborted;
         public void OnAborted(object sender, EventArgs e)
         {
-            if (backWorker.IsBusy)
+            if (backWorker.IsBusy && !backWorker.CancellationPending) 
             {
                 backWorker.CancelAsync();
-            }
-
-            if (Aborted != null)
-            {
-                Aborted(sender, e);
+                ProgressBar1.Enabled = false;
+                Aborted?.Invoke(sender, e);
             }
         }
 
@@ -190,8 +186,7 @@ namespace Framework.GUI.Controls
                 return ProgressBar1;
             }
         }
-
-        
+                
     }
 }
 

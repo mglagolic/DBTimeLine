@@ -22,7 +22,17 @@ Public Class Form1
 
 #Region "Writing rtb"
     Private Sub BatchExecutingHandler(sender As Object, e As BatchExecutingEventArgs)
-        WriteTextToRtb(rtb1, "-- EXECUTING..." & vbNewLine, Color.Yellow)
+        Dim executingLine As String = "-- EXECUTING ... {0}"
+        Dim info As String = ""
+        If e.DbSqlRevisions IsNot Nothing Then
+            For Each sqlRev As DBSqlRevision In e.DbSqlRevisions
+                info += String.Format("* {0} {1} ({2}), {3} ", sqlRev.Parent.Parent.ObjectTypeName, sqlRev.Parent.Parent.GetFullName(), sqlRev.Parent.Created.ToString("yyyy, M, d"), sqlRev.Parent.Granulation)
+            Next
+            executingLine = String.Format(executingLine, info.Trim)
+        End If
+        String.Format(executingLine, info)
+
+        WriteTextToRtb(rtb1, executingLine & vbNewLine, Color.Yellow)
         WriteTextToRtb(rtb1, e.Sql & vbNewLine, Color.LawnGreen)
     End Sub
 
@@ -113,54 +123,87 @@ Public Class Form1
         Commit = 0
     End Enum
 
-    Private Sub CreateTimeLineDB(sender As Object, inputs As CreateTimeLineDBInputs)
-        creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory)
+    Private Sub CreateTimeLineDB(worker As BackgroundWorker, inputs As CreateTimeLineDBInputs)
+        creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory, worker)
         customizationLoader = New Customizations.Core.Loader()
         moduleLoader = New DBTimeLiners.DBModules.Loader()
 
-        AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
-        AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
-        AddHandler moduleLoader.ModuleLoaded, AddressOf ModuleLoadedHandler
-        AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
-        AddHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
+        Try
+            AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
+            AddHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
+            AddHandler moduleLoader.ModuleLoaded, AddressOf ModuleLoadedHandler
+            AddHandler creator.ProgressReported, AddressOf ProgressReportedHandler
+            AddHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
+
+            If worker.CancellationPending Then
+                Exit Sub
+            End If
+
+            creator.CreateSystemObjects()
+            StepProgressBar1.NextStep(True, 250)
+
+            If worker.CancellationPending Then
+                Exit Sub
+            End If
+
+            ' TODO - dodati novi eRevisionType = AlwaysExecuteCreate (koristiti za viewove i procedure. omoguciti ucitavanje body-a iz fajla .sql)
+            ' TODO - omoguciti prikaz novih revizija, bez executea
+            ' TODO - isprogramirati podrsku za triggere
+            ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
+            ' CONSIDER - u novom persisteru maknuti implementation u posebni dll 
+            ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
+            ' TODO - isprogramirati podršku za Role
+
+            ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
+            ' CONSIDER - odraditi code generation adventureWorks baze
+
+            'Dim dbo As New DBTimeLiners.DBModules.dbo
+
+            moduleLoader.LoadModulesFromDB(creator)
+
+            If worker.CancellationPending Then
+                Exit Sub
+            End If
 
 
-        creator.CreateSystemObjects()
-        StepProgressBar1.NextStep(True, 250)
+            customizationLoader.LoadCustomizers()
 
-        ' TODO - maknuti zbrajanje commandTimeouta - razmisliti o MAX value umjesto
-        ' TODO - dodati novi eRevisionType = AlwaysExecuteCreate (koristiti za viewove i procedure. omoguciti ucitavanje body-a iz fajla .sql)
-        ' TODO - omoguciti prikaz novih revizija, bez executea
-        ' TODO - isprogramirati podrsku za triggere
-        ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
-        ' TODO - u novom persisteru maknuti implementation u posebni dll
-        ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
-        ' TODO - isprogramirati podršku za Role
+            If worker.CancellationPending Then
+                Exit Sub
+            End If
 
-        ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
-        ' CONSIDER - odraditi code generation adventureWorks baze
+            StepProgressBar1.NextStep(True, 250)
 
-        'Dim dbo As New DBTimeLiners.DBModules.dbo
+            For i As Integer = 0 To moduleLoader.DBModules.Count - 1
+                If worker.CancellationPending Then
+                    Exit Sub
+                End If
 
-        moduleLoader.LoadModulesFromDB(creator)
-
-        customizationLoader.LoadCustomizers()
-        StepProgressBar1.NextStep(True, 250)
-
-        For i As Integer = 0 To moduleLoader.DBModules.Count - 1
-            moduleLoader.DBModules(i).LoadRevisions()
-        Next
+                moduleLoader.DBModules(i).LoadRevisions()
+            Next
 
 
-        Dim callMethodsInputs As New Dictionary(Of String, Object)
-        callMethodsInputs.Add("DBTimeLiner", creator)
-        customizationLoader.CallMethods("CreateTimeLine", callMethodsInputs)
+            Dim callMethodsInputs As New Dictionary(Of String, Object)
+            callMethodsInputs.Add("DBTimeLiner", creator)
+            customizationLoader.CallMethods("CreateTimeLine", callMethodsInputs)
 
-        Using cnn As Common.DbConnection = MRC.GetConnection()
-            cnn.Open()
-            Using trn As Common.DbTransaction = cnn.BeginTransaction
+            If worker.CancellationPending Then
+                Exit Sub
+            End If
+
+            Dim cnn As Common.DbConnection = Nothing
+            Dim trn As Common.DbTransaction = Nothing
+            Try
+                cnn = MRC.GetConnection
+                cnn.Open()
+                trn = cnn.BeginTransaction
+
                 StepProgressBar1.NextStep(True, 250)
                 creator.LoadExecutedDBSqlRevisionsFromDB(cnn, trn)
+
+                If worker.CancellationPending Then
+                    Exit Sub
+                End If
 
                 If Not inputs.ActionType = eActionType.Commit OrElse inputs.ActionType = eActionType.Rollback Then
                     StepProgressBar1.NextStep(False)
@@ -171,6 +214,9 @@ Public Class Form1
 
                     StepProgressBar1.NextStep(True, 250)
                     If inputs.ActionType = eActionType.Commit Then
+                        If worker.CancellationPending Then
+                            Exit Sub
+                        End If
                         trn.Commit()
                     Else
                         Dim ts1 As TimeSpan
@@ -205,14 +251,31 @@ Public Class Form1
                 'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
                 'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
 
-            End Using
-        End Using
+            Finally
+                If trn IsNot Nothing Then
+                    Try
+                        trn.Rollback()
+                    Catch ex As Exception
+                        ' samo progutaj
+                    End Try
+                    trn.Dispose()
+                    trn = Nothing
+                End If
+                If cnn IsNot Nothing Then
+                    cnn.Dispose()
+                    cnn = Nothing
+                End If
+            End Try
 
-        RemoveHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
-        RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
-        RemoveHandler moduleLoader.ModuleLoaded, AddressOf ModuleLoadedHandler
-        RemoveHandler creator.ProgressReported, AddressOf ProgressReportedHandler
-        RemoveHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
+        Finally
+            If creator IsNot Nothing Then
+                RemoveHandler creator.BatchExecuted, AddressOf BatchExecutedHandler
+                RemoveHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
+                RemoveHandler moduleLoader.ModuleLoaded, AddressOf ModuleLoadedHandler
+                RemoveHandler creator.ProgressReported, AddressOf ProgressReportedHandler
+                RemoveHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
+            End If
+        End Try
     End Sub
 
 
@@ -273,7 +336,7 @@ Public Class Form1
     Private Sub CreateTimeLineDBDoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
         backWorker.ReportProgress(0)
         Try
-            CreateTimeLineDB(sender, DirectCast(e.Argument, CreateTimeLineDBInputs))
+            CreateTimeLineDB(CType(sender, BackgroundWorker), DirectCast(e.Argument, CreateTimeLineDBInputs))
         Catch ex As Exception
             'WriteException(ex)
             If Debugger.IsAttached Then
@@ -371,7 +434,7 @@ Public Class Form1
     Private Sub StepProgressBar1_DoWork(sender As Object, e As DoWorkEventArgs) Handles StepProgressBar1.DoWork
         StepProgressBar1.ReportProgress(0)
         Try
-            CreateTimeLineDB(sender, DirectCast(e.Argument, CreateTimeLineDBInputs))
+            CreateTimeLineDB(CType(sender, BackgroundWorker), DirectCast(e.Argument, CreateTimeLineDBInputs))
         Catch ex As Exception
             'WriteException(ex)
             If Debugger.IsAttached Then
@@ -391,10 +454,10 @@ Public Class Form1
         FillTreeView()
     End Sub
 
-    Private Sub StepProgressBar1_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles StepProgressBar1.ProgressChanged
-
+    Private Sub StepProgressBar1_Aborted(sender As Object, e As EventArgs) Handles StepProgressBar1.Aborted
+        ts2 = New TimeSpan(Now.Ticks)
+        WriteTextToRtb(rtb1, "-- Trying to cancel worker: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
     End Sub
-
 
 #End Region
 
