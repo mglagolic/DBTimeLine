@@ -12,7 +12,7 @@ namespace Framework.GUI.Helpers
         public delegate void InvokeControlCallback(Control ctl, object input, Action<object> action);
         public static void InvokeControl(Control ctl, object input, Action<object> action)
         {
-            if (ctl.InvokeRequired)
+            if (ctl != null && ctl.InvokeRequired)
             {
                 InvokeControlCallback d = new InvokeControlCallback(InvokeControl);
                 ctl.Invoke(d, ctl, input, action);

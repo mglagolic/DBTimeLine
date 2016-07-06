@@ -30,46 +30,46 @@ namespace Framework.GUI.Controls
 
         public delegate void ButtonClickEventHandler(object sender, EventArgs e);
         public event ButtonClickEventHandler Aborted;
-        public void OnAborted(object sender, EventArgs e)
+        protected virtual void OnAborted(object sender, EventArgs e)
         {
-            if (backWorker.IsBusy && !backWorker.CancellationPending) 
+            CrossThreadingHelpers.InvokeControl((Control) sender, null, (x) =>
             {
-                backWorker.CancelAsync();
-                ProgressBar1.Enabled = false;
-                Aborted?.Invoke(sender, e);
-            }
+                if (backWorker.IsBusy && !backWorker.CancellationPending)
+                {
+                    if (CanAbort)
+                    {
+                        backWorker.CancelAsync();
+                        ProgressBar1.Enabled = false;
+                        Aborted?.Invoke(sender, e);
+                    }
+                }
+            });
+           
         }
 
         public event RunWorkerCompletedEventHandler RunWorkerCompleted;
-        public void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        protected virtual void OnRunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             ProgressBar1.Style = ProgressBarStyle.Blocks;
             ProgressBar1.Value = 100;
-            if (RunWorkerCompleted != null)
-            {
-                RunWorkerCompleted(sender, e);
-            }
+            RunWorkerCompleted?.Invoke(sender, e);
         }
 
         public event DoWorkEventHandler DoWork;
-        public void OnDoWork(object sender, DoWorkEventArgs e)
+        protected virtual void OnDoWork(object sender, DoWorkEventArgs e)
         {
-            if (DoWork != null)
-            {
-                DoWork(sender, e);
-            }
+            DoWork?.Invoke(sender, e);
         }
 
         public event ProgressChangedEventHandler ProgressChanged;
-        public void OnProgressChanged(object sender, ProgressChangedEventArgs e)
+        protected virtual void OnProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            ProgressBar1.Value = e.ProgressPercentage;
-            if (ProgressChanged != null)
+            CrossThreadingHelpers.InvokeControl(ProgressBar1, e.ProgressPercentage, (x) =>
             {
-                ProgressChanged(sender, e);
-            }
+                ProgressBar1.Value = (int) x;
+                ProgressChanged?.Invoke(sender, e);
+            });
         }
-
         #endregion
 
         #region Event pipes
@@ -82,7 +82,6 @@ namespace Framework.GUI.Controls
         {
             OnRunWorkerCompleted(sender, e);
         }
-
 
         private void backWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
@@ -97,7 +96,9 @@ namespace Framework.GUI.Controls
         #endregion
 
         private int _CurrentStepIndex = -1;
-        //[System.ComponentModel.DesignerSerializationVisibility (DesignerSerializationVisibility.Hidden)]
+        //[DesignerSerializationVisibility (DesignerSerializationVisibility.Hidden)]
+        [Browsable(false)]
+        [DefaultValue(-1)]
         public int CurrentStepIndex
         {
             get
@@ -141,6 +142,11 @@ namespace Framework.GUI.Controls
             lv.Items[index].Font = new Font(lv.Items[index].Font, FontStyle.Regular);
         }
 
+        #region Public methods and properties
+        public void Abort()
+        {
+            OnAborted(null, EventArgs.Empty);
+        }
 
         public void NextStep(bool marquee)
         {
@@ -162,16 +168,19 @@ namespace Framework.GUI.Controls
             }
 
         }
+
         public void NextStep(bool continuous, int waitMiliseconds)
         {
             NextStep(continuous);
             System.Threading.Thread.Sleep(waitMiliseconds);
         }
+
         public void ReportProgress(int percentProgress)
         {
             backWorker.ReportProgress(percentProgress);
         }
 
+        [Browsable(false)]
         public ListView Grid
         {
             get
@@ -179,6 +188,7 @@ namespace Framework.GUI.Controls
                 return ListView1;
             }
         }
+        [Browsable(false)]
         public ProgressBar Progress
         {
             get
@@ -186,7 +196,30 @@ namespace Framework.GUI.Controls
                 return ProgressBar1;
             }
         }
-                
+
+        private bool _CanAbort = true;
+        [DefaultValue(true)]
+        public bool CanAbort
+        {
+            get
+            {
+                return _CanAbort;
+            }
+            set
+            {
+                if (value != _CanAbort)
+                {
+                    _CanAbort = value;
+
+                    CrossThreadingHelpers.InvokeControl(btnAbort, _CanAbort, (x) =>
+                    {
+                        btnAbort.Visible = (bool) x;
+                    });
+                }                
+            }
+        }
+
+        #endregion
     }
 }
 

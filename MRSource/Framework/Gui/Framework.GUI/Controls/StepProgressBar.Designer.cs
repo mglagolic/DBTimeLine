@@ -125,7 +125,7 @@
         internal System.Windows.Forms.ColumnHeader colDuration;
         internal System.Windows.Forms.ProgressBar ProgressBar1;
         internal System.ComponentModel.BackgroundWorker backWorker;
-        public System.Windows.Forms.ListView ListView1;
+        internal System.Windows.Forms.ListView ListView1;
         internal System.Windows.Forms.Button btnAbort;
     }
 }

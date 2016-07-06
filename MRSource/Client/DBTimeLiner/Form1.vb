@@ -50,7 +50,6 @@ Public Class Form1
 
     Private Sub ProgressReportedHandler(sender As Object, e As ProgressReportedEventArgs)
         If e.TotalSteps <> 0 Then
-            backWorker.ReportProgress(CInt(e.CurrentStep / (e.TotalSteps + 1) * 100))
             StepProgressBar1.ReportProgress(CInt(e.CurrentStep / (e.TotalSteps + 1) * 100))
         End If
     End Sub
@@ -120,13 +119,15 @@ Public Class Form1
         None = -1
         Analyze = 0
         Rollback = 1
-        Commit = 0
+        Commit = 2
     End Enum
 
     Private Sub CreateTimeLineDB(worker As BackgroundWorker, inputs As CreateTimeLineDBInputs)
         creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory, worker)
         customizationLoader = New Customizations.Core.Loader()
         moduleLoader = New DBTimeLiners.DBModules.Loader()
+        Dim cnn As Common.DbConnection = Nothing
+        Dim trn As Common.DbTransaction = Nothing
 
         Try
             AddHandler creator.BatchExecuting, AddressOf BatchExecutingHandler
@@ -147,11 +148,12 @@ Public Class Form1
             End If
 
             ' TODO - dodati novi eRevisionType = AlwaysExecuteCreate (koristiti za viewove i procedure. omoguciti ucitavanje body-a iz fajla .sql)
+            ' TODO - napraviti prozor za commit naredbi s generiranjem infa tko je odradio i sto. Slati info na mail.
             ' TODO - omoguciti prikaz novih revizija, bez executea
+            ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
             ' TODO - isprogramirati podrsku za triggere
             ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
             ' CONSIDER - u novom persisteru maknuti implementation u posebni dll 
-            ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
             ' TODO - isprogramirati podršku za Role
 
             ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
@@ -164,7 +166,6 @@ Public Class Form1
             If worker.CancellationPending Then
                 Exit Sub
             End If
-
 
             customizationLoader.LoadCustomizers()
 
@@ -182,7 +183,6 @@ Public Class Form1
                 moduleLoader.DBModules(i).LoadRevisions()
             Next
 
-
             Dim callMethodsInputs As New Dictionary(Of String, Object)
             callMethodsInputs.Add("DBTimeLiner", creator)
             customizationLoader.CallMethods("CreateTimeLine", callMethodsInputs)
@@ -191,8 +191,6 @@ Public Class Form1
                 Exit Sub
             End If
 
-            Dim cnn As Common.DbConnection = Nothing
-            Dim trn As Common.DbTransaction = Nothing
             Try
                 cnn = MRC.GetConnection
                 cnn.Open()
@@ -205,7 +203,7 @@ Public Class Form1
                     Exit Sub
                 End If
 
-                If Not inputs.ActionType = eActionType.Commit OrElse inputs.ActionType = eActionType.Rollback Then
+                If inputs.ActionType = eActionType.Commit OrElse inputs.ActionType = eActionType.Rollback Then
                     StepProgressBar1.NextStep(False)
                     creator.ExecuteDBSqlRevisions(cnn, trn)
 
@@ -217,42 +215,37 @@ Public Class Form1
                         If worker.CancellationPending Then
                             Exit Sub
                         End If
+
+                        ts1 = Now.TimeOfDay
                         trn.Commit()
+                        ts2 = Now.TimeOfDay
+                        WriteTextToRtb(rtb1, "-- Transaction commited. Duration: " & (ts2 - ts1).ToString() & vbNewLine, Color.Blue)
                     Else
                         Dim ts1 As TimeSpan
                         Dim ts2 As TimeSpan
                         Try
-                            ' TODO - provjeriti timeout
                             ts1 = Now.TimeOfDay
                             trn.Rollback()
                             ts2 = Now.TimeOfDay
+                            WriteTextToRtb(rtb1, "-- Transaction rolled back. Duration: " & (ts2 - ts1).ToString() & vbNewLine, Color.Orange)
                         Catch sqlEx As SqlClient.SqlException
                             ts2 = Now.TimeOfDay
                             If sqlEx.Number = -2 Then
-                                ' timeout expired
-                                ' progutati
                                 If Debugger.IsAttached Then
                                     Debugger.Break()
                                 End If
+                                WriteTextToRtb(rtb1, "-- Timeout expired during transaction rolling back. Check database activity monitory for residual locks." & vbNewLine & sqlEx.Message, Color.Orange)
                             Else
                                 Throw
                             End If
                         Catch ex As Exception
-                            ts2 = Now.TimeOfDay
                             Throw
                         End Try
 
                     End If
                 End If
-
-                'Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
-                'newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
-
-                'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
-                'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
-
             Finally
-                If trn IsNot Nothing Then
+                If trn IsNot Nothing AndAlso trn.Connection IsNot Nothing Then
                     Try
                         trn.Rollback()
                     Catch ex As Exception
@@ -281,9 +274,10 @@ Public Class Form1
 
 
 #Region "Extras"
+
     Private Sub FillTreeView()
-        treeRevisions.Nodes.Clear()
-        Dim root As TreeNode = treeRevisions.Nodes.Add("root", "DBTimeLiner")
+        treeDatabaseObjects.Nodes.Clear()
+        Dim root As TreeNode = treeDatabaseObjects.Nodes.Add("root", "DBTimeLiner")
         root.BackColor = Color.DarkSeaGreen
         If creator IsNot Nothing Then
             For Each dBModule As IDBModule In creator.DBModules
@@ -333,82 +327,35 @@ Public Class Form1
 #End Region
 
 #Region "DoWork"
-    Private Sub CreateTimeLineDBDoWork(sender As Object, e As DoWorkEventArgs) Handles backWorker.DoWork
-        backWorker.ReportProgress(0)
-        Try
-            CreateTimeLineDB(CType(sender, BackgroundWorker), DirectCast(e.Argument, CreateTimeLineDBInputs))
-        Catch ex As Exception
-            'WriteException(ex)
-            If Debugger.IsAttached Then
-                Debugger.Break()
-            End If
-            WriteErrorToMessageBox(ex.Message & vbNewLine & "StackTrace:" & vbNewLine & ex.StackTrace)
-        End Try
-    End Sub
-
-    Private Sub StartWorker(actionType As eActionType)
-        ts1 = New TimeSpan(Now.Ticks)
-        pnlControl.Enabled = False
-
-        rtb1.Text = ""
-        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
-        If backWorker.IsBusy Then
-            backWorker.CancelAsync()
-        Else
-            Dim inputs As New CreateTimeLineDBInputs With {.ActionType = actionType}
-            backWorker.RunWorkerAsync(inputs)
-        End If
-    End Sub
-
-    Private Sub actionButton_Click(sender As Object, e As EventArgs) Handles btnAnalyze.Click, btnCommit.Click, btnRollback.Click
+    Private Sub actionButton_Click(sender As Object, e As EventArgs) Handles btnAnalyze.Click, btnCommit.Click, btnRollback.Click, AnalyzeToolStripMenuItem.Click, RollbackToolStripMenuItem.Click, CommitToolStripMenuItem.Click
         Dim actionType As eActionType = eActionType.None
-        If sender Is btnAnalyze Then
+        If sender Is btnAnalyze OrElse sender Is AnalyzeToolStripMenuItem Then
             actionType = eActionType.Analyze
-        ElseIf sender Is btnRollback Then
+        ElseIf sender Is btnRollback OrElse sender Is RollbackToolStripMenuItem Then
             actionType = eActionType.Rollback
-        ElseIf sender Is btnCommit Then
+        ElseIf sender Is btnCommit OrElse sender Is CommitToolStripMenuItem Then
             actionType = eActionType.Commit
         End If
         If actionType <> eActionType.None Then
-            StartWorker(actionType)
+            ts1 = New TimeSpan(Now.Ticks)
+            pnlControl.Enabled = False
+            MenuStrip1.Enabled = False
+
+            rtb1.Text = ""
+            WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
+
+            InitSteps()
+            Dim inputs As New CreateTimeLineDBInputs With {.ActionType = actionType}
+            StepProgressBar1.StartWork(inputs)
         End If
-    End Sub
-
-    Private Sub backWorker_ProgressChanged(sender As Object, e As ProgressChangedEventArgs) Handles backWorker.ProgressChanged
-        'CrossThreadingHelpers.InvokeControl(ProgressBar1, e.ProgressPercentage, Sub(x) ProgressBar1.Value = CInt(x))
-    End Sub
-
-
-    Private Sub backWorker_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles backWorker.RunWorkerCompleted
-        'Private Sub backWorker_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles backWorker.RunWorkerCompleted
-        'ProgressBar1.Value = 100
-        ts2 = New TimeSpan(Now.Ticks)
-
-        WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
-        WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
-        pnlControl.Enabled = True
-        FillTreeView()
     End Sub
 
 #End Region
 
 #Region "Progress"
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        ts1 = New TimeSpan(Now.Ticks)
-        pnlControl.Enabled = False
-
-        rtb1.Text = ""
-        WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
-
-        InitSteps()
-        Dim inputs As New CreateTimeLineDBInputs With {.ActionType = eActionType.Rollback}
-        StepProgressBar1.StartWork(inputs)
-    End Sub
-
     Private Sub InitSteps()
         StepProgressBar1.CurrentStepIndex = -1
-        With StepProgressBar1.ListView1
+        With StepProgressBar1.Grid
             .Groups.Clear()
             .Items.Clear()
 
@@ -445,13 +392,14 @@ Public Class Form1
     End Sub
 
     Private Sub StepProgressBar1_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles StepProgressBar1.RunWorkerCompleted
-        'StepProgressBar1.Progress.Value = 100
         ts2 = New TimeSpan(Now.Ticks)
 
         WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
         WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
         pnlControl.Enabled = True
+        MenuStrip1.Enabled = True
         FillTreeView()
+        FillNewRevisions()
     End Sub
 
     Private Sub StepProgressBar1_Aborted(sender As Object, e As EventArgs) Handles StepProgressBar1.Aborted
@@ -459,6 +407,31 @@ Public Class Form1
         WriteTextToRtb(rtb1, "-- Trying to cancel worker: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
     End Sub
 
+    Private Sub MenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        If sender Is ExitToolStripMenuItem Then
+            Close()
+        End If
+    End Sub
+
 #End Region
+
+    Private Sub FillNewRevisions()
+        'Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+        Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+        newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+
+        Dim root As TreeNode = treeNewRevisions.TopNode
+        root.Nodes.Clear()
+
+        For Each sqlRev As DBSqlRevision In newDBSqlRevisions
+            Dim rev As IDBRevision = sqlRev.Parent
+            Dim text As String = rev.Created.ToString("yyyy-MM-dd") & " - " & rev.Granulation.ToString & " - " & sqlRev.RevisionTypeName & " - " & sqlRev.ObjectFullName
+            Dim newNode As New TreeNode(text)
+            root.Nodes.Add(newNode)
+        Next
+        'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
+        'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
+
+    End Sub
 
 End Class

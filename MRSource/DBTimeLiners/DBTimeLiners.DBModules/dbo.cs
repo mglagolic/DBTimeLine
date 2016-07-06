@@ -24,12 +24,10 @@ namespace DBTimeLiners.DBModules
             Drzava(sch);
             Grad(sch);
             Always(sch);
-
         }
 
         private string FillDrzava(IDBRevision sender, eDBType dBType)
         {
-
             var ret = string.Format(
 
 @"GO
@@ -49,14 +47,14 @@ SELECT
     Naziv = CAST(Number as nvarchar(512)) 
 FROM Tally 
 WHERE 
-    Number <= 1000000
+    Number <= 100000
 
 WAITFOR DELAY '00:00:03'
 ", sender.Parent.SchemaName + "." + sender.Parent.SchemaObjectName);
 
             return ret;
         }
-
+        
         private IDBTable Drzava(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.Create);
@@ -66,6 +64,7 @@ WAITFOR DELAY '00:00:03'
 
             return ret;
         }
+
         private IDBTable Grad(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.Create);
@@ -85,8 +84,8 @@ WAITFOR DELAY '00:00:03'
         {
             sch.AddRevision(new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.AlwaysExecuteTask, UpdateStatistics));
             
-            sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 1", WithSchemaBinding = false },
-                new DBRevision(new DateTime(2016, 6, 29), 0, eDBRevisionType.AlwaysExecuteTask));
+            //sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 1", WithSchemaBinding = false },
+            //    new DBRevision(new DateTime(2016, 6, 29), 0, eDBRevisionType.AlwaysExecuteTask));
         }
 
         private string UpdateStatistics(IDBRevision sender, eDBType dBType)

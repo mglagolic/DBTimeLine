@@ -25,7 +25,7 @@ namespace AktivniSifrarnici
             IDBSchema sch = module.AddSchema(module.DefaultSchemaName, new DBSchemaDescriptor());
 
             Drzava(sch);
-            Grad(sch);
+            //Grad(sch);
         }
         private IDBTable Drzava(IDBSchema sch)
         {
