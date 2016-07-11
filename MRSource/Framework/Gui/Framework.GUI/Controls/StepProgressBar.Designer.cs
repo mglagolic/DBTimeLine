@@ -59,6 +59,7 @@
             // btnAbort
             // 
             this.btnAbort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnAbort.ForeColor = System.Drawing.Color.Black;
             this.btnAbort.Location = new System.Drawing.Point(158, 1);
             this.btnAbort.Name = "btnAbort";
             this.btnAbort.Size = new System.Drawing.Size(107, 23);
@@ -74,6 +75,7 @@
             this.colStep,
             this.colDuration});
             this.ListView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListView1.ForeColor = System.Drawing.Color.Black;
             this.ListView1.FullRowSelect = true;
             this.ListView1.GridLines = true;
             this.ListView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;

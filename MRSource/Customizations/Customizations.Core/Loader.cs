@@ -78,7 +78,6 @@ namespace Customizations.Core
                         {
                             mi.Invoke(c, new object[] { });
                         }
-                        
                     }
                 }
             }

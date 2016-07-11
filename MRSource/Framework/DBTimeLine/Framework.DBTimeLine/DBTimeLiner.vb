@@ -16,9 +16,13 @@ Public Class DBTimeLiner
     Public ReadOnly Property ExecutedDBRevisions As New Dictionary(Of String, IDBRevision)
     Public Property Worker As ComponentModel.BackgroundWorker
 
+    Private _NewDBSqlRevisions As New List(Of DBSqlRevision)
     Public ReadOnly Property NewDBSqlRevisions As List(Of DBSqlRevision)
         Get
-            Return SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+            If _NewDBSqlRevisions.Count = 0 Then
+                RecomputeNewDBSqlRevisions()
+            End If
+            Return _NewDBSqlRevisions
         End Get
     End Property
 
@@ -67,6 +71,10 @@ Public Class DBTimeLiner
 #End Region
 
 #Region "Public methods"
+    Public Sub RecomputeNewDBSqlRevisions()
+        _NewDBSqlRevisions.Clear()
+        _NewDBSqlRevisions.AddRange(SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList)
+    End Sub
 
     Public Sub LoadExecutedDBSqlRevisionsFromDB(cnn As Common.DbConnection, Optional trn As Common.DbTransaction = Nothing)
         ExecutedDBSqlRevisions.Clear()
@@ -84,6 +92,7 @@ Public Class DBTimeLiner
                 ExecutedDBRevisions.Add(sqlRevision.Key, sqlRevision.Parent)
             Next
         End Using
+        RecomputeNewDBSqlRevisions()
     End Sub
 
     Public Sub ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction)
@@ -118,7 +127,6 @@ Public Class DBTimeLiner
 #End Region
 
 #Region "Private methods"
-
     Private Sub ExecuteScriptBatches(script As String, cnn As DbConnection, trn As DbTransaction, cancelEvents As Boolean, dbSqlRevisionsInBatch As List(Of DBSqlRevision), Optional commandTimeout As Integer = 30)
         Dim batches As List(Of String) = DBSqlGenerator.SplitSqlStatements(script).ToList
 

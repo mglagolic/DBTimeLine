@@ -42,19 +42,53 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\DatabaseConnect.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\DatabaseConnect.Designer.cs">
+      <DependentUpon>DatabaseConnect.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\DatabaseConnectedEventArgs.cs" />
     <Compile Include="Controls\StepProgressBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\StepProgressBar.Designer.cs">
       <DependentUpon>StepProgressBar.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\DatabaseConnectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DatabaseConnectForm.Designer.cs">
+      <DependentUpon>DatabaseConnectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\StatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\StatusForm.Designer.cs">
+      <DependentUpon>StatusForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\CrossThreadingHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Controls\DatabaseConnect.resx">
+      <DependentUpon>DatabaseConnect.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\StepProgressBar.resx">
       <DependentUpon>StepProgressBar.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DatabaseConnectForm.resx">
+      <DependentUpon>DatabaseConnectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\StatusForm.resx">
+      <DependentUpon>StatusForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Persisting\Framework.Persisting\Framework.Persisting.csproj">
+      <Project>{1ec4a870-bcdf-4bb7-805b-8bd5f88da6fb}</Project>
+      <Name>Framework.Persisting</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

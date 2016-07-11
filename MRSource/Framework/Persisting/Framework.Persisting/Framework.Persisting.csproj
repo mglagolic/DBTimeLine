@@ -43,6 +43,8 @@
   <ItemGroup>
     <Compile Include="Enums\eDBType.cs" />
     <Compile Include="Enums\eOrderItem.cs" />
+    <Compile Include="Implementation\DatabaseConnector.cs" />
+    <Compile Include="Interfaces\IDatabaseConnector.cs" />
     <Compile Include="PersistingSettings.cs" />
     <Compile Include="Implementation\Dlo.cs" />
     <Compile Include="Implementation\OrderItem.cs" />

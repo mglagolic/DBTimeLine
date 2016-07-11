@@ -1,6 +1,7 @@
 ﻿using Customizations.Core.Attributes;
 using Framework.DBTimeLine;
 using Framework.DBTimeLine.DBObjects;
+using System;
 using System.Collections.Generic;
 
 namespace AktivniSifrarnici
@@ -25,8 +26,18 @@ namespace AktivniSifrarnici
             IDBSchema sch = module.AddSchema(module.DefaultSchemaName, new DBSchemaDescriptor());
 
             Drzava(sch);
-            //Grad(sch);
+            Grad(sch);
+            Mjesto(sch);
         }
+        private IDBTable Mjesto(IDBSchema sch)
+        {
+            var rev = new DBRevision(new DateTime(2016, 7, 8), 1, eDBRevisionType.Create);
+            var ret = DBMacros.AddTableIDNaziv("Mjesto", sch, rev);
+
+            return ret;
+        }
+
+
         private IDBTable Drzava(IDBSchema sch)
         {
             var ret = sch.AddTable("Drzava", new DBTableDescriptor());

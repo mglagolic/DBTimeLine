@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports Framework.GUI.Helpers
 Imports Framework.Persisting
 Imports MRFramework.MRPersisting.Factory
@@ -7,18 +8,17 @@ Imports System.ComponentModel
 Imports Framework.DBTimeLine.DBObjects
 Imports Customizations.Core.EventArgs
 Imports DBTimeLiners.DBModules.EventArgs
+Imports System.Data.Sql
+Imports System.Data.SqlClient
+Imports System.Data.Common
 
 Public Class Form1
 
     Dim ts1 As TimeSpan
     Dim ts2 As TimeSpan
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        MRC.GetInstance().ConnectionString = CType(My.Settings.Item(My.Settings.DefaultConnectionString), String)
-        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
-        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
 
-    End Sub
+
 
 #Region "Writing rtb"
     Private Sub BatchExecutingHandler(sender As Object, e As BatchExecutingEventArgs)
@@ -147,6 +147,8 @@ Public Class Form1
                 Exit Sub
             End If
 
+            ' TODO - prebaciti spajanje na bazu u posebnu formu
+            ' TODO - GetAllSqlServerInstances staviti na click comba za odabir server, a ne u load
             ' TODO - dodati novi eRevisionType = AlwaysExecuteCreate (koristiti za viewove i procedure. omoguciti ucitavanje body-a iz fajla .sql)
             ' TODO - napraviti prozor za commit naredbi s generiranjem infa tko je odradio i sto. Slati info na mail.
             ' TODO - omoguciti prikaz novih revizija, bez executea
@@ -219,7 +221,7 @@ Public Class Form1
                         ts1 = Now.TimeOfDay
                         trn.Commit()
                         ts2 = Now.TimeOfDay
-                        WriteTextToRtb(rtb1, "-- Transaction commited. Duration: " & (ts2 - ts1).ToString() & vbNewLine, Color.Blue)
+                        WriteTextToRtb(rtb1, "-- Transaction commited. Duration: " & (ts2 - ts1).ToString() & vbNewLine, Color.Maroon)
                     Else
                         Dim ts1 As TimeSpan
                         Dim ts2 As TimeSpan
@@ -227,14 +229,14 @@ Public Class Form1
                             ts1 = Now.TimeOfDay
                             trn.Rollback()
                             ts2 = Now.TimeOfDay
-                            WriteTextToRtb(rtb1, "-- Transaction rolled back. Duration: " & (ts2 - ts1).ToString() & vbNewLine, Color.Orange)
+                            WriteTextToRtb(rtb1, "-- Transaction rolled back. Duration: " & (ts2 - ts1).ToString() & vbNewLine, Color.CornflowerBlue)
                         Catch sqlEx As SqlClient.SqlException
                             ts2 = Now.TimeOfDay
                             If sqlEx.Number = -2 Then
                                 If Debugger.IsAttached Then
                                     Debugger.Break()
                                 End If
-                                WriteTextToRtb(rtb1, "-- Timeout expired during transaction rolling back. Check database activity monitory for residual locks." & vbNewLine & sqlEx.Message, Color.Orange)
+                                WriteTextToRtb(rtb1, "-- Timeout expired during transaction rollback. Check database activity monitory for residual locks." & vbNewLine & sqlEx.Message, Color.Orange)
                             Else
                                 Throw
                             End If
@@ -292,6 +294,8 @@ Public Class Form1
     Private Function GetNodeColor(level As Integer) As Color
         Dim lsColor As New List(Of Color)
         lsColor.Add(Color.LightGoldenrodYellow)
+        lsColor.Add(Color.Transparent)
+        lsColor.Add(Color.Transparent)
 
         Dim index As Integer = level Mod lsColor.Count
 
@@ -341,6 +345,7 @@ Public Class Form1
             pnlControl.Enabled = False
             MenuStrip1.Enabled = False
 
+            ShowSqlRevisionInfo(Nothing)
             rtb1.Text = ""
             WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
 
@@ -416,8 +421,7 @@ Public Class Form1
 #End Region
 
     Private Sub FillNewRevisions()
-        'Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
-        Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.SourceDBSqlRevisions.Except(creator.ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList
+        Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.NewDBSqlRevisions
         newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
         Dim root As TreeNode = treeNewRevisions.TopNode
@@ -427,6 +431,7 @@ Public Class Form1
             Dim rev As IDBRevision = sqlRev.Parent
             Dim text As String = rev.Created.ToString("yyyy-MM-dd") & " - " & rev.Granulation.ToString & " - " & sqlRev.RevisionTypeName & " - " & sqlRev.ObjectFullName
             Dim newNode As New TreeNode(text)
+            newNode.Tag = sqlRev
             root.Nodes.Add(newNode)
         Next
         'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
@@ -434,4 +439,59 @@ Public Class Form1
 
     End Sub
 
+    Private Sub treeNewRevisions_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles treeNewRevisions.AfterSelect
+        If TypeOf e.Node.Tag Is DBSqlRevision Then
+            ShowSqlRevisionInfo(CType(e.Node.Tag, DBSqlRevision))
+        End If
+    End Sub
+    Private Sub ShowSqlRevisionInfo(sqlRev As DBSqlRevision)
+        If sqlRev IsNot Nothing Then
+            Dim rev As IDBRevision = sqlRev.Parent
+            lblSqlRevInfoKey.Text = rev.Created.ToString("yyyy-MM-dd") & " - " & rev.Granulation.ToString & " - " & sqlRev.RevisionTypeName & " - " & sqlRev.ObjectFullName
+            lblSqlRevInfoModule.Text = DirectCast(sqlRev.Parent, DBRevision).Parent.ModuleKey
+            lblSqlRevInfoDBObjectType.Text = sqlRev.ObjectTypeName
+            lblSqlRevInfoRevisonType.Text = sqlRev.RevisionTypeName
+            rtbSqlRevInfoDescription.Text = sqlRev.Description
+        Else
+            lblSqlRevInfoKey.Text = ""
+            lblSqlRevInfoModule.Text = ""
+            lblSqlRevInfoDBObjectType.Text = ""
+            lblSqlRevInfoRevisonType.Text = ""
+            rtbSqlRevInfoDescription.Text = ""
+        End If
+    End Sub
+
+    Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
+        Using frm As New Framework.GUI.Forms.DatabaseConnectForm
+            frm.SetDefaults(My.Settings.DefaultServerInstanceName, My.Settings.DefaultDatabaseName, "", "")
+            frm.ShowDialog()
+            If frm.Connected Then
+                EnableActionsGUI(True)
+                lblDatabase.Text = frm.DatabaseName
+                lblServer.Text = frm.ServerName
+            Else
+                EnableActionsGUI(False)
+                lblDatabase.Text = "--"
+                lblServer.Text = "--"
+            End If
+        End Using
+    End Sub
+
+    Private Sub SetTheStage(connectionString As String)
+        MRC.GetInstance().ConnectionString = connectionString
+        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
+    End Sub
+
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
+
+        EnableActionsGUI(False)
+        btnConnect.Enabled = True
+    End Sub
+    Private Sub EnableActionsGUI(enabled As Boolean)
+        pnlDBTimeLinerControls.Enabled = enabled
+        MenuStrip1.Enabled = enabled
+    End Sub
 End Class
