@@ -75,6 +75,9 @@ WAITFOR DELAY '00:00:03'
             ret.AddField("Naziv", new DBFieldDescriptor() { Nullable = false, FieldType = new DBFieldTypeNvarchar(), Size = 512 }, 
                 new DBRevision(rev));
 
+            ret.AddField("Opis", new DBFieldDescriptor() { Nullable = true, FieldType = new DBFieldTypeNvarchar(), Size = -1 },
+                new DBRevision(new DateTime(2016,7,13), 0, eDBRevisionType.Create));
+
             DBMacros.AddForeignKeyFieldID("DrzavaID", true, ret, sch.Name + ".Drzava",
                 new DBRevision(new DateTime(2016, 6, 10), 1, eDBRevisionType.Create));
 
@@ -88,7 +91,7 @@ WAITFOR DELAY '00:00:03'
 
         private void CreateIfNew(IDBSchema sch)
         {
-            sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 4", WithSchemaBinding = false },
+            sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 1", WithSchemaBinding = false },
                 new DBRevision(new DateTime(2016, 7, 12), 0, eDBRevisionType.CreateIfNew));
         }
 

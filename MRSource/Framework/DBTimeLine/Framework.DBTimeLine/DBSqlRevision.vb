@@ -178,6 +178,10 @@ Public Class DBSqlRevision
             End If
 
             ret = (rev1.Key & desc1).CompareTo(rev2.Key & desc2)
+        ElseIf rev1.RevisionType = eDBRevisionType.CreateIfNew AndAlso rev2.RevisionType <> eDBRevisionType.CreateIfNew Then
+            ret = 1
+        ElseIf rev1.RevisionType <> eDBRevisionType.CreateIfNew AndAlso rev2.RevisionType = eDBRevisionType.CreateIfNew Then
+            ret = -1
         Else
             ret = rev1.Key.CompareTo(rev2.Key)
         End If
