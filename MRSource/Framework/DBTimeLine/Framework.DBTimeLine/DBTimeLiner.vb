@@ -99,12 +99,24 @@ Public Class DBTimeLiner
 
     Public Sub ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction)
         Try
-            ExecuteDBSqlRevisionBatches(NewDBSqlRevisions, cnn, trn, False)
+            Dim revs = NewDBSqlRevisions.Where(Function(sqlRev) sqlRev.Parent.DBRevisionType <> eDBRevisionType.CreateIfNew).ToList
+            ExecuteDBSqlRevisionBatches(revs, cnn, trn, False)
         Catch ex As Exception
             ' CONSIDER - do some logging
             Throw
         End Try
     End Sub
+
+    Public Sub ExecuteDBSqlCreateIfNewRevisions(cnn As DbConnection, trn As DbTransaction)
+        Try
+            Dim revs = NewDBSqlRevisions.Where(Function(sqlRev) sqlRev.Parent.DBRevisionType = eDBRevisionType.CreateIfNew).ToList
+            ExecuteDBSqlRevisionBatches(revs, cnn, trn, False)
+        Catch ex As Exception
+            ' CONSIDER - do some logging
+            Throw
+        End Try
+    End Sub
+
 
     Public Sub ExecuteDBSqlRevisionsAlwaysExecutingTasks(cnn As DbConnection, trn As DbTransaction)
         Try
@@ -218,34 +230,36 @@ Public Class DBTimeLiner
     End Sub
 
     Private Sub ExecuteDBSqlRevisionBatches(notExecutedRevisions As List(Of DBSqlRevision), cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
-        notExecutedRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+        If notExecutedRevisions.Count > 0 Then
+            notExecutedRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
-        Dim newExecutedRevisions As New List(Of DBSqlRevision)
-        Dim sqlScriptBuilder As New StringBuilder()
-        Dim sqlBatchScriptBuilder As New StringBuilder()
+            Dim newExecutedRevisions As New List(Of DBSqlRevision)
+            Dim sqlScriptBuilder As New StringBuilder()
+            Dim sqlBatchScriptBuilder As New StringBuilder()
 
-        For i As Integer = 0 To notExecutedRevisions.Count - 1
-            If Worker.CancellationPending Then
-                Exit Sub
-            End If
-
-            Dim rev As DBSqlRevision = notExecutedRevisions(i)
-            Dim sql As String = rev.Sql
-            sqlScriptBuilder.Append(sql)
-            sqlBatchScriptBuilder.Append(sql)
-
-            newExecutedRevisions.Add(rev)
-            If i = notExecutedRevisions.Count - 1 OrElse (i + 1) Mod RevisionBatchSize = 0 Then
-                ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn, alwaysExecutingTask)
-                sqlBatchScriptBuilder.Clear()
-                newExecutedRevisions.Clear()
-                Dim msg As String = "New revisions"
-                If alwaysExecutingTask Then
-                    msg = "Always executing tasks"
+            For i As Integer = 0 To notExecutedRevisions.Count - 1
+                If Worker.CancellationPending Then
+                    Exit Sub
                 End If
-                OnProgressReported(Me, New ProgressReportedEventArgs() With {.CurrentStep = i + 1, .TotalSteps = notExecutedRevisions.Count, .Message = msg})
-            End If
-        Next
+
+                Dim rev As DBSqlRevision = notExecutedRevisions(i)
+                Dim sql As String = rev.Sql
+                sqlScriptBuilder.Append(sql)
+                sqlBatchScriptBuilder.Append(sql)
+
+                newExecutedRevisions.Add(rev)
+                If i = notExecutedRevisions.Count - 1 OrElse (i + 1) Mod RevisionBatchSize = 0 Then
+                    ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn, alwaysExecutingTask)
+                    sqlBatchScriptBuilder.Clear()
+                    newExecutedRevisions.Clear()
+                    Dim msg As String = "New revisions"
+                    If alwaysExecutingTask Then
+                        msg = "Always executing tasks"
+                    End If
+                    OnProgressReported(Me, New ProgressReportedEventArgs() With {.CurrentStep = i + 1, .TotalSteps = notExecutedRevisions.Count, .Message = msg})
+                End If
+            Next
+        End If
     End Sub
 
 #Region "System objects"

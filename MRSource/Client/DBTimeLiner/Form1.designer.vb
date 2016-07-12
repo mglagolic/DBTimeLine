@@ -22,8 +22,8 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim TreeNode3 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("New revisions (Created - Granulation - DBObject - Revision type)")
-        Dim TreeNode4 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLiner")
+        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("New revisions (Created - Granulation - DBObject - Revision type)")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLiner")
         Me.rtb1 = New System.Windows.Forms.RichTextBox()
         Me.btnCommit = New System.Windows.Forms.Button()
         Me.zoomRtb = New System.Windows.Forms.TrackBar()
@@ -50,6 +50,7 @@ Partial Class Form1
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.pnlDBTimeLinerControls = New System.Windows.Forms.Panel()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.btnAnalyze = New System.Windows.Forms.Button()
         Me.btnRollback = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -69,7 +70,6 @@ Partial Class Form1
         Me.pnlLeft = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.treeDatabaseObjects = New System.Windows.Forms.TreeView()
-        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlRtb.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -284,11 +284,11 @@ Partial Class Form1
         Me.treeNewRevisions.Dock = System.Windows.Forms.DockStyle.Fill
         Me.treeNewRevisions.Location = New System.Drawing.Point(3, 16)
         Me.treeNewRevisions.Name = "treeNewRevisions"
-        TreeNode3.BackColor = System.Drawing.Color.DarkSeaGreen
-        TreeNode3.Checked = True
-        TreeNode3.Name = "Node0"
-        TreeNode3.Text = "New revisions (Created - Granulation - DBObject - Revision type)"
-        Me.treeNewRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode3})
+        TreeNode1.BackColor = System.Drawing.Color.DarkSeaGreen
+        TreeNode1.Checked = True
+        TreeNode1.Name = "Node0"
+        TreeNode1.Text = "New revisions (Created - Granulation - DBObject - Revision type)"
+        Me.treeNewRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1})
         Me.treeNewRevisions.Size = New System.Drawing.Size(334, 185)
         Me.treeNewRevisions.TabIndex = 0
         '
@@ -380,6 +380,19 @@ Partial Class Form1
         Me.pnlDBTimeLinerControls.Size = New System.Drawing.Size(1230, 54)
         Me.pnlDBTimeLinerControls.TabIndex = 22
         '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Button1.ForeColor = System.Drawing.Color.Red
+        Me.Button1.Location = New System.Drawing.Point(306, 3)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(131, 45)
+        Me.Button1.TabIndex = 10
+        Me.Button1.Text = "HotFix"
+        Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button1.UseVisualStyleBackColor = False
+        '
         'btnAnalyze
         '
         Me.btnAnalyze.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -421,7 +434,7 @@ Partial Class Form1
         Me.gbSteps.Dock = System.Windows.Forms.DockStyle.Top
         Me.gbSteps.Location = New System.Drawing.Point(0, 0)
         Me.gbSteps.Name = "gbSteps"
-        Me.gbSteps.Size = New System.Drawing.Size(290, 346)
+        Me.gbSteps.Size = New System.Drawing.Size(290, 356)
         Me.gbSteps.TabIndex = 1
         Me.gbSteps.TabStop = False
         Me.gbSteps.Text = "Steps"
@@ -432,7 +445,7 @@ Partial Class Form1
         Me.StepProgressBar1.ForeColor = System.Drawing.Color.Black
         Me.StepProgressBar1.Location = New System.Drawing.Point(3, 16)
         Me.StepProgressBar1.Name = "StepProgressBar1"
-        Me.StepProgressBar1.Size = New System.Drawing.Size(284, 327)
+        Me.StepProgressBar1.Size = New System.Drawing.Size(284, 337)
         Me.StepProgressBar1.TabIndex = 0
         '
         'Splitter1
@@ -536,10 +549,10 @@ Partial Class Form1
         Me.GroupBox1.Controls.Add(Me.treeDatabaseObjects)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox1.ForeColor = System.Drawing.Color.Black
-        Me.GroupBox1.Location = New System.Drawing.Point(0, 346)
+        Me.GroupBox1.Location = New System.Drawing.Point(0, 356)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Padding = New System.Windows.Forms.Padding(3, 3, 10, 3)
-        Me.GroupBox1.Size = New System.Drawing.Size(290, 282)
+        Me.GroupBox1.Size = New System.Drawing.Size(290, 272)
         Me.GroupBox1.TabIndex = 2
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Database objects"
@@ -549,26 +562,13 @@ Partial Class Form1
         Me.treeDatabaseObjects.Dock = System.Windows.Forms.DockStyle.Fill
         Me.treeDatabaseObjects.Location = New System.Drawing.Point(3, 16)
         Me.treeDatabaseObjects.Name = "treeDatabaseObjects"
-        TreeNode4.BackColor = System.Drawing.Color.DarkSeaGreen
-        TreeNode4.Checked = True
-        TreeNode4.Name = "Node0"
-        TreeNode4.Text = "DBTimeLiner"
-        Me.treeDatabaseObjects.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode4})
-        Me.treeDatabaseObjects.Size = New System.Drawing.Size(277, 263)
+        TreeNode2.BackColor = System.Drawing.Color.DarkSeaGreen
+        TreeNode2.Checked = True
+        TreeNode2.Name = "Node0"
+        TreeNode2.Text = "DBTimeLiner"
+        Me.treeDatabaseObjects.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
+        Me.treeDatabaseObjects.Size = New System.Drawing.Size(277, 253)
         Me.treeDatabaseObjects.TabIndex = 0
-        '
-        'Button1
-        '
-        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Button1.BackColor = System.Drawing.Color.WhiteSmoke
-        Me.Button1.ForeColor = System.Drawing.Color.Red
-        Me.Button1.Location = New System.Drawing.Point(306, 3)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(131, 45)
-        Me.Button1.TabIndex = 10
-        Me.Button1.Text = "HotFix"
-        Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.Button1.UseVisualStyleBackColor = False
         '
         'Form1
         '

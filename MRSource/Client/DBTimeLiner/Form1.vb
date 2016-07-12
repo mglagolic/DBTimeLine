@@ -265,8 +265,9 @@ Public Class Form1
             .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "2", .Text = "Loading modules"})
             .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "3", .Text = "Loading customizations"})
             .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "4", .Text = "Applying changes"})
-            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "5", .Text = "Running always execute tasks"})
-            .Items.Add(New ListViewItem() With {.Group = grpFinish, .Tag = "6", .Text = "Finishing work"})
+            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "5", .Text = "Recreating objects"})
+            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "6", .Text = "Running always execute tasks"})
+            .Items.Add(New ListViewItem() With {.Group = grpFinish, .Tag = "7", .Text = "Finishing work"})
         End With
     End Sub
 
@@ -438,6 +439,9 @@ Public Class Form1
                 If inputs.ActionType = eActionType.Commit OrElse inputs.ActionType = eActionType.Rollback Then
                     StepProgressBar1.NextStep(False)
                     creator.ExecuteDBSqlRevisions(cnn, trn)
+
+                    StepProgressBar1.NextStep(False)
+                    creator.ExecuteDBSqlCreateIfNewRevisions(cnn, trn)
 
                     StepProgressBar1.NextStep(False)
                     creator.ExecuteDBSqlRevisionsAlwaysExecutingTasks(cnn, trn)
