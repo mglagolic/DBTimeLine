@@ -19,6 +19,7 @@
     ReadOnly Property Revisions As List(Of IDBRevision)
     Function GetFullName() As String
 
+    'Function GetSqlCreate(dBType As eDBType, Optional drop As Boolean = False) As String
     Function GetSqlCreate(dBType As eDBType) As String
     Function GetSqlModify(dBType As eDBType) As String
     Function GetSqlDelete(dBType As eDBType) As String

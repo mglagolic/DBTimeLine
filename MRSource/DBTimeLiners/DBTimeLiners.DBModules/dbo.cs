@@ -24,6 +24,7 @@ namespace DBTimeLiners.DBModules
             Drzava(sch);
             Grad(sch);
             Always(sch);
+            CreateIfNew(sch);
         }
 
         private string FillDrzava(IDBRevision sender, eDBType dBType)
@@ -83,9 +84,12 @@ WAITFOR DELAY '00:00:03'
         private void Always(IDBSchema sch)
         {
             sch.AddRevision(new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.AlwaysExecuteTask, UpdateStatistics));
-            
-            //sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 1", WithSchemaBinding = false },
-            //    new DBRevision(new DateTime(2016, 6, 29), 0, eDBRevisionType.AlwaysExecuteTask));
+        }
+
+        private void CreateIfNew(IDBSchema sch)
+        {
+            sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 3", WithSchemaBinding = false },
+                new DBRevision(new DateTime(2016, 7, 12), 0, eDBRevisionType.CreateIfNew));
         }
 
         private string UpdateStatistics(IDBRevision sender, eDBType dBType)
