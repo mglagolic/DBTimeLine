@@ -104,15 +104,6 @@ Namespace My
             End Get
         End Property
         
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("localhost")>  _
-        Public ReadOnly Property DefaultServerInstanceName() As String
-            Get
-                Return CType(Me("DefaultServerInstanceName"),String)
-            End Get
-        End Property
-        
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("Test5")>  _
@@ -123,6 +114,15 @@ Namespace My
             Set
                 Me("DefaultDatabaseName") = value
             End Set
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("HOME7\SQLEXPRESS2014")>  _
+        Public ReadOnly Property DefaultServerInstanceName() As String
+            Get
+                Return CType(Me("DefaultServerInstanceName"),String)
+            End Get
         End Property
     End Class
 End Namespace

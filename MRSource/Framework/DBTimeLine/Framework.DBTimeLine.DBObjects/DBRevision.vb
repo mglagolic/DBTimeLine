@@ -38,6 +38,8 @@ Public Class DBRevision
         End If
         If Parent IsNot Nothing Then
             Select Case DBRevisionType
+                Case eDBRevisionType.CreateIfNew
+                    sbSql.Append(DirectCast(Parent, IDBRecreatableObject).GetSqlRecreate(Parent.DBTimeLiner.DBType))
                 Case eDBRevisionType.Create
                     sbSql.Append(Parent.GetSqlCreate(Parent.DBTimeLiner.DBType))
                 Case eDBRevisionType.Modify
@@ -47,7 +49,7 @@ Public Class DBRevision
                 Case eDBRevisionType.Task, eDBRevisionType.AlwaysExecuteTask
                     ' Do nothing, tasks do not change db structure
                 Case Else
-                    Throw New NotSupportedException("eDBRevisionType")
+                    Throw New NotSupportedException("NotSupported: eDBRevisionType")
             End Select
         End If
         If PostSqlTask IsNot Nothing Then

@@ -50,6 +50,7 @@ Partial Class Form1
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.pnlDBTimeLinerControls = New System.Windows.Forms.Panel()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.btnAnalyze = New System.Windows.Forms.Button()
         Me.btnRollback = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -314,7 +315,7 @@ Partial Class Form1
         Me.pnlConnect.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlConnect.Location = New System.Drawing.Point(0, 0)
         Me.pnlConnect.Name = "pnlConnect"
-        Me.pnlConnect.Size = New System.Drawing.Size(375, 54)
+        Me.pnlConnect.Size = New System.Drawing.Size(300, 54)
         Me.pnlConnect.TabIndex = 23
         '
         'btnConnect
@@ -369,6 +370,7 @@ Partial Class Form1
         '
         'pnlDBTimeLinerControls
         '
+        Me.pnlDBTimeLinerControls.Controls.Add(Me.Button1)
         Me.pnlDBTimeLinerControls.Controls.Add(Me.btnAnalyze)
         Me.pnlDBTimeLinerControls.Controls.Add(Me.btnCommit)
         Me.pnlDBTimeLinerControls.Controls.Add(Me.btnRollback)
@@ -377,6 +379,19 @@ Partial Class Form1
         Me.pnlDBTimeLinerControls.Name = "pnlDBTimeLinerControls"
         Me.pnlDBTimeLinerControls.Size = New System.Drawing.Size(1230, 54)
         Me.pnlDBTimeLinerControls.TabIndex = 22
+        '
+        'Button1
+        '
+        Me.Button1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Button1.BackColor = System.Drawing.Color.WhiteSmoke
+        Me.Button1.ForeColor = System.Drawing.Color.Red
+        Me.Button1.Location = New System.Drawing.Point(306, 3)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(131, 45)
+        Me.Button1.TabIndex = 10
+        Me.Button1.Text = "HotFix"
+        Me.Button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.Button1.UseVisualStyleBackColor = False
         '
         'btnAnalyze
         '
@@ -419,7 +434,7 @@ Partial Class Form1
         Me.gbSteps.Dock = System.Windows.Forms.DockStyle.Top
         Me.gbSteps.Location = New System.Drawing.Point(0, 0)
         Me.gbSteps.Name = "gbSteps"
-        Me.gbSteps.Size = New System.Drawing.Size(290, 346)
+        Me.gbSteps.Size = New System.Drawing.Size(290, 356)
         Me.gbSteps.TabIndex = 1
         Me.gbSteps.TabStop = False
         Me.gbSteps.Text = "Steps"
@@ -430,7 +445,7 @@ Partial Class Form1
         Me.StepProgressBar1.ForeColor = System.Drawing.Color.Black
         Me.StepProgressBar1.Location = New System.Drawing.Point(3, 16)
         Me.StepProgressBar1.Name = "StepProgressBar1"
-        Me.StepProgressBar1.Size = New System.Drawing.Size(284, 327)
+        Me.StepProgressBar1.Size = New System.Drawing.Size(284, 337)
         Me.StepProgressBar1.TabIndex = 0
         '
         'Splitter1
@@ -534,10 +549,10 @@ Partial Class Form1
         Me.GroupBox1.Controls.Add(Me.treeDatabaseObjects)
         Me.GroupBox1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.GroupBox1.ForeColor = System.Drawing.Color.Black
-        Me.GroupBox1.Location = New System.Drawing.Point(0, 346)
+        Me.GroupBox1.Location = New System.Drawing.Point(0, 356)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Padding = New System.Windows.Forms.Padding(3, 3, 10, 3)
-        Me.GroupBox1.Size = New System.Drawing.Size(290, 282)
+        Me.GroupBox1.Size = New System.Drawing.Size(290, 272)
         Me.GroupBox1.TabIndex = 2
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Database objects"
@@ -552,7 +567,7 @@ Partial Class Form1
         TreeNode2.Name = "Node0"
         TreeNode2.Text = "DBTimeLiner"
         Me.treeDatabaseObjects.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
-        Me.treeDatabaseObjects.Size = New System.Drawing.Size(277, 263)
+        Me.treeDatabaseObjects.Size = New System.Drawing.Size(277, 253)
         Me.treeDatabaseObjects.TabIndex = 0
         '
         'Form1
@@ -572,7 +587,7 @@ Partial Class Form1
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "Form1"
         Me.Padding = New System.Windows.Forms.Padding(10)
-        Me.Text = "Form1"
+        Me.Text = "DBTimeLiner"
         CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlRtb.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
@@ -636,4 +651,5 @@ Partial Class Form1
     Friend WithEvents lblDatabase As Label
     Friend WithEvents pnlConnect As Panel
     Friend WithEvents pnlDBTimeLinerControls As Panel
+    Friend WithEvents Button1 As Button
 End Class

@@ -73,36 +73,50 @@ Public Class DBTimeLiner
 #Region "Public methods"
     Public Sub RecomputeNewDBSqlRevisions()
         _NewDBSqlRevisions.Clear()
+        '_NewDBSqlRevisions.AddRange(SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask AndAlso rev.RevisionType <> eDBRevisionType.CreateIfNew).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList)
         _NewDBSqlRevisions.AddRange(SourceDBSqlRevisions.Where(Function(rev) rev.RevisionType <> eDBRevisionType.AlwaysExecuteTask).Except(ExecutedDBSqlRevisions, New DBSqlRevision.DBSqlRevisionEqualityComparer).ToList)
     End Sub
 
-    Public Sub LoadExecutedDBSqlRevisionsFromDB(cnn As Common.DbConnection, Optional trn As Common.DbTransaction = Nothing)
+    Public Sub LoadExecutedDBSqlRevisionsFromDB(cnn As DbConnection, Optional trn As DbTransaction = Nothing)
         ExecutedDBSqlRevisions.Clear()
 
-        Using per As New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn, .PagingEnabled = False}
-            With per.OrderItems
-                .Add(New MRCore.MROrderItem("RevisionKey", MRCore.Enums.eOrderDirection.Ascending))
-                .Add(New MRCore.MROrderItem("ID", MRCore.Enums.eOrderDirection.Ascending))
-            End With
 
-            Dim dicExecutedRevisions As Dictionary(Of Object, IMRDLO) = per.GetData(trn)
-            For Each kv As KeyValuePair(Of Object, IMRDLO) In dicExecutedRevisions
-                Dim sqlRevision As New DBSqlRevision(kv.Value, Me)
-                ExecutedDBSqlRevisions.Add(sqlRevision)
-                ExecutedDBRevisions.Add(sqlRevision.Key, sqlRevision.Parent)
-            Next
-        End Using
+        Dim per As New DBSqlRevision.DBSqlRevisionPersisterNew With {.CNN = cnn}
+        With per.OrderItems
+            .Add(New Persisting.Implementation.OrderItem() With {.SqlName = "RevisionKey", .Direction = Persisting.Enums.eOrderDirection.Ascending})
+            .Add(New Persisting.Implementation.OrderItem() With {.SqlName = "ID", .Direction = Persisting.Enums.eOrderDirection.Ascending})
+        End With
+
+        Dim lsExecutedRevisions As List(Of Persisting.Interfaces.IDlo) = per.GetData(trn)
+        For Each dlo As Persisting.Interfaces.IDlo In lsExecutedRevisions
+            Dim sqlRevision As New DBSqlRevision(dlo.ColumnValues, Me)
+            ExecutedDBSqlRevisions.Add(sqlRevision)
+            ExecutedDBRevisions.Add(sqlRevision.Key, sqlRevision.Parent)
+        Next
+
         RecomputeNewDBSqlRevisions()
     End Sub
 
     Public Sub ExecuteDBSqlRevisions(cnn As DbConnection, trn As DbTransaction)
         Try
-            ExecuteDBSqlRevisionBatches(NewDBSqlRevisions, cnn, trn, False)
+            Dim revs = NewDBSqlRevisions.Where(Function(sqlRev) sqlRev.Parent.DBRevisionType <> eDBRevisionType.CreateIfNew).ToList
+            ExecuteDBSqlRevisionBatches(revs, cnn, trn, False)
         Catch ex As Exception
             ' CONSIDER - do some logging
             Throw
         End Try
     End Sub
+
+    Public Sub ExecuteDBSqlCreateIfNewRevisions(cnn As DbConnection, trn As DbTransaction)
+        Try
+            Dim revs = NewDBSqlRevisions.Where(Function(sqlRev) sqlRev.Parent.DBRevisionType = eDBRevisionType.CreateIfNew).ToList
+            ExecuteDBSqlRevisionBatches(revs, cnn, trn, False)
+        Catch ex As Exception
+            ' CONSIDER - do some logging
+            Throw
+        End Try
+    End Sub
+
 
     Public Sub ExecuteDBSqlRevisionsAlwaysExecutingTasks(cnn As DbConnection, trn As DbTransaction)
         Try
@@ -122,6 +136,8 @@ Public Class DBTimeLiner
         CreateAlwaysExecutingTaskTable()
         CreateModuleTable()
         CreateCustomizationTable()
+        CreateDummyProcedureProc()
+        CreateDummyViewProc()
     End Sub
 
 #End Region
@@ -214,34 +230,36 @@ Public Class DBTimeLiner
     End Sub
 
     Private Sub ExecuteDBSqlRevisionBatches(notExecutedRevisions As List(Of DBSqlRevision), cnn As DbConnection, trn As DbTransaction, alwaysExecutingTask As Boolean)
-        notExecutedRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+        If notExecutedRevisions.Count > 0 Then
+            notExecutedRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
 
-        Dim newExecutedRevisions As New List(Of DBSqlRevision)
-        Dim sqlScriptBuilder As New StringBuilder()
-        Dim sqlBatchScriptBuilder As New StringBuilder()
+            Dim newExecutedRevisions As New List(Of DBSqlRevision)
+            Dim sqlScriptBuilder As New StringBuilder()
+            Dim sqlBatchScriptBuilder As New StringBuilder()
 
-        For i As Integer = 0 To notExecutedRevisions.Count - 1
-            If Worker.CancellationPending Then
-                Exit Sub
-            End If
-
-            Dim rev As DBSqlRevision = notExecutedRevisions(i)
-            Dim sql As String = rev.Sql
-            sqlScriptBuilder.Append(sql)
-            sqlBatchScriptBuilder.Append(sql)
-
-            newExecutedRevisions.Add(rev)
-            If i = notExecutedRevisions.Count - 1 OrElse (i + 1) Mod RevisionBatchSize = 0 Then
-                ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn, alwaysExecutingTask)
-                sqlBatchScriptBuilder.Clear()
-                newExecutedRevisions.Clear()
-                Dim msg As String = "New revisions"
-                If alwaysExecutingTask Then
-                    msg = "Always executing tasks"
+            For i As Integer = 0 To notExecutedRevisions.Count - 1
+                If Worker.CancellationPending Then
+                    Exit Sub
                 End If
-                OnProgressReported(Me, New ProgressReportedEventArgs() With {.CurrentStep = i + 1, .TotalSteps = notExecutedRevisions.Count, .Message = msg})
-            End If
-        Next
+
+                Dim rev As DBSqlRevision = notExecutedRevisions(i)
+                Dim sql As String = rev.Sql
+                sqlScriptBuilder.Append(sql)
+                sqlBatchScriptBuilder.Append(sql)
+
+                newExecutedRevisions.Add(rev)
+                If i = notExecutedRevisions.Count - 1 OrElse (i + 1) Mod RevisionBatchSize = 0 Then
+                    ExecuteRevisionBatch(sqlBatchScriptBuilder.ToString, newExecutedRevisions, i + 1, notExecutedRevisions.Count, cnn, trn, alwaysExecutingTask)
+                    sqlBatchScriptBuilder.Clear()
+                    newExecutedRevisions.Clear()
+                    Dim msg As String = "New revisions"
+                    If alwaysExecutingTask Then
+                        msg = "Always executing tasks"
+                    End If
+                    OnProgressReported(Me, New ProgressReportedEventArgs() With {.CurrentStep = i + 1, .TotalSteps = notExecutedRevisions.Count, .Message = msg})
+                End If
+            Next
+        End If
     End Sub
 
 #Region "System objects"
@@ -312,6 +330,38 @@ Public Class DBTimeLiner
                     cnn.Open()
                 End If
                 ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemModuleTable(), CType(cnn, DbConnection), Nothing, True, Nothing)
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
+        End Using
+    End Sub
+
+    Private Sub CreateDummyViewProc()
+        Using cnn As IDbConnection = MRC.GetConnection
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemDummyViewProcedure(), CType(cnn, DbConnection), Nothing, True, Nothing)
+            Catch ex As Exception
+                If Debugger.IsAttached Then
+                    Debugger.Break()
+                End If
+                Throw
+            End Try
+        End Using
+    End Sub
+
+    Private Sub CreateDummyProcedureProc()
+        Using cnn As IDbConnection = MRC.GetConnection
+            Try
+                If cnn.State <> ConnectionState.Open Then
+                    cnn.Open()
+                End If
+                ExecuteScriptBatches(DBSqlGenerator.GetSqlCreateSystemDummyProcedureProcedure(), CType(cnn, DbConnection), Nothing, True, Nothing)
             Catch ex As Exception
                 If Debugger.IsAttached Then
                     Debugger.Break()
