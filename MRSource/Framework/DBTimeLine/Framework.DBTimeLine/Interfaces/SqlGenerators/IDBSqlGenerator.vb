@@ -7,7 +7,5 @@
     Function GetSqlCheckIfSchemaExists() As String
     Function SplitSqlStatements(sqlScript As String) As IEnumerable(Of String)
     Function GetSqlCreateSystemCustomizationTable() As String
-    Function GetSqlCreateSystemDummyViewProcedure() As String
-    Function GetSqlCreateSystemDummyProcedureProcedure() As String
 
 End Interface

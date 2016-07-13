@@ -10,7 +10,7 @@
     <AssemblyName>Framework.DBTimeLine</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -86,7 +86,6 @@
     <Compile Include="Interfaces\IDBIndex.vb" />
     <Compile Include="Interfaces\IDBForeignKeyConstraint.vb" />
     <Compile Include="Interfaces\IDBConstraint.vb" />
-    <Compile Include="Interfaces\IDBRecreatableObject.vb" />
     <Compile Include="Interfaces\IDBView.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBViewDescriptor.vb" />
     <Compile Include="Interfaces\DBObjectDescriptors\IDBConstraintDescriptor.vb" />
@@ -143,10 +142,6 @@
     <ProjectReference Include="..\..\Core\MRFramework.MRCore\MRFramework.MRCore.vbproj">
       <Project>{84315872-44b6-4da5-aee6-33a96215294d}</Project>
       <Name>MRFramework.MRCore</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Persisting\Framework.Persisting\Framework.Persisting.csproj">
-      <Project>{1ec4a870-bcdf-4bb7-805b-8bd5f88da6fb}</Project>
-      <Name>Framework.Persisting</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Persisting\MRFramework.MRPersisting.Core\MRFramework.MRPersisting.Core.vbproj">
       <Project>{687aaae9-c8e2-4027-8a74-1411d0c52f7f}</Project>

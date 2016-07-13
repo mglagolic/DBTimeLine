@@ -60,7 +60,8 @@ GO
             End If
             ret = String.Format(
 "GO
-ALTER VIEW {0}.{1} {2}
+ALTER VIEW {0}.{1}
+{2}
 AS
 {3}
 GO
@@ -78,16 +79,6 @@ GO
 DROP VIEW {0}.{1}
 GO
 ", SchemaName, SchemaObjectName)
-        Return ret
-    End Function
-
-    Public Function GetSqlRecreate(dBType As eDBType) As String Implements IDBRecreatableObject.GetSqlRecreate
-        Dim ret As String = String.Format(
-"GO
-EXEC DBTimeLine.CreateDummyView {0}, {1}
-{2}
-", SchemaName, SchemaObjectName, GetSqlModify(dBType))
-
         Return ret
     End Function
 

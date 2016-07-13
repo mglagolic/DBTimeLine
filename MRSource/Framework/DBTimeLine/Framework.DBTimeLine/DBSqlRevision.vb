@@ -70,34 +70,30 @@ Public Class DBSqlRevision
         End With
     End Sub
 
-    Public Sub New(dloColumnValues As Dictionary(Of String, Object), dBTimeLiner As DBTimeLiner)
-        Created = CDate(dloColumnValues("Created"))
-        Granulation = CInt(dloColumnValues("Granulation"))
+    Public Sub New(dlo As IMRDLO, dBTimeLiner As DBTimeLiner)
+        Created = CDate(dlo.ColumnValues("Created"))
+        Granulation = CInt(dlo.ColumnValues("Granulation"))
 
-        ObjectTypeOrdinal = CInt(dloColumnValues("ObjectTypeOrdinal"))
-        ObjectTypeName = CStr(dloColumnValues("ObjectTypeName"))
+        ObjectTypeOrdinal = CInt(dlo.ColumnValues("ObjectTypeOrdinal"))
+        ObjectTypeName = CStr(dlo.ColumnValues("ObjectTypeName"))
 
-        RevisionType = CType([Enum].Parse(GetType(eDBRevisionType), CStr(dloColumnValues("RevisionType"))), eDBRevisionType)
+        RevisionType = CType([Enum].Parse(GetType(eDBRevisionType), CStr(dlo.ColumnValues("RevisionType"))), eDBRevisionType)
 
-        ModuleKey = CStr(dloColumnValues("ModuleKey"))
+        ModuleKey = CStr(dlo.ColumnValues("ModuleKey"))
         SchemaName = ""
-        If dloColumnValues("SchemaName") IsNot DBNull.Value Then
-            SchemaName = CStr(dloColumnValues("SchemaName"))
+        If dlo.ColumnValues("SchemaName") IsNot DBNull.Value Then
+            SchemaName = CStr(dlo.ColumnValues("SchemaName"))
         End If
 
         SchemaObjectName = ""
-        If dloColumnValues("SchemaObjectName") IsNot DBNull.Value Then
-            SchemaObjectName = CStr(dloColumnValues("SchemaObjectName"))
+        If dlo.ColumnValues("SchemaObjectName") IsNot DBNull.Value Then
+            SchemaObjectName = CStr(dlo.ColumnValues("SchemaObjectName"))
         End If
 
-        ObjectName = CStr(dloColumnValues("ObjectName"))
-        ObjectFullName = CStr(dloColumnValues("ObjectName"))
+        ObjectName = CStr(dlo.ColumnValues("ObjectName"))
+        ObjectFullName = CStr(dlo.ColumnValues("ObjectName"))
 
-        If dloColumnValues("Description") IsNot DBNull.Value Then
-            Description = CStr(dloColumnValues("Description"))
-        End If
-
-        Key = CStr(dloColumnValues("RevisionKey"))
+        Key = CStr(dlo.ColumnValues("RevisionKey"))
 
         Parent = FindParent(dBTimeLiner)
     End Sub
@@ -167,51 +163,12 @@ Public Class DBSqlRevision
     Public Shared Function CompareRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer
         Dim ret As Integer = 0
 
-        If rev1.RevisionType = eDBRevisionType.CreateIfNew AndAlso rev2.RevisionType = eDBRevisionType.CreateIfNew Then
-            Dim desc1 = ""
-            Dim desc2 = ""
-            If rev1.Description IsNot Nothing Then
-                desc1 = rev1.Description
-            End If
-            If rev2.Description IsNot Nothing Then
-                desc2 = rev2.Description
-            End If
-
-            ret = (rev1.Key & desc1).CompareTo(rev2.Key & desc2)
-        Else
-            ret = rev1.Key.CompareTo(rev2.Key)
-        End If
-
-        Return ret
-    End Function
-
-    Public Shared Function CompareCreateIfNewRevisionsForDbCreations(rev1 As DBSqlRevision, rev2 As DBSqlRevision) As Integer
-        Dim ret As Integer = 0
-
-        ret = (rev1.Key & rev1.Description).CompareTo(rev2.Key & rev2.Description)
+        ret = rev1.Key.CompareTo(rev2.Key)
 
         Return ret
     End Function
 
 #Region "EqualityComparer"
-    Public Class DBSqlRevisionCreateIfNewEqualityComparer
-        Implements IEqualityComparer(Of DBSqlRevision)
-
-        Public Shadows Function Equals(x As DBSqlRevision, y As DBSqlRevision) As Boolean Implements IEqualityComparer(Of DBSqlRevision).Equals
-            Dim ret As Boolean = False
-
-            If CompareCreateIfNewRevisionsForDbCreations(x, y) = 0 Then
-                ret = True
-            End If
-
-            Return ret
-        End Function
-
-        Public Shadows Function GetHashCode(obj As DBSqlRevision) As Integer Implements IEqualityComparer(Of DBSqlRevision).GetHashCode
-            Return obj.Key.GetHashCode
-        End Function
-    End Class
-
     Public Class DBSqlRevisionEqualityComparer
         Implements IEqualityComparer(Of DBSqlRevision)
 
@@ -233,77 +190,6 @@ Public Class DBSqlRevision
 #End Region
 
 #Region "Persister"
-    Public Class DBSqlRevisionPersisterNew
-        Inherits Persisting.Persister
-
-        Protected Overrides ReadOnly Property DataBaseTableName As String
-            Get
-                Return "DBTimeLine.Revision"
-            End Get
-        End Property
-
-        Protected Overrides ReadOnly Property Sql As String
-            Get
-                Return _
-    "WITH RevCTE AS
-(
-	SELECT 
-		ID, 
-		RevisionKey, 
-		Created, 
-		Granulation, 
-		ObjectTypeOrdinal, 
-		ObjectTypeName, 
-		RevisionType, 
-		ModuleKey, 
-		SchemaName, 
-		SchemaObjectName, 
-		ObjectName, 
-		ObjectFullName
-	FROM 
-		DBTimeLine.Revision t
-)
-
-SELECT 
-	rev.*,
-	Description = CAST(NULL AS NVARCHAR(MAX))
-FROM 
-	RevCTE rev
-WHERE
-	rev.RevisionType <> 'CreateIfNew'
-
-UNION ALL
-
-SELECT 
-	rev.*,
-	Description = lastCreateIfNew.Description
-FROM 
-	RevCTE rev
-	INNER JOIN
-	(
-		SELECT 
-			RevisionKey,
-			ID,
-			Description
-		FROM
-			(
-				SELECT 
-					RevisionKey,
-					ID,
-					Description,
-					RBR = ROW_NUMBER() OVER(PARTITION BY RevisionKey ORDER BY t.Executed DESC)
-				FROM 
-					DBTimeLine.Revision t
-				WHERE
-					t.RevisionType = 'CreateIfNew'
-			) t
-		WHERE
-			t.RBR = 1
-	) lastCreateIfNew ON rev.RevisionKey = lastCreateIfNew.RevisionKey AND rev.ID = lastCreateIfNew.ID
-"
-            End Get
-        End Property
-    End Class
 
     Public Class DBSqlRevisionPersister
         Inherits MRPersisting.MRPersister
@@ -315,27 +201,26 @@ FROM
         End Property
         Public Overrides ReadOnly Property SQL As String
             Get
-                Return "SELECT RevisionKey, ID FROM " & DataBaseTableName
+                Return "SELECT ID, RevisionKey, Created, Granulation, ObjectTypeOrdinal, ObjectTypeName, RevisionType, ModuleKey, SchemaName, SchemaObjectName, ObjectName, ObjectFullName FROM " & DataBaseTableName
+            End Get
+        End Property
+    End Class
+    Public Class DBSqlAlwaysExecutingTaskPersister
+        Inherits MRPersisting.MRPersister
+
+        Public Overrides ReadOnly Property DataBaseTableName As String
+            Get
+                Return "DBTimeLine.AlwaysExecutingTask"
+            End Get
+        End Property
+        Public Overrides ReadOnly Property SQL As String
+            Get
+                Return "SELECT Key, ID FROM " & DataBaseTableName
             End Get
         End Property
     End Class
 
-    Public Class DBSqlAlwaysExecutingTaskPersister
-            Inherits MRPersisting.MRPersister
-
-            Public Overrides ReadOnly Property DataBaseTableName As String
-                Get
-                    Return "DBTimeLine.AlwaysExecutingTask"
-                End Get
-            End Property
-            Public Overrides ReadOnly Property SQL As String
-                Get
-                    Return "SELECT Key, ID FROM " & DataBaseTableName
-                End Get
-            End Property
-        End Class
-
 #End Region
 
 
-    End Class
+End Class
