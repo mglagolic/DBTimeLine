@@ -88,7 +88,7 @@ WAITFOR DELAY '00:00:03'
 
         private void CreateIfNew(IDBSchema sch)
         {
-            sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 4", WithSchemaBinding = false },
+            sch.AddView("testAlways", new DBViewDescriptor() { Body = "SELECT Broj = 3", WithSchemaBinding = false },
                 new DBRevision(new DateTime(2016, 7, 12), 0, eDBRevisionType.CreateIfNew));
         }
 
