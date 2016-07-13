@@ -1,6 +1,6 @@
 ﻿namespace Framework.GUI.Controls
 {
-    partial class DatabaseConnect
+    partial class MRDatabaseConnect
     {
         /// <summary> 
         /// Required designer variable.

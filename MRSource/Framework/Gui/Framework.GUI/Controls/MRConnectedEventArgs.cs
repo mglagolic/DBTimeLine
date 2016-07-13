@@ -1,6 +1,6 @@
 ﻿namespace Framework.GUI.Controls
 {
-    public class DBConnectedEventArgs : System.EventArgs
+    public class MRConnectedEventArgs : System.EventArgs
     {
         public string Message { get; set; }
         public string ErrorMessage { get; set; }

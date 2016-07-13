@@ -54,7 +54,7 @@ Partial Class Form1
         Me.btnRollback = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.gbSteps = New System.Windows.Forms.GroupBox()
-        Me.StepProgressBar1 = New Framework.GUI.Controls.StepProgressBar()
+        Me.StepProgressBar1 = New Framework.GUI.Controls.MRStepProgressBar()
         Me.Splitter1 = New System.Windows.Forms.Splitter()
         Me.Splitter2 = New System.Windows.Forms.Splitter()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
@@ -69,6 +69,7 @@ Partial Class Form1
         Me.pnlLeft = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.treeDatabaseObjects = New System.Windows.Forms.TreeView()
+        Me.btnHotFix = New System.Windows.Forms.Button()
         CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlRtb.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -105,6 +106,7 @@ Partial Class Form1
         '
         Me.btnCommit.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCommit.BackColor = System.Drawing.Color.Maroon
+        Me.btnCommit.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(238, Byte))
         Me.btnCommit.ForeColor = System.Drawing.Color.White
         Me.btnCommit.Location = New System.Drawing.Point(1164, 3)
         Me.btnCommit.Name = "btnCommit"
@@ -369,6 +371,7 @@ Partial Class Form1
         '
         'pnlDBTimeLinerControls
         '
+        Me.pnlDBTimeLinerControls.Controls.Add(Me.btnHotFix)
         Me.pnlDBTimeLinerControls.Controls.Add(Me.btnAnalyze)
         Me.pnlDBTimeLinerControls.Controls.Add(Me.btnCommit)
         Me.pnlDBTimeLinerControls.Controls.Add(Me.btnRollback)
@@ -555,6 +558,20 @@ Partial Class Form1
         Me.treeDatabaseObjects.Size = New System.Drawing.Size(277, 263)
         Me.treeDatabaseObjects.TabIndex = 0
         '
+        'btnHotFix
+        '
+        Me.btnHotFix.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnHotFix.BackColor = System.Drawing.Color.CornflowerBlue
+        Me.btnHotFix.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(238, Byte))
+        Me.btnHotFix.ForeColor = System.Drawing.Color.Red
+        Me.btnHotFix.Location = New System.Drawing.Point(381, 5)
+        Me.btnHotFix.Name = "btnHotFix"
+        Me.btnHotFix.Size = New System.Drawing.Size(131, 45)
+        Me.btnHotFix.TabIndex = 10
+        Me.btnHotFix.Text = "HotFix"
+        Me.btnHotFix.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnHotFix.UseVisualStyleBackColor = False
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -601,7 +618,7 @@ Partial Class Form1
     Friend WithEvents gbSteps As GroupBox
     Friend WithEvents btnAnalyze As Button
     Friend WithEvents btnRollback As Button
-    Friend WithEvents StepProgressBar1 As Framework.GUI.Controls.StepProgressBar
+    Friend WithEvents StepProgressBar1 As Framework.GUI.Controls.MRStepProgressBar
     Friend WithEvents Splitter1 As Splitter
     Friend WithEvents Splitter2 As Splitter
     Friend WithEvents MenuStrip1 As MenuStrip
@@ -636,4 +653,5 @@ Partial Class Form1
     Friend WithEvents lblDatabase As Label
     Friend WithEvents pnlConnect As Panel
     Friend WithEvents pnlDBTimeLinerControls As Panel
+    Friend WithEvents btnHotFix As Button
 End Class

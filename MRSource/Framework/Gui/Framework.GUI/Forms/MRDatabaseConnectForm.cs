@@ -1,8 +1,8 @@
 ﻿namespace Framework.GUI.Forms
 {
-    public partial class DatabaseConnectForm : Framework.GUI.Forms.StatusForm
+    public partial class MRDatabaseConnectForm : Framework.GUI.Forms.MRStatusForm
     {
-        public DatabaseConnectForm()
+        public MRDatabaseConnectForm()
         {
             InitializeComponent();
             databaseConnect1.SetDBConnector(new Persisting.Implementation.DatabaseConnector());
@@ -12,7 +12,7 @@
             databaseConnect1.SetDefaults(serverName, databaseName, username, password);
         }
 
-        private void databaseConnect1_DatabaseConnected(object sender, Controls.DBConnectedEventArgs e)
+        private void databaseConnect1_DatabaseConnected(object sender, Controls.MRConnectedEventArgs e)
         {
             Connected = e.Success;
         }

@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Framework.GUI.Forms
 {
-    public partial class StatusForm : Form
+    public partial class MRStatusForm : Form
     {
-        public StatusForm()
+        public MRStatusForm()
         {
             InitializeComponent();
         }

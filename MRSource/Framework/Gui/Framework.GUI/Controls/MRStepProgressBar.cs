@@ -6,9 +6,9 @@ using System.Windows.Forms;
 
 namespace Framework.GUI.Controls
 {
-    public partial class StepProgressBar : UserControl
+    public partial class MRStepProgressBar : UserControl
     {
-        public StepProgressBar()
+        public MRStepProgressBar()
         {
             InitializeComponent();
         }

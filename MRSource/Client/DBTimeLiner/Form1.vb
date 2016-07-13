@@ -95,7 +95,6 @@ Public Class Form1
                                                            rtb.AppendText(CType(input(0), String))
                                                            rtb.ScrollToCaret()
                                                        End Sub)
-
     End Sub
 
     Delegate Sub WriteErrorToMessageBoxCallback(text As String)
@@ -125,7 +124,7 @@ Public Class Form1
 
 #Region "Connect"
     Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
-        Using frm As New Framework.GUI.Forms.DatabaseConnectForm
+        Using frm As New Framework.GUI.Forms.MRDatabaseConnectForm
             frm.SetDefaults(My.Settings.DefaultServerInstanceName, My.Settings.DefaultDatabaseName, "", "")
             frm.ShowDialog()
             If frm.Connected Then
@@ -382,9 +381,6 @@ Public Class Form1
                 Exit Sub
             End If
 
-            ' TODO - prebaciti spajanje na bazu u posebnu formu
-            ' TODO - GetAllSqlServerInstances staviti na click comba za odabir server, a ne u load
-            ' TODO - dodati novi eRevisionType = AlwaysExecuteCreate (koristiti za viewove i procedure. omoguciti ucitavanje body-a iz fajla .sql)
             ' TODO - napraviti prozor za commit naredbi s generiranjem infa tko je odradio i sto. Slati info na mail.
             ' TODO - omoguciti prikaz novih revizija, bez executea
             ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
@@ -506,6 +502,10 @@ Public Class Form1
                 RemoveHandler customizationLoader.CustomizationLoaded, AddressOf CustomizationLoadedHandler
             End If
         End Try
+    End Sub
+
+    Private Sub btnHotFix_Click(sender As Object, e As EventArgs) Handles btnHotFix.Click
+
     End Sub
 #End Region
 

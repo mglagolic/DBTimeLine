@@ -42,46 +42,52 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controls\DatabaseConnect.cs">
+    <Compile Include="Controls\MRDatabaseConnect.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\DatabaseConnect.Designer.cs">
-      <DependentUpon>DatabaseConnect.cs</DependentUpon>
+    <Compile Include="Controls\MRDatabaseConnect.Designer.cs">
+      <DependentUpon>MRDatabaseConnect.cs</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DatabaseConnectedEventArgs.cs" />
-    <Compile Include="Controls\StepProgressBar.cs">
+    <Compile Include="Controls\MRConnectedEventArgs.cs" />
+    <Compile Include="Controls\MRRichTextBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\MRRichTextBox.Designer.cs">
+      <DependentUpon>MRRichTextBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MRStepProgressBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\StepProgressBar.Designer.cs">
-      <DependentUpon>StepProgressBar.cs</DependentUpon>
+    <Compile Include="Controls\MRStepProgressBar.Designer.cs">
+      <DependentUpon>MRStepProgressBar.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\DatabaseConnectForm.cs">
+    <Compile Include="Forms\MRDatabaseConnectForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\DatabaseConnectForm.Designer.cs">
-      <DependentUpon>DatabaseConnectForm.cs</DependentUpon>
+    <Compile Include="Forms\MRDatabaseConnectForm.Designer.cs">
+      <DependentUpon>MRDatabaseConnectForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StatusForm.cs">
+    <Compile Include="Forms\MRStatusForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\StatusForm.Designer.cs">
-      <DependentUpon>StatusForm.cs</DependentUpon>
+    <Compile Include="Forms\MRStatusForm.Designer.cs">
+      <DependentUpon>MRStatusForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\CrossThreadingHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Controls\DatabaseConnect.resx">
-      <DependentUpon>DatabaseConnect.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\MRDatabaseConnect.resx">
+      <DependentUpon>MRDatabaseConnect.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Controls\StepProgressBar.resx">
-      <DependentUpon>StepProgressBar.cs</DependentUpon>
+    <EmbeddedResource Include="Controls\MRStepProgressBar.resx">
+      <DependentUpon>MRStepProgressBar.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\DatabaseConnectForm.resx">
-      <DependentUpon>DatabaseConnectForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MRDatabaseConnectForm.resx">
+      <DependentUpon>MRDatabaseConnectForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StatusForm.resx">
-      <DependentUpon>StatusForm.cs</DependentUpon>
+    <EmbeddedResource Include="Forms\MRStatusForm.resx">
+      <DependentUpon>MRStatusForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

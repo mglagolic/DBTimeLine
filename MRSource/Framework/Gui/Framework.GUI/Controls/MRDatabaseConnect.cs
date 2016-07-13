@@ -4,15 +4,15 @@ using System.Windows.Forms;
 
 namespace Framework.GUI.Controls
 {
-    public partial class DatabaseConnect : UserControl
+    public partial class MRDatabaseConnect : UserControl
     {
-        public DatabaseConnect()
+        public MRDatabaseConnect()
         {
             InitializeComponent();
             btnRefreshDB.Visible = false;
         }
 
-        public DatabaseConnect(Persisting.Interfaces.IDatabaseConnector dbConnector) : this()
+        public MRDatabaseConnect(Persisting.Interfaces.IDatabaseConnector dbConnector) : this()
         {
             DBConnector = dbConnector;
         }
@@ -71,16 +71,16 @@ namespace Framework.GUI.Controls
                 lblTestConnect.Text = "-- FAILED --";
                 lblTestConnect.ForeColor = Color.Red;
             }
-            OnDatabaseConnected(DBConnector, new DBConnectedEventArgs() { Message = msg, ErrorMessage = errorMsg, Success = (errorMsg.Length == 0 ? true : false) });
+            OnDatabaseConnected(DBConnector, new MRConnectedEventArgs() { Message = msg, ErrorMessage = errorMsg, Success = (errorMsg.Length == 0 ? true : false) });
         }
 
         #region Events and event raisers
 
-        public delegate void DatabaseConnectedEventHandler(object sender, DBConnectedEventArgs e);
+        public delegate void DatabaseConnectedEventHandler(object sender, MRConnectedEventArgs e);
 
         public event DatabaseConnectedEventHandler DatabaseConnected;
 
-        protected internal void OnDatabaseConnected(object sender, DBConnectedEventArgs e)
+        protected internal void OnDatabaseConnected(object sender, MRConnectedEventArgs e)
 
         {
             if (DatabaseConnected != null)

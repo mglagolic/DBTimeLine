@@ -34,7 +34,6 @@ C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersistin
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.dll
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.pdb
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.xml
-D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbprojResolveAssemblyReference.cache
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.Resources.resources
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbproj.GenerateResource.Cache
 D:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll

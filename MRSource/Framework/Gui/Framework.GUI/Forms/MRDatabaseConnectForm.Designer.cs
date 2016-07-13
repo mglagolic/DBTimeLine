@@ -1,6 +1,6 @@
 ﻿namespace Framework.GUI.Forms
 {
-    partial class DatabaseConnectForm
+    partial class MRDatabaseConnectForm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.databaseConnect1 = new Framework.GUI.Controls.DatabaseConnect();
+            this.databaseConnect1 = new Framework.GUI.Controls.MRDatabaseConnect();
             this.SuspendLayout();
             // 
             // databaseConnect1
@@ -38,7 +38,7 @@
             this.databaseConnect1.Name = "databaseConnect1";
             this.databaseConnect1.Size = new System.Drawing.Size(330, 155);
             this.databaseConnect1.TabIndex = 1;
-            this.databaseConnect1.DatabaseConnected += new Framework.GUI.Controls.DatabaseConnect.DatabaseConnectedEventHandler(this.databaseConnect1_DatabaseConnected);
+            this.databaseConnect1.DatabaseConnected += new Framework.GUI.Controls.MRDatabaseConnect.DatabaseConnectedEventHandler(this.databaseConnect1_DatabaseConnected);
             // 
             // DatabaseConnectForm
             // 
@@ -56,6 +56,6 @@
 
         #endregion
 
-        private Controls.DatabaseConnect databaseConnect1;
+        private Controls.MRDatabaseConnect databaseConnect1;
     }
 }

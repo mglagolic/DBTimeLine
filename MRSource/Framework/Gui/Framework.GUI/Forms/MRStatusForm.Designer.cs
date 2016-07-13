@@ -1,6 +1,6 @@
 ﻿namespace Framework.GUI.Forms
 {
-    partial class StatusForm
+    partial class MRStatusForm
     {
         /// <summary>
         /// Required designer variable.

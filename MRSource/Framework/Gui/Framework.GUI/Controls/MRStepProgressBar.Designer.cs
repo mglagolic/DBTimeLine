@@ -1,6 +1,6 @@
 ﻿namespace Framework.GUI.Controls
 {
-    partial class StepProgressBar
+    partial class MRStepProgressBar
     {
         /// <summary> 
         /// Required designer variable.
