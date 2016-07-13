@@ -14,11 +14,14 @@ Imports System.Data.Common
 
 Public Class Form1
 
-    Dim ts1 As TimeSpan
-    Dim ts2 As TimeSpan
+#Region "Globals"
+    Private ts1 As TimeSpan
+    Private ts2 As TimeSpan
 
-
-
+    Private creator As DBTimeLiner = Nothing
+    Private customizationLoader As Customizations.Core.Loader = Nothing
+    Private moduleLoader As DBTimeLiners.DBModules.Loader = Nothing
+#End Region
 
 #Region "Writing rtb"
     Private Sub BatchExecutingHandler(sender As Object, e As BatchExecutingEventArgs)
@@ -107,10 +110,7 @@ Public Class Form1
 
 #End Region
 
-    Private creator As DBTimeLiner = Nothing
-    Private customizationLoader As Customizations.Core.Loader = Nothing
-    Private moduleLoader As DBTimeLiners.DBModules.Loader = Nothing
-
+#Region "Classes and enums"
     Private Class CreateTimeLineDBInputs
         Public Property ActionType As eActionType = 0
     End Class
@@ -121,6 +121,241 @@ Public Class Form1
         Rollback = 1
         Commit = 2
     End Enum
+#End Region
+
+#Region "Connect"
+    Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
+        Using frm As New Framework.GUI.Forms.DatabaseConnectForm
+            frm.SetDefaults(My.Settings.DefaultServerInstanceName, My.Settings.DefaultDatabaseName, "", "")
+            frm.ShowDialog()
+            If frm.Connected Then
+                EnableActionsGUI(True)
+                lblDatabase.Text = frm.DatabaseName
+                lblServer.Text = frm.ServerName
+            Else
+                EnableActionsGUI(False)
+                lblDatabase.Text = "--"
+                lblServer.Text = "--"
+            End If
+        End Using
+    End Sub
+
+    Private Sub SetTheStage(connectionString As String)
+        MRC.GetInstance().ConnectionString = connectionString
+        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
+    End Sub
+
+    Private Sub EnableActionsGUI(enabled As Boolean)
+        pnlDBTimeLinerControls.Enabled = enabled
+        MenuStrip1.Enabled = enabled
+    End Sub
+#End Region
+
+#Region "Init"
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
+        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
+
+        EnableActionsGUI(False)
+        btnConnect.Enabled = True
+
+        TempConnect()
+    End Sub
+
+    Private Sub TempConnect()
+        Dim dc As New Framework.Persisting.Implementation.DatabaseConnector
+        Dim cnnstr As String = dc.GenerateConnectionString(My.Settings.DefaultServerInstanceName, My.Settings.DefaultDatabaseName)
+        dc.Connect(cnnstr)
+        lblServer.Text = My.Settings.DefaultServerInstanceName
+        lblDatabase.Text = My.Settings.DefaultDatabaseName
+        EnableActionsGUI(True)
+    End Sub
+#End Region
+
+#Region "Extras"
+
+    Private Sub FillTreeView()
+        treeDatabaseObjects.Nodes.Clear()
+        Dim root As TreeNode = treeDatabaseObjects.Nodes.Add("root", "DBTimeLiner")
+        root.BackColor = Color.DarkSeaGreen
+        If creator IsNot Nothing Then
+            For Each dBModule As IDBModule In creator.DBModules
+                Dim nodModule = root.Nodes.Add(dBModule.ModuleKey & " (Module)")
+                nodModule.BackColor = Color.CornflowerBlue
+
+                FillTreeViewRecursive(nodModule, dBModule, 0)
+            Next
+        End If
+    End Sub
+
+    Private Function GetNodeColor(level As Integer) As Color
+        Dim lsColor As New List(Of Color)
+        lsColor.Add(Color.LightGoldenrodYellow)
+        lsColor.Add(Color.Transparent)
+        lsColor.Add(Color.Transparent)
+
+        Dim index As Integer = level Mod lsColor.Count
+
+        Return lsColor(index)
+    End Function
+
+    Private Sub FillTreeViewRecursive(currentNode As TreeNode, dbParent As IDBParent, level As Integer)
+        For Each dBObject As IDBObject In dbParent.DBObjects.Values
+            Dim treeNode = currentNode.Nodes.Add(dBObject.GetFullName & " (" & dBObject.ObjectTypeName & ")")
+
+            treeNode.BackColor = GetNodeColor(level)
+
+            If TypeOf dBObject Is IDBParent Then
+                FillTreeViewRecursive(treeNode, dBObject, level + 1)
+            End If
+        Next
+    End Sub
+
+    Private Sub zoomRtb_Scroll(sender As Object, e As EventArgs) Handles zoomRtb.Scroll
+        Dim tb As TrackBar = CType(sender, TrackBar)
+        Dim value As Decimal = tb.Value - tb.Minimum
+
+        Dim zoomFactor As Decimal = value / (tb.Maximum - tb.Minimum) * 2
+        If zoomFactor <= 0.015625D Then
+            zoomFactor = 0.02D
+        ElseIf zoomFactor >= 64 Then
+            zoomFactor = 63D
+        End If
+
+        rtb1.ZoomFactor = zoomFactor
+    End Sub
+
+    Private Sub FillNewRevisions()
+        Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.NewDBSqlRevisions
+        newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
+
+        Dim root As TreeNode = treeNewRevisions.TopNode
+        root.Nodes.Clear()
+
+        For Each sqlRev As DBSqlRevision In newDBSqlRevisions
+            Dim rev As IDBRevision = sqlRev.Parent
+            Dim text As String = rev.Created.ToString("yyyy-MM-dd") & " - " & rev.Granulation.ToString & " - " & sqlRev.RevisionTypeName & " - " & sqlRev.ObjectFullName
+            Dim newNode As New TreeNode(text)
+            newNode.Tag = sqlRev
+            root.Nodes.Add(newNode)
+        Next
+        'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
+        'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
+    End Sub
+
+    Private Sub treeNewRevisions_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles treeNewRevisions.AfterSelect
+        If TypeOf e.Node.Tag Is DBSqlRevision Then
+            ShowSqlRevisionInfo(CType(e.Node.Tag, DBSqlRevision))
+        End If
+    End Sub
+
+    Private Sub ShowSqlRevisionInfo(sqlRev As DBSqlRevision)
+        If sqlRev IsNot Nothing Then
+            Dim rev As IDBRevision = sqlRev.Parent
+            lblSqlRevInfoKey.Text = rev.Created.ToString("yyyy-MM-dd") & " - " & rev.Granulation.ToString & " - " & sqlRev.RevisionTypeName & " - " & sqlRev.ObjectFullName
+            lblSqlRevInfoModule.Text = DirectCast(sqlRev.Parent, DBRevision).Parent.ModuleKey
+            lblSqlRevInfoDBObjectType.Text = sqlRev.ObjectTypeName
+            lblSqlRevInfoRevisonType.Text = sqlRev.RevisionTypeName
+            rtbSqlRevInfoDescription.Text = sqlRev.Description
+        Else
+            lblSqlRevInfoKey.Text = ""
+            lblSqlRevInfoModule.Text = ""
+            lblSqlRevInfoDBObjectType.Text = ""
+            lblSqlRevInfoRevisonType.Text = ""
+            rtbSqlRevInfoDescription.Text = ""
+        End If
+    End Sub
+
+#End Region
+
+#Region "Progress"
+    Private Sub InitSteps()
+        StepProgressBar1.CurrentStepIndex = -1
+        With StepProgressBar1.Grid
+            .Groups.Clear()
+            .Items.Clear()
+
+            Dim grpInit As New ListViewGroup() With {.Header = "Initializing", .Name = "1"}
+            Dim grpCreate As New ListViewGroup() With {.Header = "Creating timeline", .Name = "2"}
+            Dim grpApply As New ListViewGroup() With {.Header = "Applying timeline", .Name = "3"}
+            Dim grpFinish As New ListViewGroup() With {.Header = "finishing tasks", .Name = "4"}
+
+            .Groups.Add(grpInit)
+            .Groups.Add(grpCreate)
+            .Groups.Add(grpApply)
+            .Groups.Add(grpFinish)
+
+            .Items.Add(New ListViewItem() With {.Group = grpInit, .Tag = "1", .Text = "Checking system objects"})
+            .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "2", .Text = "Loading modules"})
+            .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "3", .Text = "Loading customizations"})
+            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "4", .Text = "Applying changes"})
+            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "5", .Text = "Running always execute tasks"})
+            .Items.Add(New ListViewItem() With {.Group = grpFinish, .Tag = "6", .Text = "Finishing work"})
+        End With
+    End Sub
+
+    Private Sub StepProgressBar1_DoWork(sender As Object, e As DoWorkEventArgs) Handles StepProgressBar1.DoWork
+        StepProgressBar1.ReportProgress(0)
+        Try
+            CreateTimeLineDB(CType(sender, BackgroundWorker), DirectCast(e.Argument, CreateTimeLineDBInputs))
+        Catch ex As Exception
+            'WriteException(ex)
+            If Debugger.IsAttached Then
+                Debugger.Break()
+            End If
+            WriteErrorToMessageBox(ex.Message & vbNewLine & "StackTrace:" & vbNewLine & ex.StackTrace)
+        End Try
+    End Sub
+
+    Private Sub StepProgressBar1_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles StepProgressBar1.RunWorkerCompleted
+        ts2 = New TimeSpan(Now.Ticks)
+
+        WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
+        WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
+        pnlControl.Enabled = True
+        MenuStrip1.Enabled = True
+        FillTreeView()
+        FillNewRevisions()
+    End Sub
+
+    Private Sub StepProgressBar1_Aborted(sender As Object, e As EventArgs) Handles StepProgressBar1.Aborted
+        ts2 = New TimeSpan(Now.Ticks)
+        WriteTextToRtb(rtb1, "-- Trying to cancel worker: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
+    End Sub
+
+    Private Sub MenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
+        If sender Is ExitToolStripMenuItem Then
+            Close()
+        End If
+    End Sub
+
+#End Region
+
+#Region "DoWork"
+    Private Sub actionButton_Click(sender As Object, e As EventArgs) Handles btnAnalyze.Click, btnCommit.Click, btnRollback.Click, AnalyzeToolStripMenuItem.Click, RollbackToolStripMenuItem.Click, CommitToolStripMenuItem.Click
+        Dim actionType As eActionType = eActionType.None
+        If sender Is btnAnalyze OrElse sender Is AnalyzeToolStripMenuItem Then
+            actionType = eActionType.Analyze
+        ElseIf sender Is btnRollback OrElse sender Is RollbackToolStripMenuItem Then
+            actionType = eActionType.Rollback
+        ElseIf sender Is btnCommit OrElse sender Is CommitToolStripMenuItem Then
+            actionType = eActionType.Commit
+        End If
+        If actionType <> eActionType.None Then
+            ts1 = New TimeSpan(Now.Ticks)
+            pnlControl.Enabled = False
+            MenuStrip1.Enabled = False
+
+            ShowSqlRevisionInfo(Nothing)
+            rtb1.Text = ""
+            WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
+
+            InitSteps()
+            Dim inputs As New CreateTimeLineDBInputs With {.ActionType = actionType}
+            StepProgressBar1.StartWork(inputs)
+        End If
+    End Sub
 
     Private Sub CreateTimeLineDB(worker As BackgroundWorker, inputs As CreateTimeLineDBInputs)
         creator = New DBTimeLiner(eDBType.TransactSQL, New DBSqlGeneratorFactory, worker)
@@ -272,226 +507,6 @@ Public Class Form1
             End If
         End Try
     End Sub
-
-
-
-#Region "Extras"
-
-    Private Sub FillTreeView()
-        treeDatabaseObjects.Nodes.Clear()
-        Dim root As TreeNode = treeDatabaseObjects.Nodes.Add("root", "DBTimeLiner")
-        root.BackColor = Color.DarkSeaGreen
-        If creator IsNot Nothing Then
-            For Each dBModule As IDBModule In creator.DBModules
-                Dim nodModule = root.Nodes.Add(dBModule.ModuleKey & " (Module)")
-                nodModule.BackColor = Color.CornflowerBlue
-
-                FillTreeViewRecursive(nodModule, dBModule, 0)
-            Next
-        End If
-    End Sub
-
-    Private Function GetNodeColor(level As Integer) As Color
-        Dim lsColor As New List(Of Color)
-        lsColor.Add(Color.LightGoldenrodYellow)
-        lsColor.Add(Color.Transparent)
-        lsColor.Add(Color.Transparent)
-
-        Dim index As Integer = level Mod lsColor.Count
-
-        Return lsColor(index)
-    End Function
-
-    Private Sub FillTreeViewRecursive(currentNode As TreeNode, dbParent As IDBParent, level As Integer)
-        For Each dBObject As IDBObject In dbParent.DBObjects.Values
-            Dim treeNode = currentNode.Nodes.Add(dBObject.GetFullName & " (" & dBObject.ObjectTypeName & ")")
-
-            treeNode.BackColor = GetNodeColor(level)
-
-            If TypeOf dBObject Is IDBParent Then
-                FillTreeViewRecursive(treeNode, dBObject, level + 1)
-            End If
-        Next
-    End Sub
-
-    Private Sub zoomRtb_Scroll(sender As Object, e As EventArgs) Handles zoomRtb.Scroll
-        Dim tb As TrackBar = CType(sender, TrackBar)
-        Dim value As Decimal = tb.Value - tb.Minimum
-
-        Dim zoomFactor As Decimal = value / (tb.Maximum - tb.Minimum) * 2
-        If zoomFactor <= 0.015625D Then
-            zoomFactor = 0.02D
-        ElseIf zoomFactor >= 64 Then
-            zoomFactor = 63D
-        End If
-
-        rtb1.ZoomFactor = zoomFactor
-    End Sub
-
 #End Region
 
-#Region "DoWork"
-    Private Sub actionButton_Click(sender As Object, e As EventArgs) Handles btnAnalyze.Click, btnCommit.Click, btnRollback.Click, AnalyzeToolStripMenuItem.Click, RollbackToolStripMenuItem.Click, CommitToolStripMenuItem.Click
-        Dim actionType As eActionType = eActionType.None
-        If sender Is btnAnalyze OrElse sender Is AnalyzeToolStripMenuItem Then
-            actionType = eActionType.Analyze
-        ElseIf sender Is btnRollback OrElse sender Is RollbackToolStripMenuItem Then
-            actionType = eActionType.Rollback
-        ElseIf sender Is btnCommit OrElse sender Is CommitToolStripMenuItem Then
-            actionType = eActionType.Commit
-        End If
-        If actionType <> eActionType.None Then
-            ts1 = New TimeSpan(Now.Ticks)
-            pnlControl.Enabled = False
-            MenuStrip1.Enabled = False
-
-            ShowSqlRevisionInfo(Nothing)
-            rtb1.Text = ""
-            WriteTextToRtb(rtb1, "...Started (" & Now.ToString("yyyy-MM-dd hh:mm.sss") & ")" & vbNewLine, Color.Yellow)
-
-            InitSteps()
-            Dim inputs As New CreateTimeLineDBInputs With {.ActionType = actionType}
-            StepProgressBar1.StartWork(inputs)
-        End If
-    End Sub
-
-#End Region
-
-#Region "Progress"
-    Private Sub InitSteps()
-        StepProgressBar1.CurrentStepIndex = -1
-        With StepProgressBar1.Grid
-            .Groups.Clear()
-            .Items.Clear()
-
-            Dim grpInit As New ListViewGroup() With {.Header = "Initializing", .Name = "1"}
-            Dim grpCreate As New ListViewGroup() With {.Header = "Creating timeline", .Name = "2"}
-            Dim grpApply As New ListViewGroup() With {.Header = "Applying timeline", .Name = "3"}
-            Dim grpFinish As New ListViewGroup() With {.Header = "finishing tasks", .Name = "4"}
-
-            .Groups.Add(grpInit)
-            .Groups.Add(grpCreate)
-            .Groups.Add(grpApply)
-            .Groups.Add(grpFinish)
-
-            .Items.Add(New ListViewItem() With {.Group = grpInit, .Tag = "1", .Text = "Checking system objects"})
-            .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "2", .Text = "Loading modules"})
-            .Items.Add(New ListViewItem() With {.Group = grpCreate, .Tag = "3", .Text = "Loading customizations"})
-            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "4", .Text = "Applying changes"})
-            .Items.Add(New ListViewItem() With {.Group = grpApply, .Tag = "5", .Text = "Running always execute tasks"})
-            .Items.Add(New ListViewItem() With {.Group = grpFinish, .Tag = "6", .Text = "Finishing work"})
-        End With
-    End Sub
-
-    Private Sub StepProgressBar1_DoWork(sender As Object, e As DoWorkEventArgs) Handles StepProgressBar1.DoWork
-        StepProgressBar1.ReportProgress(0)
-        Try
-            CreateTimeLineDB(CType(sender, BackgroundWorker), DirectCast(e.Argument, CreateTimeLineDBInputs))
-        Catch ex As Exception
-            'WriteException(ex)
-            If Debugger.IsAttached Then
-                Debugger.Break()
-            End If
-            WriteErrorToMessageBox(ex.Message & vbNewLine & "StackTrace:" & vbNewLine & ex.StackTrace)
-        End Try
-    End Sub
-
-    Private Sub StepProgressBar1_RunWorkerCompleted(sender As Object, e As RunWorkerCompletedEventArgs) Handles StepProgressBar1.RunWorkerCompleted
-        ts2 = New TimeSpan(Now.Ticks)
-
-        WriteTextToRtb(rtb1, "-- Total time: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
-        WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
-        pnlControl.Enabled = True
-        MenuStrip1.Enabled = True
-        FillTreeView()
-        FillNewRevisions()
-    End Sub
-
-    Private Sub StepProgressBar1_Aborted(sender As Object, e As EventArgs) Handles StepProgressBar1.Aborted
-        ts2 = New TimeSpan(Now.Ticks)
-        WriteTextToRtb(rtb1, "-- Trying to cancel worker: " & (ts2 - ts1).ToString() & vbNewLine, Color.LightBlue)
-    End Sub
-
-    Private Sub MenuItem_Click(sender As Object, e As EventArgs) Handles ExitToolStripMenuItem.Click
-        If sender Is ExitToolStripMenuItem Then
-            Close()
-        End If
-    End Sub
-
-#End Region
-
-    Private Sub FillNewRevisions()
-        Dim newDBSqlRevisions As List(Of DBSqlRevision) = creator.NewDBSqlRevisions
-        newDBSqlRevisions.Sort(AddressOf DBSqlRevision.CompareRevisionsForDbCreations)
-
-        Dim root As TreeNode = treeNewRevisions.TopNode
-        root.Nodes.Clear()
-
-        For Each sqlRev As DBSqlRevision In newDBSqlRevisions
-            Dim rev As IDBRevision = sqlRev.Parent
-            Dim text As String = rev.Created.ToString("yyyy-MM-dd") & " - " & rev.Granulation.ToString & " - " & sqlRev.RevisionTypeName & " - " & sqlRev.ObjectFullName
-            Dim newNode As New TreeNode(text)
-            newNode.Tag = sqlRev
-            root.Nodes.Add(newNode)
-        Next
-        'Dim imaUBaziNemaUSource = creator.ExecutedDBSqlRevisions.Except(creator.SourceDBSqlRevisions).ToList()
-        'Dim unija = imaUSourceuNemaUBazi.Union(imaUBaziNemaUSource).ToList()
-
-    End Sub
-
-    Private Sub treeNewRevisions_AfterSelect(sender As Object, e As TreeViewEventArgs) Handles treeNewRevisions.AfterSelect
-        If TypeOf e.Node.Tag Is DBSqlRevision Then
-            ShowSqlRevisionInfo(CType(e.Node.Tag, DBSqlRevision))
-        End If
-    End Sub
-    Private Sub ShowSqlRevisionInfo(sqlRev As DBSqlRevision)
-        If sqlRev IsNot Nothing Then
-            Dim rev As IDBRevision = sqlRev.Parent
-            lblSqlRevInfoKey.Text = rev.Created.ToString("yyyy-MM-dd") & " - " & rev.Granulation.ToString & " - " & sqlRev.RevisionTypeName & " - " & sqlRev.ObjectFullName
-            lblSqlRevInfoModule.Text = DirectCast(sqlRev.Parent, DBRevision).Parent.ModuleKey
-            lblSqlRevInfoDBObjectType.Text = sqlRev.ObjectTypeName
-            lblSqlRevInfoRevisonType.Text = sqlRev.RevisionTypeName
-            rtbSqlRevInfoDescription.Text = sqlRev.Description
-        Else
-            lblSqlRevInfoKey.Text = ""
-            lblSqlRevInfoModule.Text = ""
-            lblSqlRevInfoDBObjectType.Text = ""
-            lblSqlRevInfoRevisonType.Text = ""
-            rtbSqlRevInfoDescription.Text = ""
-        End If
-    End Sub
-
-    Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
-        Using frm As New Framework.GUI.Forms.DatabaseConnectForm
-            frm.SetDefaults(My.Settings.DefaultServerInstanceName, My.Settings.DefaultDatabaseName, "", "")
-            frm.ShowDialog()
-            If frm.Connected Then
-                EnableActionsGUI(True)
-                lblDatabase.Text = frm.DatabaseName
-                lblServer.Text = frm.ServerName
-            Else
-                EnableActionsGUI(False)
-                lblDatabase.Text = "--"
-                lblServer.Text = "--"
-            End If
-        End Using
-    End Sub
-
-    Private Sub SetTheStage(connectionString As String)
-        MRC.GetInstance().ConnectionString = connectionString
-        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
-        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
-    End Sub
-
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        MRC.GetInstance().ProviderName = CType(My.Settings.Item(My.Settings.DefaultProvider), String)
-        PersistingSettings.Instance.SqlGeneratorFactory = New Implementation.SqlGeneratorFactory()
-
-        EnableActionsGUI(False)
-        btnConnect.Enabled = True
-    End Sub
-    Private Sub EnableActionsGUI(enabled As Boolean)
-        pnlDBTimeLinerControls.Enabled = enabled
-        MenuStrip1.Enabled = enabled
-    End Sub
 End Class
