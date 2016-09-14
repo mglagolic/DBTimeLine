@@ -204,7 +204,14 @@ Public Class DBTimeLiner
             Else
                 per = New DBSqlRevision.DBSqlRevisionPersister With {.CNN = cnn}
             End If
-            per.InsertBulk(dlos, trn)
+            If (dlos.Count >= 10) Then
+                per.InsertBulk(dlos, trn)
+            Else
+                For Each dlo As IMRDLO In dlos
+                    per.Insert(dlo, trn)
+                Next
+            End If
+
         Catch
             Throw
         Finally

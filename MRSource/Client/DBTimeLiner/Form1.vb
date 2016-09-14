@@ -158,8 +158,10 @@ Public Class Form1
 
         EnableActionsGUI(False)
         btnConnect.Enabled = True
-
-        TempConnect()
+        Try
+            TempConnect()
+        Catch ex As Exception
+        End Try
     End Sub
 
     Private Sub TempConnect()
@@ -314,6 +316,7 @@ Public Class Form1
         WriteTextToRtb(rtb1, "...Finished (" & Now.ToString("yyyy-dd-MM hh:mm.sss") & ")", Color.Yellow)
         pnlControl.Enabled = True
         MenuStrip1.Enabled = True
+
         FillTreeView()
         FillNewRevisions()
     End Sub
@@ -384,6 +387,7 @@ Public Class Form1
             ' TODO - napraviti prozor za commit naredbi s generiranjem infa tko je odradio i sto. Slati info na mail.
             ' TODO - omoguciti prikaz novih revizija, bez executea
             ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
+            ' TODO - isprogramirati podrsku za store
             ' TODO - isprogramirati podrsku za triggere
             ' TODO - odraditi novi persister do kraja (snimanje, cacheiranje shema i sl.)
             ' CONSIDER - u novom persisteru maknuti implementation u posebni dll 
@@ -391,8 +395,6 @@ Public Class Form1
 
             ' CONSIDER - db objekte (vieove, tablice, itd) drzati u posebnim classama koje se mogu MEFom aktivirati
             ' CONSIDER - odraditi code generation adventureWorks baze
-
-            'Dim dbo As New DBTimeLiners.DBModules.dbo
 
             moduleLoader.LoadModulesFromDB(creator)
 
@@ -505,7 +507,9 @@ Public Class Form1
     End Sub
 
     Private Sub btnHotFix_Click(sender As Object, e As EventArgs) Handles btnHotFix.Click
-
+        Using frm As New HotFixForm
+            frm.ShowDialog()
+        End Using
     End Sub
 #End Region
 
