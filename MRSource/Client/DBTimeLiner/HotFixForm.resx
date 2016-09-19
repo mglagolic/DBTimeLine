@@ -117,4 +117,24 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="MrRichTextBox1.Text" xml:space="preserve">
+    <value>Scenarij 1)
+
+Ručno izmijenjeno 15 ak viewova na bazi, bez checkina u Rhetos.
+Promijenjeni su neki rhetos objekti u .rhe skriptama.
+Rhetos je updateo te promijenjene .rhe objekte i overwriteao samo neke ručno izmijenjene objekte, ovisno o dependency chainu.
+
+Rezultat : baza u nekonzistentnom stanju
+
+
+Rješenje HOTFIX form:
+
+Kad se napravi commit, automatski se uploada commit message Omeginom servisu za praćenje hotfixova.
+Ako je servis nedostupan poruka se prikazuje na ekranu i treba se ručno pejstnuti u aplikaciju u Omegi.
+Prije svakog razvoja nad bazom nekog korisnika, treba provjeriti hotfix aplikaciju i vidjeti kakvih sve hotfixova ima i jesi li checkinani.
+Kada neki developer odradi checkin nekog hotfixa, onda treba u aplikaciji označiti dotični hotfix da je checkinan.
+
+Konzultanti bi mogli raditi ručne izmjene, ali programeri bi trebali raditi checkinove i usput provjeriti je li kod dobar.
+Ovo je rješenje koje ne ograničava, već proširuje.</value>
+  </data>
 </root>

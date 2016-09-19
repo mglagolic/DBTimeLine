@@ -26,8 +26,20 @@ namespace AktivniSifrarnici
             IDBSchema sch = module.AddSchema(module.DefaultSchemaName, new DBSchemaDescriptor());
 
 
-            sch.AddView("v_cus_cus_CustomView", new DBViewDescriptor() { Body = "SELECT Broj  = 1", WithSchemaBinding = true },
+            var view = sch.AddView("v_cus_cus_CustomView", new DBViewDescriptor() { Body = 
+@"SELECT 
+    Broj = 1
+"
+, WithSchemaBinding = true },
                     new DBRevision(new DateTime(2016, 9, 14), 0, eDBRevisionType.Create));
+
+            view.AddRevision(new DBRevision(new DateTime(2016, 9, 19), 0, eDBRevisionType.Modify),
+                new DBViewDescriptor() { Body = 
+
+@"SELECT 
+Broj = 2
+
+", WithSchemaBinding = false });
         }
         
     }
