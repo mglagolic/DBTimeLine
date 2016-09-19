@@ -34,7 +34,7 @@ namespace Centrix1.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("HOME7\\SQLEXPRESS2014")]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string DefaultServerInstanceName {
             get {
                 return ((string)(this["DefaultServerInstanceName"]));

@@ -20,6 +20,8 @@ namespace Centrix1
 
             MRC.GetInstance().ProviderName = Properties.Settings.Default.Provider;
             PersistingSettings.Instance.SqlGeneratorFactory = new Framework.Persisting.Implementation.SqlGeneratorFactory();
+
+            TempConnect();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -40,6 +42,16 @@ namespace Centrix1
                     lblServer.Text = "--";
                 }
             }
+        }
+
+        private void TempConnect()
+        {
+            var dc = new Framework.Persisting.Implementation.DatabaseConnector();
+
+            string cnnstr = dc.GenerateConnectionString(Properties.Settings.Default.DefaultServerInstanceName, Properties.Settings.Default.DefaultDatabaseName);
+            dc.Connect(cnnstr);
+            lblServer.Text = Properties.Settings.Default.DefaultServerInstanceName;
+            lblDatabase.Text = Properties.Settings.Default.DefaultDatabaseName;
         }
 
         private void button1_Click(object sender, EventArgs e)

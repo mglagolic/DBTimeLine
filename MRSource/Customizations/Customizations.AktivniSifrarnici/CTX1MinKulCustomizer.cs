@@ -11,6 +11,9 @@ namespace AktivniSifrarnici
     [Customization(CustomizationKey = "Ctx1MinKul")]
     public class Ctx1MinKulCustomizer : Customizations.Core.Customizer
     {
+        #region Database customization
+
+        
         [MethodActivationCustomization(ActivationKey = "CreateTimeLine")]
         public void CreateTimeLine(Dictionary<string, object> inputs)
         {
@@ -28,26 +31,32 @@ namespace AktivniSifrarnici
             IDBSchema sch = module.AddSchema(module.DefaultSchemaName, new DBSchemaDescriptor());
 
             IDBTable tblCases = sch.AddTable("tblCases", new DBTableDescriptor());
-            tblCases.AddField("cus_Opis", new DBFieldDescriptor() {  FieldType = new DBFieldTypeNvarchar(), Nullable = true });
+
+            tblCases.AddField("Ctx1MinKul_Opis", new DBFieldDescriptor() {  FieldType = new DBFieldTypeNvarchar(), Nullable = true, Size = 512 }, 
+                new DBRevision(new DateTime(2016,9,19), 1, eDBRevisionType.Create));
+            
                         
             var view = sch.AddView("vw_cus_cus_CustomView", new DBViewDescriptor() { Body = 
 @"SELECT 
     Broj = 1
 "
 , WithSchemaBinding = true },
-                    new DBRevision(new DateTime(2016, 9, 14), 0, eDBRevisionType.Create));
+                    new DBRevision(new DateTime(2016, 9, 20), 0, eDBRevisionType.Create));
 
-            view.AddRevision(new DBRevision(new DateTime(2016, 9, 19), 0, eDBRevisionType.Modify),
+            view.AddRevision(new DBRevision(new DateTime(2016, 9, 20), 1, eDBRevisionType.Modify),
                 new DBViewDescriptor() { Body = 
 
 @"SELECT 
 Broj = 2
 
 ", WithSchemaBinding = false });
-
-
+            
         }
 
+        #endregion
+
+        #region UI Customization
+        
         [MethodActivationCustomization(ActivationKey = "FormLoaded")]
         public void FormLoaded(Dictionary<string, object> inputs)
         {
@@ -61,5 +70,6 @@ Broj = 2
 
         }
 
+        #endregion
     }
 }

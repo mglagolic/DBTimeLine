@@ -124,6 +124,7 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pnlConnect);
             this.Name = "FormMain";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormMain";
             this.pnlConnect.ResumeLayout(false);
             this.ResumeLayout(false);
