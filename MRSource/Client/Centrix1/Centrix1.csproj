@@ -4,15 +4,17 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{91F233D0-86F9-4597-947E-D1FDF4FA17F4}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{773653B6-3F3D-4A66-9E4C-DFDF9FA4BE0B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DBTimeLiners.DBModules</RootNamespace>
-    <AssemblyName>DBTimeLiners.DBModules</AssemblyName>
+    <RootNamespace>Centrix1</RootNamespace>
+    <AssemblyName>Centrix1</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +24,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -36,28 +39,63 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CentrixCore.cs" />
-    <Compile Include="ImperiosCore.cs" />
-    <Compile Include="dbo.cs" />
-    <Compile Include="DBObjects\DBStoredProcedure.cs" />
-    <Compile Include="DBObjects\DBStoredProcedureDescriptor.cs" />
-    <Compile Include="EventArgs\ModuleLoadedEventArgs.cs" />
-    <Compile Include="Loader.cs" />
-    <Compile Include="Persisters\DBModulePersister.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FormMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormMain.Designer.cs">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FormMain.resx">
+      <DependentUpon>FormMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
-      <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
-      <Name>Framework.DBTimeLine.DBObjects</Name>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Customizations\Customizations.Core\Customizations.Core.csproj">
+      <Project>{a224372a-ea51-4c7f-a280-6e9937875451}</Project>
+      <Name>Customizations.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj">
-      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
-      <Name>Framework.DBTimeLine</Name>
+    <ProjectReference Include="..\..\Framework\Gui\Framework.GUI\Framework.GUI.csproj">
+      <Project>{45e75768-8918-43d5-84b8-707c87af4ee5}</Project>
+      <Name>Framework.GUI</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\Persisting\Framework.Persisting\Framework.Persisting.csproj">
       <Project>{1ec4a870-bcdf-4bb7-805b-8bd5f88da6fb}</Project>

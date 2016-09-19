@@ -23,5 +23,6 @@ namespace DBTimeLiners.DBModules.DBObjects
 
         public string Parameters { get; set; }
         public string Body { get; set; }
+        public bool ErrorHandling { get; set; }
     }
 }

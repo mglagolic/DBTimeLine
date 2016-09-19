@@ -43,7 +43,7 @@ namespace AktivniSifrarnici
             var ret = sch.AddTable("Drzava", new DBTableDescriptor());
 
             ret.AddField("Active", DBMacros.DBFieldActiveDescriptor(),
-                new DBRevision(new System.DateTime(2016, 6, 10), 2, eDBRevisionType.Create));
+                new DBRevision(new DateTime(2016, 6, 10), 2, eDBRevisionType.Create));
 
             return ret;
         }
@@ -53,7 +53,7 @@ namespace AktivniSifrarnici
             var ret = sch.AddTable("Grad", new DBTableDescriptor());
 
             ret.AddField("Active", DBMacros.DBFieldActiveDescriptor(),
-                new DBRevision(new System.DateTime(2016, 6, 10), 2, eDBRevisionType.Create));
+                new DBRevision(new DateTime(2016, 6, 10), 2, eDBRevisionType.Create));
 
             return ret;
         }

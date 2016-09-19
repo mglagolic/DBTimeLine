@@ -32,6 +32,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -42,6 +44,12 @@
   <ItemGroup>
     <Compile Include="Ctx1MinKulCustomizer.cs" />
     <Compile Include="AktivniSifrarniciCustomizer.cs" />
+    <Compile Include="FormUICustomizationsContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUICustomizationsContainer.Designer.cs">
+      <DependentUpon>FormUICustomizationsContainer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -58,10 +66,17 @@
       <Name>Customizations.Core</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormUICustomizationsContainer.resx">
+      <DependentUpon>FormUICustomizationsContainer.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)Client\DBTimeLiner\bin\Debug\$(TargetName).dll"
-copy /Y "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Client\DBTimeLiner\bin\Debug\$(TargetName).pdb"</PostBuildEvent>
+copy /Y "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Client\DBTimeLiner\bin\Debug\$(TargetName).pdb"
+copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)Client\Centrix1\bin\Debug\$(TargetName).dll"
+copy /Y "$(TargetDir)$(TargetName).pdb" "$(SolutionDir)Client\Centrix1\bin\Debug\$(TargetName).pdb"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

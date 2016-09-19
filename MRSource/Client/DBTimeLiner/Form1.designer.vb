@@ -22,8 +22,8 @@ Partial Class Form1
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("New revisions (Created - Granulation - DBObject - Revision type)")
-        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLiner")
+        Dim TreeNode11 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("New revisions (Created - Granulation - DBObject - Revision type)")
+        Dim TreeNode12 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("DBTimeLiner")
         Me.rtb1 = New System.Windows.Forms.RichTextBox()
         Me.btnCommit = New System.Windows.Forms.Button()
         Me.zoomRtb = New System.Windows.Forms.TrackBar()
@@ -50,6 +50,7 @@ Partial Class Form1
         Me.Label7 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.pnlDBTimeLinerControls = New System.Windows.Forms.Panel()
+        Me.btnHotFix = New System.Windows.Forms.Button()
         Me.btnAnalyze = New System.Windows.Forms.Button()
         Me.btnRollback = New System.Windows.Forms.Button()
         Me.Panel5 = New System.Windows.Forms.Panel()
@@ -69,7 +70,6 @@ Partial Class Form1
         Me.pnlLeft = New System.Windows.Forms.Panel()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.treeDatabaseObjects = New System.Windows.Forms.TreeView()
-        Me.btnHotFix = New System.Windows.Forms.Button()
         CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlRtb.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -95,9 +95,9 @@ Partial Class Form1
         Me.rtb1.Location = New System.Drawing.Point(0, 0)
         Me.rtb1.Name = "rtb1"
         Me.rtb1.ReadOnly = True
-        Me.rtb1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical
+        Me.rtb1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.ForcedVertical
         Me.rtb1.ShowSelectionMargin = True
-        Me.rtb1.Size = New System.Drawing.Size(595, 628)
+        Me.rtb1.Size = New System.Drawing.Size(575, 628)
         Me.rtb1.TabIndex = 0
         Me.rtb1.Text = "... welcome ..."
         Me.rtb1.WordWrap = False
@@ -135,8 +135,8 @@ Partial Class Form1
         '
         'pnlRtb
         '
-        Me.pnlRtb.Controls.Add(Me.zoomRtb)
         Me.pnlRtb.Controls.Add(Me.rtb1)
+        Me.pnlRtb.Controls.Add(Me.zoomRtb)
         Me.pnlRtb.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlRtb.Location = New System.Drawing.Point(300, 88)
         Me.pnlRtb.Name = "pnlRtb"
@@ -177,6 +177,8 @@ Partial Class Form1
         '
         'lblSqlRevInfoRevisonType
         '
+        Me.lblSqlRevInfoRevisonType.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSqlRevInfoRevisonType.AutoEllipsis = True
         Me.lblSqlRevInfoRevisonType.BackColor = System.Drawing.Color.Transparent
         Me.lblSqlRevInfoRevisonType.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -195,6 +197,8 @@ Partial Class Form1
         '
         'lblSqlRevInfoDBObjectType
         '
+        Me.lblSqlRevInfoDBObjectType.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSqlRevInfoDBObjectType.AutoEllipsis = True
         Me.lblSqlRevInfoDBObjectType.BackColor = System.Drawing.Color.Transparent
         Me.lblSqlRevInfoDBObjectType.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -213,6 +217,9 @@ Partial Class Form1
         '
         'rtbSqlRevInfoDescription
         '
+        Me.rtbSqlRevInfoDescription.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.rtbSqlRevInfoDescription.BackColor = System.Drawing.Color.LightYellow
         Me.rtbSqlRevInfoDescription.Location = New System.Drawing.Point(79, 115)
         Me.rtbSqlRevInfoDescription.Name = "rtbSqlRevInfoDescription"
@@ -231,6 +238,8 @@ Partial Class Form1
         '
         'lblSqlRevInfoKey
         '
+        Me.lblSqlRevInfoKey.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSqlRevInfoKey.AutoEllipsis = True
         Me.lblSqlRevInfoKey.BackColor = System.Drawing.Color.LightYellow
         Me.lblSqlRevInfoKey.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -250,6 +259,8 @@ Partial Class Form1
         '
         'lblSqlRevInfoModule
         '
+        Me.lblSqlRevInfoModule.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.lblSqlRevInfoModule.AutoEllipsis = True
         Me.lblSqlRevInfoModule.BackColor = System.Drawing.Color.Transparent
         Me.lblSqlRevInfoModule.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -285,11 +296,11 @@ Partial Class Form1
         Me.treeNewRevisions.Dock = System.Windows.Forms.DockStyle.Fill
         Me.treeNewRevisions.Location = New System.Drawing.Point(3, 16)
         Me.treeNewRevisions.Name = "treeNewRevisions"
-        TreeNode1.BackColor = System.Drawing.Color.DarkSeaGreen
-        TreeNode1.Checked = True
-        TreeNode1.Name = "Node0"
-        TreeNode1.Text = "New revisions (Created - Granulation - DBObject - Revision type)"
-        Me.treeNewRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1})
+        TreeNode11.BackColor = System.Drawing.Color.DarkSeaGreen
+        TreeNode11.Checked = True
+        TreeNode11.Name = "Node0"
+        TreeNode11.Text = "New revisions (Created - Granulation - DBObject - Revision type)"
+        Me.treeNewRevisions.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode11})
         Me.treeNewRevisions.Size = New System.Drawing.Size(334, 185)
         Me.treeNewRevisions.TabIndex = 0
         '
@@ -316,7 +327,7 @@ Partial Class Form1
         Me.pnlConnect.Dock = System.Windows.Forms.DockStyle.Left
         Me.pnlConnect.Location = New System.Drawing.Point(0, 0)
         Me.pnlConnect.Name = "pnlConnect"
-        Me.pnlConnect.Size = New System.Drawing.Size(375, 54)
+        Me.pnlConnect.Size = New System.Drawing.Size(300, 54)
         Me.pnlConnect.TabIndex = 23
         '
         'btnConnect
@@ -380,6 +391,19 @@ Partial Class Form1
         Me.pnlDBTimeLinerControls.Name = "pnlDBTimeLinerControls"
         Me.pnlDBTimeLinerControls.Size = New System.Drawing.Size(1230, 54)
         Me.pnlDBTimeLinerControls.TabIndex = 22
+        '
+        'btnHotFix
+        '
+        Me.btnHotFix.BackColor = System.Drawing.Color.CornflowerBlue
+        Me.btnHotFix.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(238, Byte))
+        Me.btnHotFix.ForeColor = System.Drawing.Color.Red
+        Me.btnHotFix.Location = New System.Drawing.Point(306, 5)
+        Me.btnHotFix.Name = "btnHotFix"
+        Me.btnHotFix.Size = New System.Drawing.Size(131, 45)
+        Me.btnHotFix.TabIndex = 10
+        Me.btnHotFix.Text = "HotFix"
+        Me.btnHotFix.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+        Me.btnHotFix.UseVisualStyleBackColor = False
         '
         'btnAnalyze
         '
@@ -550,27 +574,13 @@ Partial Class Form1
         Me.treeDatabaseObjects.Dock = System.Windows.Forms.DockStyle.Fill
         Me.treeDatabaseObjects.Location = New System.Drawing.Point(3, 16)
         Me.treeDatabaseObjects.Name = "treeDatabaseObjects"
-        TreeNode2.BackColor = System.Drawing.Color.DarkSeaGreen
-        TreeNode2.Checked = True
-        TreeNode2.Name = "Node0"
-        TreeNode2.Text = "DBTimeLiner"
-        Me.treeDatabaseObjects.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
+        TreeNode12.BackColor = System.Drawing.Color.DarkSeaGreen
+        TreeNode12.Checked = True
+        TreeNode12.Name = "Node0"
+        TreeNode12.Text = "DBTimeLiner"
+        Me.treeDatabaseObjects.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode12})
         Me.treeDatabaseObjects.Size = New System.Drawing.Size(277, 263)
         Me.treeDatabaseObjects.TabIndex = 0
-        '
-        'btnHotFix
-        '
-        Me.btnHotFix.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnHotFix.BackColor = System.Drawing.Color.CornflowerBlue
-        Me.btnHotFix.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(238, Byte))
-        Me.btnHotFix.ForeColor = System.Drawing.Color.Red
-        Me.btnHotFix.Location = New System.Drawing.Point(381, 5)
-        Me.btnHotFix.Name = "btnHotFix"
-        Me.btnHotFix.Size = New System.Drawing.Size(131, 45)
-        Me.btnHotFix.TabIndex = 10
-        Me.btnHotFix.Text = "HotFix"
-        Me.btnHotFix.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
-        Me.btnHotFix.UseVisualStyleBackColor = False
         '
         'Form1
         '
@@ -590,6 +600,7 @@ Partial Class Form1
         Me.Name = "Form1"
         Me.Padding = New System.Windows.Forms.Padding(10)
         Me.Text = "Form1"
+        Me.WindowState = System.Windows.Forms.FormWindowState.Maximized
         CType(Me.zoomRtb, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlRtb.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)

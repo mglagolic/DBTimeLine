@@ -1,4 +1,6 @@
-﻿using Customizations.Core.Attributes;
+﻿using System.Linq;
+using System.Windows.Forms;
+using Customizations.Core.Attributes;
 using Framework.DBTimeLine;
 using Framework.DBTimeLine.DBObjects;
 using System;
@@ -25,8 +27,10 @@ namespace AktivniSifrarnici
         {
             IDBSchema sch = module.AddSchema(module.DefaultSchemaName, new DBSchemaDescriptor());
 
-
-            var view = sch.AddView("v_cus_cus_CustomView", new DBViewDescriptor() { Body = 
+            IDBTable tblCases = sch.AddTable("tblCases", new DBTableDescriptor());
+            tblCases.AddField("cus_Opis", new DBFieldDescriptor() {  FieldType = new DBFieldTypeNvarchar(), Nullable = true });
+                        
+            var view = sch.AddView("vw_cus_cus_CustomView", new DBViewDescriptor() { Body = 
 @"SELECT 
     Broj = 1
 "
@@ -40,7 +44,22 @@ namespace AktivniSifrarnici
 Broj = 2
 
 ", WithSchemaBinding = false });
+
+
         }
-        
+
+        [MethodActivationCustomization(ActivationKey = "FormLoaded")]
+        public void FormLoaded(Dictionary<string, object> inputs)
+        {
+            Form form = (Form) inputs["Form"];
+            
+            Panel mainPanel = (Panel) form.Controls.Cast<Control>().ToList().Find(ctrl =>  ctrl.Tag != null && (string) ctrl.Tag == "mainPanel");
+            var frmCustomizationContainer = new FormUICustomizationsContainer();
+            var gb = frmCustomizationContainer.Ctx1MinKul_groupBox1;
+            mainPanel.Controls.Add(gb);
+            gb.BringToFront();
+
+        }
+
     }
 }

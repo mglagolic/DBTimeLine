@@ -47,26 +47,28 @@ namespace DBTimeLiners.DBModules
                         string className = "";
                         string assemblyName = "DBTimeLiners.DBModules";
                         string defaultSchemaName = "";
+                        string description = "";
                         try
                         {
                             className = (string)module.ColumnValues["ClassName"];
                             defaultSchemaName = (string)module.ColumnValues["DefaultSchemaName"];
+                            description = (string)module.ColumnValues["Description"];
 
                             IDBModule m = (IDBModule)Activator.CreateInstance(assemblyName, assemblyName + "." + className).Unwrap();
                             m.DefaultSchemaName = defaultSchemaName;
                             m.Parent = dBTimeLiner;
 
                             message = string.Format(
-@"Successfully instanced module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}).", className, assemblyName, defaultSchemaName);
+@"Successfully instanced module (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}, Description: {3}).", className, assemblyName, defaultSchemaName, description);
 
                             ret.Add(m);
                         }
                         catch (Exception ex)
                         {
                             errorMessage = string.Format(
-@"Error instancing module from database config (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}),
+@"Error instancing module from database config (ClassName: {0}, AssemblyName: {1}, DefaultSchemaName: {2}, DefaultSchemaName: {3}),
 ErrorMessage: 
-{3}", className, assemblyName, defaultSchemaName, ex.Message);
+{4}", className, assemblyName, defaultSchemaName, description, ex.Message);
 
                             ret.Clear();
                             break;

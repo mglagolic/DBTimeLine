@@ -1,6 +1,7 @@
 ﻿using System;
 using Framework.DBTimeLine;
 using Framework.DBTimeLine.DBObjects;
+using DBTimeLiners.DBModules.DBObjects;
 
 namespace DBTimeLiners.DBModules
 {
@@ -24,6 +25,9 @@ namespace DBTimeLiners.DBModules
             Drzava(sch);
             Grad(sch);
             Always(sch);
+
+            DBStoredProcedure sp = (DBStoredProcedure) sch.AddDBObject("sp_Stora", new DBStoredProcedureDescriptor() { Parameters = "@broj int, @broj2 int, @tekst nvarchar(max)", Body = "SELECT Dijeljenje = @broj / @broj2, Tekst = @tekst", ErrorHandling = true },
+                new DBRevision(new DateTime(2016, 9, 19), 0, eDBRevisionType.Create));
         }
 
         private string FillDrzava(IDBRevision sender, eDBType dBType)
@@ -91,8 +95,8 @@ WAITFOR DELAY '00:00:03'
         private string UpdateStatistics(IDBRevision sender, eDBType dBType)
         {
             return 
-@"WAITFOR DELAY '00:00:02'
-exec sp_updatestats";
+@"WAITFOR DELAY '00:00:01'
+--exec sp_updatestats";
         }
     }
 }

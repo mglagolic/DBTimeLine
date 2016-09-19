@@ -8,9 +8,6 @@ Imports System.ComponentModel
 Imports Framework.DBTimeLine.DBObjects
 Imports Customizations.Core.EventArgs
 Imports DBTimeLiners.DBModules.EventArgs
-Imports System.Data.Sql
-Imports System.Data.SqlClient
-Imports System.Data.Common
 
 Public Class Form1
 
@@ -125,6 +122,7 @@ Public Class Form1
 #Region "Connect"
     Private Sub btnConnect_Click(sender As Object, e As EventArgs) Handles btnConnect.Click
         Using frm As New Framework.GUI.Forms.MRDatabaseConnectForm
+            frm.StartPosition = FormStartPosition.CenterScreen
             frm.SetDefaults(My.Settings.DefaultServerInstanceName, My.Settings.DefaultDatabaseName, "", "")
             frm.ShowDialog()
             If frm.Connected Then
@@ -508,6 +506,7 @@ Public Class Form1
 
     Private Sub btnHotFix_Click(sender As Object, e As EventArgs) Handles btnHotFix.Click
         Using frm As New HotFixForm
+            frm.StartPosition = FormStartPosition.CenterScreen
             frm.ShowDialog()
         End Using
     End Sub

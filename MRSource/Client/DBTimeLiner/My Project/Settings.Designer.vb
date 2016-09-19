@@ -106,7 +106,7 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("localhost")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("HOME7\SQLEXPRESS2014")>  _
         Public ReadOnly Property DefaultServerInstanceName() As String
             Get
                 Return CType(Me("DefaultServerInstanceName"),String)
@@ -115,7 +115,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("TestImperiosFeroterm1")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("TestImperiosHKZP")>  _
         Public Property DefaultDatabaseName() As String
             Get
                 Return CType(Me("DefaultDatabaseName"),String)

@@ -18,7 +18,7 @@ namespace Customizations.Core
         public event CustomizationLoadedEventHandler CustomizationLoaded;
         public void OnCustomizationLoaded(object sender, CustomizationLoadedEventArgs e)
         {
-            CustomizationLoaded(sender, e);
+            CustomizationLoaded?.Invoke(sender, e);
         }
         
         #endregion
