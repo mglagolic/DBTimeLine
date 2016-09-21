@@ -22,9 +22,11 @@ namespace DBTimeLiners.DBModules
             if (DefaultSchemaName != "dbo") sch.AddRevision(new DBRevision(rev));
 
             tblCases(sch);
+
+            var ass = System.Reflection.Assembly.GetExecutingAssembly();
+            sch.AddExecuteOnceTask(new DateTime(2016, 9, 21), 0, Framework.Core.Helpers.ReadEmbeddedTextResource(ass, "Resources.CentrixCore.sp_Zbroji_v1.txt"));
         }
 
-                
         private IDBTable tblCases(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 9, 19), 0, eDBRevisionType.Create);

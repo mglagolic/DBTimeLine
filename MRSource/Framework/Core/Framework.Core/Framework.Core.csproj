@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{91F233D0-86F9-4597-947E-D1FDF4FA17F4}</ProjectGuid>
+    <ProjectGuid>{18F85E07-8F10-496B-829F-AE4FC00DE935}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DBTimeLiners.DBModules</RootNamespace>
-    <AssemblyName>DBTimeLiners.DBModules</AssemblyName>
+    <RootNamespace>Framework.Core</RootNamespace>
+    <AssemblyName>Framework.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -40,40 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CentrixCore.cs" />
-    <Compile Include="ImperiosCore.cs" />
-    <Compile Include="dbo.cs" />
-    <Compile Include="DBObjects\DBStoredProcedure.cs" />
-    <Compile Include="DBObjects\DBStoredProcedureDescriptor.cs" />
-    <Compile Include="EventArgs\ModuleLoadedEventArgs.cs" />
-    <Compile Include="Loader.cs" />
-    <Compile Include="Persisters\DBModulePersister.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Framework\Core\Framework.Core\Framework.Core.csproj">
-      <Project>{18f85e07-8f10-496b-829f-ae4fc00de935}</Project>
-      <Name>Framework.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
-      <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
-      <Name>Framework.DBTimeLine.DBObjects</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj">
-      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
-      <Name>Framework.DBTimeLine</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Persisting\Framework.Persisting\Framework.Persisting.csproj">
-      <Project>{1ec4a870-bcdf-4bb7-805b-8bd5f88da6fb}</Project>
-      <Name>Framework.Persisting</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Framework\Persisting\MRFramework.MRPersisting.Factory\MRFramework.MRPersisting.Factory.vbproj">
-      <Project>{e177c8d6-b8df-4de4-81af-3f2d17e23a05}</Project>
-      <Name>MRFramework.MRPersisting.Factory</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\CentrixCore\sp_Zbroji_v1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

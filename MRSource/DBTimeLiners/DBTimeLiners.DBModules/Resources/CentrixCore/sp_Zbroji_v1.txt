@@ -1,0 +1,8 @@
+﻿CREATE PROCEDURE dbo.sp_Zbroji
+	@x int, @y int
+AS
+	SELECT @x + @y
+
+GO
+
+GRANT EXECUTE ON sp_Zbroji TO PUBLIC

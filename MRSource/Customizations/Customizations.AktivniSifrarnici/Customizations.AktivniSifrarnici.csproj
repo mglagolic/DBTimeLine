@@ -53,6 +53,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Framework\Core\Framework.Core\Framework.Core.csproj">
+      <Project>{18f85e07-8f10-496b-829f-ae4fc00de935}</Project>
+      <Name>Framework.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
       <Project>{986EF2D7-7F89-459F-B9EE-A9077CDCD147}</Project>
       <Name>Framework.DBTimeLine.DBObjects</Name>
@@ -70,6 +74,9 @@
     <EmbeddedResource Include="FormUICustomizationsContainer.resx">
       <DependentUpon>FormUICustomizationsContainer.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Ctx1MinKul\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

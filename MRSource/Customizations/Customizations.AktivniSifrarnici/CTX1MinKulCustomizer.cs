@@ -30,33 +30,45 @@ namespace AktivniSifrarnici
         {
             IDBSchema sch = module.AddSchema(module.DefaultSchemaName, new DBSchemaDescriptor());
 
+            tblCases(sch);
+            vw_cus_cus_CustomView(sch);
+        }
+
+        private void tblCases(IDBSchema sch)
+        {
             IDBTable tblCases = sch.AddTable("tblCases", new DBTableDescriptor());
 
-            tblCases.AddField("Ctx1MinKul_Opis", new DBFieldDescriptor() {  FieldType = new DBFieldTypeNvarchar(), Nullable = true, Size = 512 }, 
-                new DBRevision(new DateTime(2016,9,19), 1, eDBRevisionType.Create));
-            
-                        
-            var view = sch.AddView("vw_cus_cus_CustomView", new DBViewDescriptor() { Body = 
+            tblCases.AddField("Ctx1MinKul_Opis", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Nullable = true, Size = 512 },
+                new DBRevision(new DateTime(2016, 9, 19), 1, eDBRevisionType.Create));
+        }
+
+        private void vw_cus_cus_CustomView(IDBSchema sch)
+        {
+            var view = sch.AddView("vw_cus_cus_CustomView", new DBViewDescriptor()
+            {
+                WithSchemaBinding = true,
+                Body =
 @"SELECT 
     Broj = 1
 "
-, WithSchemaBinding = true },
-                    new DBRevision(new DateTime(2016, 9, 20), 0, eDBRevisionType.Create));
+            },
+                   new DBRevision(new DateTime(2016, 9, 20), 0, eDBRevisionType.Create));
 
             view.AddRevision(new DBRevision(new DateTime(2016, 9, 20), 1, eDBRevisionType.Modify),
-                new DBViewDescriptor() { Body = 
-
+                new DBViewDescriptor()
+                {
+                    WithSchemaBinding = false,
+                    Body =
 @"SELECT 
-Broj = 2
-
-", WithSchemaBinding = false });
-            
+    Broj = 2
+"
+                });
         }
 
         #endregion
 
         #region UI Customization
-        
+
         [MethodActivationCustomization(ActivationKey = "FormLoaded")]
         public void FormLoaded(Dictionary<string, object> inputs)
         {

@@ -27,6 +27,12 @@
         Return MyBase.AddDBObject(viewName, descriptor, createRevision)
     End Function
 
+    Public Function AddExecuteOnceTask(created As Date, granulation As Integer, sql As String) As IDBRevision Implements IDBSchema.AddExecuteOnceTask
+        Dim returnSql As RevisionTaskDelegate = Function(sender, DBType) sql
+
+        Return AddRevision(New DBRevision(New DateTime(2016, 9, 21), 0, eDBRevisionType.Task, returnSql))
+    End Function
+
     Public Overrides Function GetSqlCreate(dBType As eDBType) As String
         Dim ret As String = ""
         ret = String.Format("GO
@@ -50,4 +56,6 @@ GO
 
         Return ret
     End Function
+
+
 End Class

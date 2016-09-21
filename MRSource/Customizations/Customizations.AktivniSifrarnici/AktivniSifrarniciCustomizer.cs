@@ -29,6 +29,7 @@ namespace AktivniSifrarnici
             Grad(sch);
             Mjesto(sch);
         }
+
         private IDBTable Mjesto(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 7, 8), 1, eDBRevisionType.Create);

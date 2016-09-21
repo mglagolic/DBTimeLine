@@ -143,6 +143,10 @@
       <Project>{91f233d0-86f9-4597-947e-d1fdf4fa17f4}</Project>
       <Name>DBTimeLiners.DBModules</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Framework\Core\Framework.Core\Framework.Core.csproj">
+      <Project>{18f85e07-8f10-496b-829f-ae4fc00de935}</Project>
+      <Name>Framework.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
       <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
       <Name>Framework.DBTimeLine.DBObjects</Name>
