@@ -382,8 +382,8 @@ Public Class Form1
                 Exit Sub
             End If
 
+            ' TODO - ugraditi fleg SmallTransations u GUI (tu nema rollback-a, koristilo bi se samo kad bi se napunio transaction log)
             ' TODO - napraviti prozor za commit naredbi s generiranjem infa tko je odradio i sto. Slati info na mail.
-            ' TODO - omoguciti prikaz novih revizija, bez executea
             ' TODO - testirati "deklarativno" programiranje, vise puta pozvati isti modul
             ' TODO - isprogramirati podrsku za store
             ' TODO - isprogramirati podrsku za triggere
