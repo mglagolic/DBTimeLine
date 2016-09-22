@@ -51,6 +51,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Centrix1", "Client\Centrix1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.Core", "Framework\Core\Framework.Core\Framework.Core.csproj", "{18F85E07-8F10-496B-829F-AE4FC00DE935}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Customizations.Ctx1MinKul", "Customizations\Customizations.Ctx1MinKul\Customizations.Ctx1MinKul.csproj", "{F0415D31-608E-43E6-8F4C-DBFC3F1B7454}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,10 @@ Global
 		{18F85E07-8F10-496B-829F-AE4FC00DE935}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18F85E07-8F10-496B-829F-AE4FC00DE935}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18F85E07-8F10-496B-829F-AE4FC00DE935}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0415D31-608E-43E6-8F4C-DBFC3F1B7454}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0415D31-608E-43E6-8F4C-DBFC3F1B7454}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0415D31-608E-43E6-8F4C-DBFC3F1B7454}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0415D31-608E-43E6-8F4C-DBFC3F1B7454}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -146,5 +152,6 @@ Global
 		{45E75768-8918-43D5-84B8-707C87AF4EE5} = {B02E7A7D-A45D-4CC8-AF41-2BEBA10C6039}
 		{773653B6-3F3D-4A66-9E4C-DFDF9FA4BE0B} = {C2FB5356-9C71-4338-8FCB-585CDCAA4F23}
 		{18F85E07-8F10-496B-829F-AE4FC00DE935} = {1FE7DBDB-96F8-481A-9087-4EC0DE12DC39}
+		{F0415D31-608E-43E6-8F4C-DBFC3F1B7454} = {7EBCBA90-29BA-4BE8-A246-C92EA3CCAB17}
 	EndGlobalSection
 EndGlobal

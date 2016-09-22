@@ -27,12 +27,12 @@ Partial Class HotFixForm
         Me.gbActions = New System.Windows.Forms.GroupBox()
         Me.btnAnalyze = New System.Windows.Forms.Button()
         Me.btnCommit = New System.Windows.Forms.Button()
+        Me.Label6 = New System.Windows.Forms.Label()
         Me.gbQuery = New System.Windows.Forms.GroupBox()
         Me.MrRichTextBox1 = New Framework.GUI.Controls.MRRichTextBox(Me.components)
         Me.gbDetails = New System.Windows.Forms.GroupBox()
         Me.TextBox5 = New System.Windows.Forms.TextBox()
         Me.Label7 = New System.Windows.Forms.Label()
-        Me.Label6 = New System.Windows.Forms.Label()
         Me.TextBox4 = New System.Windows.Forms.TextBox()
         Me.TextBox3 = New System.Windows.Forms.TextBox()
         Me.TextBox2 = New System.Windows.Forms.TextBox()
@@ -87,6 +87,15 @@ Partial Class HotFixForm
         Me.btnCommit.TabStop = False
         Me.btnCommit.Text = "Commit"
         Me.btnCommit.UseVisualStyleBackColor = False
+        '
+        'Label6
+        '
+        Me.Label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.Label6.Location = New System.Drawing.Point(707, 9)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(127, 17)
+        Me.Label6.TabIndex = 9
+        Me.Label6.Text = "timestamp"
         '
         'gbQuery
         '
@@ -143,15 +152,6 @@ Partial Class HotFixForm
         Me.Label7.Size = New System.Drawing.Size(82, 20)
         Me.Label7.TabIndex = 10
         Me.Label7.Text = "Database name"
-        '
-        'Label6
-        '
-        Me.Label6.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.Label6.Location = New System.Drawing.Point(707, 9)
-        Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(127, 17)
-        Me.Label6.TabIndex = 9
-        Me.Label6.Text = "timestamp"
         '
         'TextBox4
         '

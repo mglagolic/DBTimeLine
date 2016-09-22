@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7A8E07B8-0B5F-49F7-A7BD-EB43AFD52E9E}</ProjectGuid>
+    <ProjectGuid>{F0415D31-608E-43E6-8F4C-DBFC3F1B7454}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>AktivniSifrarnici</RootNamespace>
-    <AssemblyName>Customizations.AktivniSifrarnici</AssemblyName>
+    <RootNamespace>Customizations.Ctx1MinKul</RootNamespace>
+    <AssemblyName>Customizations.Ctx1MinKul</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,8 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AktivniSifrarniciCustomizer.cs" />
+    <Compile Include="Ctx1MinKulCustomizer.cs" />
+    <Compile Include="FormUICustomizationsContainer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormUICustomizationsContainer.Designer.cs">
+      <DependentUpon>FormUICustomizationsContainer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FormUICustomizationsContainer.resx">
+      <DependentUpon>FormUICustomizationsContainer.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Framework\Core\Framework.Core\Framework.Core.csproj">
@@ -51,11 +63,11 @@
       <Name>Framework.Core</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine.DBObjects\Framework.DBTimeLine.DBObjects.vbproj">
-      <Project>{986EF2D7-7F89-459F-B9EE-A9077CDCD147}</Project>
+      <Project>{986ef2d7-7f89-459f-b9ee-a9077cdcd147}</Project>
       <Name>Framework.DBTimeLine.DBObjects</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Framework\DBTimeLine\Framework.DBTimeLine\Framework.DBTimeLine.vbproj">
-      <Project>{99EB1A6E-D3CA-4AA0-B7A2-ED4EBAE91CA5}</Project>
+      <Project>{99eb1a6e-d3ca-4aa0-b7a2-ed4ebae91ca5}</Project>
       <Name>Framework.DBTimeLine</Name>
     </ProjectReference>
     <ProjectReference Include="..\Customizations.Core\Customizations.Core.csproj">
@@ -63,7 +75,9 @@
       <Name>Customizations.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Resources\Ctx1MinKul\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>copy /Y "$(TargetDir)$(TargetName).dll" "$(SolutionDir)Client\DBTimeLiner\bin\Debug\$(TargetName).dll"
