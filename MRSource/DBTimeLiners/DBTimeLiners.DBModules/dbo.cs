@@ -51,7 +51,7 @@ SELECT
     Naziv = CAST(Number as nvarchar(512)) 
 FROM Tally 
 WHERE 
-    Number <= 100000
+    Number <= 10000
 
 WAITFOR DELAY '00:00:03'
 ", sender.Parent.SchemaName + "." + sender.Parent.SchemaObjectName);
