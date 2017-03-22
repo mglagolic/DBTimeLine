@@ -18,7 +18,7 @@ Public Class DBMacros
         Return ret
     End Function
 
-    Public Shared Function AddTableIDNaziv(tableName As String, sch As IDBSchema, rev As DBRevision) As IDBTable
+    Public Shared Function AddDBTableIDNaziv(tableName As String, sch As IDBSchema, rev As DBRevision) As IDBTable
         Dim ret As IDBTable = Nothing
 
         ret = AddDBTableID(tableName, sch, rev)
@@ -45,9 +45,13 @@ Public Class DBMacros
         Return New DBFieldDescriptor() With {.FieldType = New DBFieldTypeNvarchar, .Nullable = nullable, .Size = 512}
     End Function
 
+    Public Shared Function DBFieldBitDescriptor(nullable As Boolean) As DBFieldDescriptor
+        Return New DBFieldDescriptor() With {.FieldType = New DBFieldTypeBoolean, .Nullable = nullable}
+    End Function
+
 #End Region
 
-    Public Shared Function AddForeignKeyFieldID(fieldName As String, nullable As Boolean, table As IDBTable, pkFullTableName As String, rev As DBRevision)
+    Public Shared Function AddForeignKeyFieldID(fieldName As String, nullable As Boolean, table As IDBTable, pkFullTableName As String, rev As DBRevision) As IDBField
         Dim ret As IDBField
         ret = table.AddField(fieldName, DBFieldIDDescriptor(nullable),
                        New DBRevision(rev))

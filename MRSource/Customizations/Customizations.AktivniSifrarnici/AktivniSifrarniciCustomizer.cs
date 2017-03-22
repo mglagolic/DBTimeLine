@@ -33,7 +33,7 @@ namespace AktivniSifrarnici
         private IDBTable Mjesto(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 7, 8), 1, eDBRevisionType.Create);
-            var ret = DBMacros.AddTableIDNaziv("Mjesto", sch, rev);
+            var ret = DBMacros.AddDBTableIDNaziv("Mjesto", sch, rev);
 
             return ret;
         }

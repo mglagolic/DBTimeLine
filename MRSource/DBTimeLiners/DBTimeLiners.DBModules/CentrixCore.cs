@@ -30,7 +30,7 @@ namespace DBTimeLiners.DBModules
         private IDBTable tblCases(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 9, 19), 0, eDBRevisionType.Create);
-            var ret = DBMacros.AddTableIDNaziv("tblCases", sch, rev);
+            var ret = DBMacros.AddDBTableIDNaziv("tblCases", sch, rev);
                     
             return ret;
         }

@@ -62,7 +62,7 @@ WAITFOR DELAY '00:00:03'
         private IDBTable Drzava(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 6, 10), 0, eDBRevisionType.Create);
-            var ret = DBMacros.AddTableIDNaziv("Drzava", sch, rev);
+            var ret = DBMacros.AddDBTableIDNaziv("Drzava", sch, rev);
 
             ret.AddRevision(new DBRevision(new DateTime(2016, 6, 28), 0, eDBRevisionType.Task, FillDrzava, null, 150));
 

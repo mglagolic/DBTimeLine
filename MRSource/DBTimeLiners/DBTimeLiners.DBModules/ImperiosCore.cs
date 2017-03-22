@@ -28,7 +28,7 @@ namespace DBTimeLiners.DBModules
         private IDBTable MjestoTroska(IDBSchema sch)
         {
             var rev = new DBRevision(new DateTime(2016, 9, 19), 0, eDBRevisionType.Create);
-            var ret = DBMacros.AddTableIDNaziv("MjestoTroska", sch, rev);
+            var ret = DBMacros.AddDBTableIDNaziv("MjestoTroska", sch, rev);
 
             //ret.AddRevision(new DBRevision(new DateTime(2016, 6, 28), 0, eDBRevisionType.Task, null, null));
 

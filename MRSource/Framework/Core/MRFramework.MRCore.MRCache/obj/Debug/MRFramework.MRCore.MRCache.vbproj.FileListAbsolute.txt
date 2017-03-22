@@ -58,3 +58,15 @@ C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\ob
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.dll
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.xml
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.pdb
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.dll
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.pdb
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.MRCache.xml
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.dll
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.pdb
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\bin\Debug\MRFramework.MRCore.xml
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.vbprojResolveAssemblyReference.cache
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.Resources.resources
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.vbproj.GenerateResource.Cache
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.dll
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.xml
+C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore.MRCache\obj\Debug\MRFramework.MRCore.MRCache.pdb

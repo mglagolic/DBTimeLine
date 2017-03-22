@@ -56,16 +56,6 @@ Namespace My
         
         <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test5;Integrated Security=True;C"& _ 
-            "onnection Timeout=30")>  _
-        Public ReadOnly Property ConnectionStringTest() As String
-            Get
-                Return CType(Me("ConnectionStringTest"),String)
-            End Get
-        End Property
-        
-        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
-         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
          Global.System.Configuration.DefaultSettingValueAttribute("ProviderSqlServer")>  _
         Public ReadOnly Property DefaultProvider() As String
             Get
@@ -115,7 +105,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("TestCentrix1")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("testcoreidentity")>  _
         Public Property DefaultDatabaseName() As String
             Get
                 Return CType(Me("DefaultDatabaseName"),String)
@@ -123,6 +113,16 @@ Namespace My
             Set
                 Me("DefaultDatabaseName") = value
             End Set
+        End Property
+        
+        <Global.System.Configuration.ApplicationScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=localhost;Initial Catalog=TestCoreIdentity;Integrated Security=True;C"& _ 
+            "onnection Timeout=30")>  _
+        Public ReadOnly Property ConnectionStringTest() As String
+            Get
+                Return CType(Me("ConnectionStringTest"),String)
+            End Get
         End Property
     End Class
 End Namespace

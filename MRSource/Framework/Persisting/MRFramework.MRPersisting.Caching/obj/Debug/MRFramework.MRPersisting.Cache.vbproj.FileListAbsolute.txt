@@ -58,3 +58,15 @@ C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersistin
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.dll
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.xml
 C:\Miro\Bitbucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.pdb
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.dll
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.pdb
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.xml
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRCore.MRCache.dll
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRCore.MRCache.pdb
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRCore.MRCache.xml
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.vbprojResolveAssemblyReference.cache
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.Resources.resources
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.vbproj.GenerateResource.Cache
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.dll
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.xml
+C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.pdb

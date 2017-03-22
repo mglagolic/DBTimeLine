@@ -2,9 +2,6 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
   <Profiles />
   <Settings>
-    <Setting Name="ConnectionStringTest" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=HOME7\SQLEXPRESS2014;Initial Catalog=Test5;Integrated Security=True;Connection Timeout=30</Value>
-    </Setting>
     <Setting Name="DefaultProvider" Type="System.String" Scope="Application">
       <Value Profile="(Default)">ProviderSqlServer</Value>
     </Setting>
@@ -21,7 +18,10 @@
       <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="DefaultDatabaseName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TestCentrix1</Value>
+      <Value Profile="(Default)">testcoreidentity</Value>
+    </Setting>
+    <Setting Name="ConnectionStringTest" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">Data Source=localhost;Initial Catalog=TestCoreIdentity;Integrated Security=True;Connection Timeout=30</Value>
     </Setting>
   </Settings>
 </SettingsFile>
