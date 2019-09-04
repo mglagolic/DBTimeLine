@@ -64,7 +64,7 @@
         End If
 
         With Me
-            ret = String.Format("CREATE {0} {1} INDEX {2} ON {3} ({4}) {5}", strUnique, strClustered, indexName, DirectCast(Parent, IDBObject).GetFullName, strKeys, strInclude)
+            ret = String.Format("; CREATE {0} {1} INDEX {2} ON {3} ({4}) {5}", strUnique, strClustered, indexName, DirectCast(Parent, IDBObject).GetFullName, strKeys, strInclude)
         End With
 
         Return ret

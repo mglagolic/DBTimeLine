@@ -47,3 +47,13 @@ C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Fac
 C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll
 C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
 C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.dll
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.pdb
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.xml
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbprojAssemblyReference.cache
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.Resources.resources
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbproj.GenerateResource.cache
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbproj.CoreCompileInputs.cache
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb

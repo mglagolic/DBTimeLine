@@ -38,7 +38,8 @@
                 bindingClause = "WITH SCHEMABINDING"
             End If
             ret = String.Format(
-"GO
+"
+GO
 CREATE VIEW {0}.{1}
 {2}
 AS

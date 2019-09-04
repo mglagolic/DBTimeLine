@@ -46,3 +46,17 @@ C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Cor
 C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.dll
 C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.xml
 C:\BitBucket\DbCreate\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.pdb
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.dll
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.pdb
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRPersisting.Core.xml
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.dll
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.pdb
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\bin\Debug\MRFramework.MRCore.xml
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbprojAssemblyReference.cache
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.Resources.resources
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbproj.GenerateResource.cache
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbproj.CoreCompileInputs.cache
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.vbproj.CopyComplete
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.dll
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.xml
+C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Core\obj\Debug\MRFramework.MRPersisting.Core.pdb
