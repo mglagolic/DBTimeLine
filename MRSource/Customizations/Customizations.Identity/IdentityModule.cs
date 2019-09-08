@@ -132,7 +132,7 @@ namespace Customizations.Identity
             {
                 Body =
 @"SELECT 
-	t.ClaimID, t.PrincipalID, CanExecute = MAX(CAST(t.CanExecute AS INT))
+	ID = newid(), t.ClaimID, t.PrincipalID, CanExecute = CAST(MAX(CAST(t.CanExecute AS INT)) AS BIT)
 FROM
 	(
 		SELECT 
