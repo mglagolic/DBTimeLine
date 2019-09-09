@@ -160,10 +160,34 @@ GROUP BY
         {
             sch.AddRevision(new DBRevision(new DateTime(2016, 6, 10), 1, eDBRevisionType.Task, FillAdmin));
             sch.AddRevision(new DBRevision(new DateTime(2016, 6, 10), 2, eDBRevisionType.Task, FillAdmin2));
+
+            sch.AddRevision(new DBRevision(new DateTime(2019, 9, 9), 0, eDBRevisionType.AlwaysExecuteTask, FillAdminRolePermissions));
         }
 
         #region Tasks
-        
+        private string FillAdminRolePermissions(IDBRevision sender, eDBType dBType)
+        {
+            return
+@"
+
+INSERT INTO Common.Role
+SELECT 
+	ID = NEWID(), Name = 'Administrator'
+WHERE
+	NOT EXISTS (SELECT ID FROM Common.Role r WHERE r.Name = 'Administrator')
+
+INSERT INTO Common.RolePermission (ID, ClaimID, RoleID, CanExecute)
+SELECT 
+	n.*
+FROM
+	(SELECT ID = NEWID(), ClaimID = c.ID, RoleID = (SELECT ID FROM Common.Role r WHERE r.Name = 'Administrator'), CanExecute = 1 FROM Common.Claim c) n
+	LEFT JOIN Common.RolePermission rp ON n.ClaimID = rp.ClaimID AND rp.RoleID = n.roleID
+	WHERE rp.ID is null
+
+";
+        }
+
+
         private string FillAdmin(IDBRevision sender, eDBType dBType)
         {
             return
