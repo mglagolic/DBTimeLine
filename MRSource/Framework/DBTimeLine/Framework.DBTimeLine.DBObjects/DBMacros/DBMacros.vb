@@ -15,6 +15,7 @@ Public Class DBMacros
         ret.AddConstraint(New DBPrimaryKeyConstraintDescriptor("ID"),
                           New DBRevision(rev))
 
+        ret.AddClaims(rev.Created)
         Return ret
     End Function
 

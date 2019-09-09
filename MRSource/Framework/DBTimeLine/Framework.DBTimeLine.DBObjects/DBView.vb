@@ -83,4 +83,20 @@ GO
         Return ret
     End Function
 
+    Public Sub AddClaims(created As Date) Implements IDBView.AddClaims
+        AddRevision(New DBRevision(created, 0, eDBRevisionType.Task, AddressOf AddViewClaims))
+    End Sub
+
+    Private Function AddViewClaims(sender As IDBRevision, dBType As eDBType) As String
+        Return "
+        INSERT INTO Common.Claim (ID, Name)
+        SELECT ID, NAME 
+        FROM 
+        (
+            SELECT ID = NEWID(), Name = '" & CType(sender.Parent, IDBTable).GetFullName() & ".Read' 
+        ) a 
+        WHERE
+            a.name NOT IN (SELECT NAME FROM Common.Claim)"
+
+    End Function
 End Class
