@@ -84,3 +84,17 @@ C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Cach
 C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.dll
 C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.xml
 C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.pdb
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.dll
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.pdb
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRPersisting.Cache.xml
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRCore.MRCache.dll
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRCore.MRCache.pdb
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\bin\Debug\MRFramework.MRCore.MRCache.xml
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.vbprojAssemblyReference.cache
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.Resources.resources
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.vbproj.GenerateResource.cache
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.vbproj.CoreCompileInputs.cache
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.vbproj.CopyComplete
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.dll
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.xml
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Caching\obj\Debug\MRFramework.MRPersisting.Cache.pdb

@@ -182,3 +182,7 @@ $RECYCLE.BIN/
 
 # Visual Studio 2014 CTP
 **/*.sln.ide
+/MRSource/.vs/MRSource/v16/Server/sqlite3/storage.ide-wal
+/MRSource/.vs/MRSource/v16/Server/sqlite3/storage.ide-shm
+/MRSource/.vs/MRSource/v16/Server/sqlite3/storage.ide
+/MRSource/.vs/MRSource/v16/Server/sqlite3/db.lock

@@ -57,3 +57,13 @@ C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Fact
 C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll
 C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
 C:\Source\DBTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.dll
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.pdb
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\bin\Debug\MRFramework.MRPersisting.Factory.xml
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbprojAssemblyReference.cache
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.Resources.resources
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbproj.GenerateResource.cache
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.vbproj.CoreCompileInputs.cache
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.dll
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.xml
+C:\Projects\DbTimeLine\MRSource\Framework\Persisting\MRFramework.MRPersisting.Factory\obj\Debug\MRFramework.MRPersisting.Factory.pdb
