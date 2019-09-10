@@ -29,22 +29,22 @@ Public Class DBTable
         End Get
     End Property
 
-    Public Sub AddClaims(created As Date) Implements IDBTable.AddClaims
-        AddRevision(New DBRevision(created, 0, eDBRevisionType.Task, AddressOf AddTableClaims))
-    End Sub
+    'Public Sub AddClaims(created As Date) Implements IDBTable.AddClaims
+    '    AddRevision(New DBRevision(created, 0, eDBRevisionType.Task, AddressOf AddTableClaims))
+    'End Sub
 
-    Private Function AddTableClaims(sender As IDBRevision, dBType As eDBType) As String
-        Return "
-        INSERT INTO Common.Claim (ID, Name)
-        SELECT ID, NAME 
-        FROM 
-            (
-                SELECT ID = NEWID(), Name = '" & CType(sender.Parent, IDBTable).GetFullName() & ".Read' UNION ALL
-                SELECT NEWID(), '" & CType(sender.Parent, IDBTable).GetFullName() & ".Write' 
-            ) a 
-        WHERE
-            a.name NOT IN (SELECT Name FROM Common.Claim)"
-    End Function
+    'Private Function AddTableClaims(sender As IDBRevision, dBType As eDBType) As String
+    '    Return "
+    '    INSERT INTO Common.Claim (ID, Name)
+    '    SELECT ID, NAME 
+    '    FROM 
+    '        (
+    '            SELECT ID = NEWID(), Name = '" & CType(sender.Parent, IDBTable).GetFullName() & ".Read' UNION ALL
+    '            SELECT NEWID(), '" & CType(sender.Parent, IDBTable).GetFullName() & ".Write' 
+    '        ) a 
+    '    WHERE
+    '        a.name NOT IN (SELECT Name FROM Common.Claim)"
+    'End Function
 
     Public Function AddConstraint(descriptor As IDBConstraintDescriptor, Optional createRevision As IDBRevision = Nothing) As IDBConstraint Implements IDBTable.AddConstraint
         Return CType(MyBase.AddDBObject(descriptor.GetConstraintName(SchemaName, Name), descriptor, createRevision), IDBConstraint)

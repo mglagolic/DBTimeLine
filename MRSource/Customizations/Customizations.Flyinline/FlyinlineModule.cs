@@ -55,6 +55,7 @@ namespace Customizations.Identity
         private void Tasks(IDBSchema sch)
         {
             sch.AddRevision(new DBRevision(new DateTime(2019, 9, 9), 0, eDBRevisionType.AlwaysExecuteTask, FillClaims));
+            sch.AddRevision(new DBRevision(new DateTime(2019, 9, 10), 0, eDBRevisionType.AlwaysExecuteTask, FillRoles));
         }
 
         #region Tasks
@@ -64,10 +65,8 @@ namespace Customizations.Identity
             return
 @"WITH ClaimsCTE AS
 (
-SELECT ID = NEWID(), Name = 'Feature_HasMultipleLines'
-UNION ALL SELECT NEWID(), 'Common.Principal.Read'
-UNION ALL SELECT NEWID(), 'Common.Principal.Write'
-UNION ALL SELECT NEWID(), 'Common.ClaimPermission.Read'
+SELECT ID = NEWID(), Name = 'HasMultipleLines'
+UNION ALL SELECT ID = NEWID(), Name = 'RegisterUser'
 )
 
 INSERT INTO Common.Claim (ID, Name)
@@ -80,7 +79,28 @@ WHERE
 	c.ID is null
 ";
         }
-        
+
+
+        private string FillRoles(IDBRevision sender, eDBType dBType)
+        {
+            return
+@"WITH RolesCTE AS
+(
+SELECT ID = NEWID(), Name = 'Client'
+UNION ALL SELECT NEWID(), 'BusinessOwner'
+)
+
+INSERT INTO Common.Role (ID, Name)
+SELECT 
+	t.ID, t.Name 
+FROM 
+	RolesCTE t
+	LEFT JOIN Common.Role r ON t.Name = r.Name
+WHERE 
+	r.ID is null
+";
+        }
+
         #endregion
 
     }
