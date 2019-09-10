@@ -65,8 +65,7 @@ namespace Customizations.Identity
             return
 @"WITH ClaimsCTE AS
 (
-SELECT ID = NEWID(), Name = 'HasMultipleLines'
-UNION ALL SELECT ID = NEWID(), Name = 'RegisterUser'
+    SELECT ID = NEWID(), Name = 'Users.RegisterUser'
 )
 
 INSERT INTO Common.Claim (ID, Name)
