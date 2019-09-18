@@ -49,6 +49,9 @@ namespace Customizations.Identity
             ret.AddField("Fullname", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
                 new DBRevision(rev));
 
+            ret.AddField("Nickname", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
+                new DBRevision(rev));
+
             return ret;
         }
 
