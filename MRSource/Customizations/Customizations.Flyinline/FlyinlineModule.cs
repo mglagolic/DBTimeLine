@@ -2,6 +2,7 @@
 using Framework.DBTimeLine.DBObjects;
 using Framework.DBTimeLine;
 using System.Collections.Generic;
+using Customizations.Flyinline.StoredProcedures;
 
 namespace Customizations.Identity
 {
@@ -27,7 +28,9 @@ namespace Customizations.Identity
             if (DefaultSchemaName != "dbo") sch.AddRevision(new DBRevision(rev));
 
             UserDetail(sch);
-            
+
+            ClearDbForTesting.Create(sch);
+
             Tasks(sch);
         }
 

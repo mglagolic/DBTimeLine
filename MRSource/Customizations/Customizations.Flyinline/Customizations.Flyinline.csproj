@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="StoredProcedures\ClearDbForTesting.cs" />
+    <Compile Include="DBObjects\DBStoredProcedure.cs" />
+    <Compile Include="DBObjects\DBStoredProcedureDescriptor.cs" />
     <Compile Include="FlyinlineCustomizer.cs" />
     <Compile Include="FlyinlineModule.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
