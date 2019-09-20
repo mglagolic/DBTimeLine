@@ -43,6 +43,9 @@ namespace Customizations.Identity
             ret.AddField("Username", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
                 new DBRevision(rev));
 
+            ret.AddConstraint(new DBUniqueConstraintDescriptor("Username"),
+                new DBRevision(rev));
+
             ret.AddField("Email", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
                 new DBRevision(rev));
 

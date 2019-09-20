@@ -66,3 +66,4 @@ C:\Projects\DbTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFr
 C:\Projects\DbTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.dll
 C:\Projects\DbTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.xml
 C:\Projects\DbTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.pdb
+C:\Projects\DbTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.vbprojAssemblyReference.cache

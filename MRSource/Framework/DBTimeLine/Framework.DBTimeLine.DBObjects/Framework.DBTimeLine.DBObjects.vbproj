@@ -75,9 +75,11 @@
     <Compile Include="DBIndex.vb" />
     <Compile Include="DBIndexDescriptor.vb" />
     <Compile Include="DBForeignKeyConstraint.vb" />
+    <Compile Include="DBUniqueConstraint.vb" />
     <Compile Include="DBPrimaryKeyConstraint.vb" />
     <Compile Include="DBField.vb" />
     <Compile Include="DBForeignKeyConstraintDescriptor.vb" />
+    <Compile Include="DBUniqueConstraintDescriptor.vb" />
     <Compile Include="DBPrimaryKeyConstraintDescriptor.vb" />
     <Compile Include="DBFieldDescriptor.vb" />
     <Compile Include="DBModule.vb" />
