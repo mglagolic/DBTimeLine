@@ -65,6 +65,7 @@ namespace Customizations.Identity
         {
             sch.AddRevision(new DBRevision(new DateTime(2019, 9, 9), 0, eDBRevisionType.AlwaysExecuteTask, FillClaims));
             sch.AddRevision(new DBRevision(new DateTime(2019, 9, 10), 0, eDBRevisionType.AlwaysExecuteTask, FillRoles));
+            sch.AddRevision(new DBRevision(new DateTime(2019, 9, 30), 0, eDBRevisionType.AlwaysExecuteTask, FillRolePermissions));
         }
 
         #region Tasks
@@ -75,7 +76,7 @@ namespace Customizations.Identity
 @"WITH ClaimsCTE AS
 (
     SELECT TOP 0 ID = NEWID(), Name = ''
-    -- SELECT ID = NEWID(), Name = 'Users.Commands.RegisterUser'
+    UNION ALL SELECT ID = NEWID(), Name = 'Routes.HomePage.View'
 )
 
 INSERT INTO Common.Claim (ID, Name)
@@ -96,6 +97,7 @@ WHERE
 @"WITH RolesCTE AS
 (
 SELECT ID = NEWID(), Name = 'Client'
+UNION ALL SELECT NEWID(), 'Admin'
 UNION ALL SELECT NEWID(), 'BusinessOwner'
 )
 
@@ -111,25 +113,33 @@ WHERE
         }
 
 
-//        private string FillRolePermissions(IDBRevision sender, eDBType dBType)
-//        {
-//            return
-//@"WITH RolesCTE AS
-//(
-//SELECT ID = NEWID(), Name = 'Client'
-//UNION ALL SELECT NEWID(), 'BusinessOwner'
-//)
+        private string FillRolePermissions(IDBRevision sender, eDBType dBType)
+        {
+            return
+@"
+;WITH 
+RolesCTE AS
+(
+    SELECT RoleID = ID FROM Common.Role t WHERE t.Name IN ('Client', 'BusinessOwner')
+),
+ClaimsCTE AS
+(
+    SELECT ClaimID = ID FROM Common.Claim t WHERE t.Name IN ('Routes.HomePage.View')
+)
 
-//INSERT INTO Common.Role (ID, Name)
-//SELECT 
-//	t.ID, t.Name 
-//FROM 
-//	RolesCTE t
-//	LEFT JOIN Common.Role r ON t.Name = r.Name
-//WHERE 
-//	r.ID is null
-//";
-//        }
+INSERT INTO Common.RolePermission (ID, RoleID, ClaimID, CanExecute)
+SELECT a.*
+FROM
+(
+	SELECT ID = NEWID(), RoleID, ClaimID, CanExecute = 1
+	FROM 
+		RolesCTE r,
+		ClaimsCTE c
+) a
+LEFT JOIN Common.RolePermission existing on a.RoleID = existing.RoleID and a.ClaimID = existing.ClaimID
+WHERE existing.ID IS NULL
+";
+        }
         #endregion
 
     }

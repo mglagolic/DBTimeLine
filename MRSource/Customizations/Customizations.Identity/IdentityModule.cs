@@ -182,7 +182,7 @@ SELECT
 FROM
 	(SELECT ID = NEWID(), ClaimID = c.ID, RoleID = (SELECT ID FROM Common.Role r WHERE r.Name = 'Administrator'), CanExecute = 1 FROM Common.Claim c) n
 	LEFT JOIN Common.RolePermission rp ON n.ClaimID = rp.ClaimID AND rp.RoleID = n.roleID
-	WHERE rp.ID is null
+WHERE rp.ID is null
 
 ";
         }
