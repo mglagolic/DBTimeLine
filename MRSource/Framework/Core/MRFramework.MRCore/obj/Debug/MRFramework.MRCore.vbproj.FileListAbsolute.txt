@@ -50,7 +50,6 @@ C:\BitBucket\DbCreate\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFra
 C:\Source\DBTimeLine\MRSource\Framework\Core\MRFramework.MRCore\bin\Debug\MRFramework.MRCore.dll
 C:\Source\DBTimeLine\MRSource\Framework\Core\MRFramework.MRCore\bin\Debug\MRFramework.MRCore.pdb
 C:\Source\DBTimeLine\MRSource\Framework\Core\MRFramework.MRCore\bin\Debug\MRFramework.MRCore.xml
-C:\Source\DBTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.vbprojAssemblyReference.cache
 C:\Source\DBTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.Resources.resources
 C:\Source\DBTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.vbproj.GenerateResource.cache
 C:\Source\DBTimeLine\MRSource\Framework\Core\MRFramework.MRCore\obj\Debug\MRFramework.MRCore.vbproj.CoreCompileInputs.cache

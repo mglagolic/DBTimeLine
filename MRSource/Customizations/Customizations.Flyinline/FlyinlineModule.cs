@@ -52,11 +52,22 @@ namespace Customizations.Identity
             ret.AddField("Email", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
                 new DBRevision(rev));
 
-            ret.AddField("Fullname", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
+            var fldFullName = ret.AddField("Fullname", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
                 new DBRevision(rev));
 
-            ret.AddField("Nickname", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
+            fldFullName.AddRevision(new DBRevision(new DateTime(2019, 10, 10), 0, eDBRevisionType.Delete));
+
+            ret.AddField("FirstName", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
                 new DBRevision(rev));
+
+            ret.AddField("LastName", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
+                new DBRevision(rev));
+
+
+            var fldNickName = ret.AddField("Nickname", new DBFieldDescriptor() { FieldType = new DBFieldTypeNvarchar(), Size = 512, Nullable = false },
+                new DBRevision(rev));
+
+            fldNickName.AddRevision(new DBRevision(new DateTime(2019, 10, 10), 0, eDBRevisionType.Delete));
 
             return ret;
         }
